@@ -69,32 +69,32 @@
 			path = Onboarding;
 			sourceTree = "<group>";
 		};
-		0E7E2A6126BAB04D0012E987 /* Authorization */ = {
+		0E7E2A6726BAC2B40012E987 /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Authorization;
 			sourceTree = "<group>";
 		};
-		0E7E2A6226BAB0770012E987 /* Swipe */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Swipe;
-			sourceTree = "<group>";
-		};
-		0E7E2A6326BAB0870012E987 /* Chats */ = {
+		0E7E2A6826BAC2F10012E987 /* Chats */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Chats;
 			sourceTree = "<group>";
 		};
-		0E7E2A6426BAB0910012E987 /* Profile */ = {
+		0E7E2A6926BAC2F60012E987 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		0E7E2A6A26BAC3020012E987 /* Swipe */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Swipe;
 			sourceTree = "<group>";
 		};
 		0EE0183626B96AEA00AEB059 = {
@@ -118,11 +118,11 @@
 		0EE0184126B96AEA00AEB059 /* ITinder */ = {
 			isa = PBXGroup;
 			children = (
+				0E7E2A6A26BAC3020012E987 /* Swipe */,
+				0E7E2A6926BAC2F60012E987 /* Profile */,
+				0E7E2A6826BAC2F10012E987 /* Chats */,
+				0E7E2A6726BAC2B40012E987 /* Authorization */,
 				0E7E2A6026BAB0170012E987 /* Onboarding */,
-				0E7E2A6126BAB04D0012E987 /* Authorization */,
-				0E7E2A6226BAB0770012E987 /* Swipe */,
-				0E7E2A6326BAB0870012E987 /* Chats */,
-				0E7E2A6426BAB0910012E987 /* Profile */,
 				0E7E2A5F26BAAFDA0012E987 /* Storyboard */,
 				0E7E2A5E26BAAFA30012E987 /* Supporting Files */,
 				0EE0184626B96AEA00AEB059 /* ViewController.swift */,
