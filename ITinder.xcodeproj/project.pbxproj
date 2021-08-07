@@ -13,7 +13,11 @@
 		0EE0184A26B96AEA00AEB059 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184826B96AEA00AEB059 /* Main.storyboard */; };
 		0EE0184C26B96AEF00AEB059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184B26B96AEF00AEB059 /* Assets.xcassets */; };
 		0EE0184F26B96AEF00AEB059 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184D26B96AEF00AEB059 /* LaunchScreen.storyboard */; };
-		0EE0185726B96B8100AEB059 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0185626B96B8100AEB059 /* GoogleService-Info.plist */; };
+		224FD0AE26BE8FE000D993B5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FD0AD26BE8FE000D993B5 /* TableViewCell.swift */; };
+		224FD0B226BE90AA00D993B5 /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FD0B126BE90A900D993B5 /* MatchesTableViewController.swift */; };
+		224FD0B626BE90EC00D993B5 /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FD0B526BE90EC00D993B5 /* DialogViewController.swift */; };
+		224FD0BA26BE938200D993B5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 224FD0B926BE938200D993B5 /* GoogleService-Info.plist */; };
+		224FD0C326BE9B8E00D993B5 /* MatchesDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FD0C226BE9B8E00D993B5 /* MatchesDelegate.swift */; };
 		462DEB6A15BDC2085F0B2760 /* Pods_ITinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33BC96C815BA2AB57F596464 /* Pods_ITinder.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,7 +30,11 @@
 		0EE0184B26B96AEF00AEB059 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0EE0184E26B96AEF00AEB059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0EE0185026B96AEF00AEB059 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0EE0185626B96B8100AEB059 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		224FD0AD26BE8FE000D993B5 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		224FD0B126BE90A900D993B5 /* MatchesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
+		224FD0B526BE90EC00D993B5 /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
+		224FD0B926BE938200D993B5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		224FD0C226BE9B8E00D993B5 /* MatchesDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesDelegate.swift; sourceTree = "<group>"; };
 		33BC96C815BA2AB57F596464 /* Pods_ITinder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ITinder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D8F4B84C0B4B44156F5CEA3 /* Pods-ITinder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ITinder.release.xcconfig"; path = "Target Support Files/Pods-ITinder/Pods-ITinder.release.xcconfig"; sourceTree = "<group>"; };
 		537CDCD2BCF0A83A07B19A55 /* Pods-ITinder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ITinder.debug.xcconfig"; path = "Target Support Files/Pods-ITinder/Pods-ITinder.debug.xcconfig"; sourceTree = "<group>"; };
@@ -76,13 +84,6 @@
 			path = Authorization;
 			sourceTree = "<group>";
 		};
-		0E7E2A6826BAC2F10012E987 /* Chats */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Chats;
-			sourceTree = "<group>";
-		};
 		0E7E2A6926BAC2F60012E987 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -120,17 +121,44 @@
 			children = (
 				0E7E2A6A26BAC3020012E987 /* Swipe */,
 				0E7E2A6926BAC2F60012E987 /* Profile */,
-				0E7E2A6826BAC2F10012E987 /* Chats */,
 				0E7E2A6726BAC2B40012E987 /* Authorization */,
+				224FD0C026BE998000D993B5 /* Dialog */,
 				0E7E2A6026BAB0170012E987 /* Onboarding */,
 				0E7E2A5F26BAAFDA0012E987 /* Storyboard */,
 				0E7E2A5E26BAAFA30012E987 /* Supporting Files */,
 				0EE0184626B96AEA00AEB059 /* ViewController.swift */,
-				0EE0185626B96B8100AEB059 /* GoogleService-Info.plist */,
 				0EE0185026B96AEF00AEB059 /* Info.plist */,
+				224FD0B926BE938200D993B5 /* GoogleService-Info.plist */,
 				0EE0184B26B96AEF00AEB059 /* Assets.xcassets */,
 			);
 			path = ITinder;
+			sourceTree = "<group>";
+		};
+		224FD0BD26BE995900D993B5 /* Matches */ = {
+			isa = PBXGroup;
+			children = (
+				224FD0B126BE90A900D993B5 /* MatchesTableViewController.swift */,
+				224FD0C226BE9B8E00D993B5 /* MatchesDelegate.swift */,
+				224FD0AD26BE8FE000D993B5 /* TableViewCell.swift */,
+			);
+			path = Matches;
+			sourceTree = "<group>";
+		};
+		224FD0BF26BE996A00D993B5 /* Dialog */ = {
+			isa = PBXGroup;
+			children = (
+				224FD0B526BE90EC00D993B5 /* DialogViewController.swift */,
+			);
+			path = Dialog;
+			sourceTree = "<group>";
+		};
+		224FD0C026BE998000D993B5 /* Dialog */ = {
+			isa = PBXGroup;
+			children = (
+				224FD0BD26BE995900D993B5 /* Matches */,
+				224FD0BF26BE996A00D993B5 /* Dialog */,
+			);
+			path = Dialog;
 			sourceTree = "<group>";
 		};
 		22AE25192213948A06A1F7FD /* Pods */ = {
@@ -162,7 +190,6 @@
 				0EE0183C26B96AEA00AEB059 /* Frameworks */,
 				0EE0183D26B96AEA00AEB059 /* Resources */,
 				DC85788055D8F210F308EA3E /* [CP] Embed Pods Frameworks */,
-				0EE0185826B9733400AEB059 /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -211,7 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EE0184F26B96AEF00AEB059 /* LaunchScreen.storyboard in Resources */,
-				0EE0185726B96B8100AEB059 /* GoogleService-Info.plist in Resources */,
+				224FD0BA26BE938200D993B5 /* GoogleService-Info.plist in Resources */,
 				0EE0184C26B96AEF00AEB059 /* Assets.xcassets in Resources */,
 				0EE0184A26B96AEA00AEB059 /* Main.storyboard in Resources */,
 			);
@@ -220,24 +247,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0EE0185826B9733400AEB059 /* SwiftLint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = SwiftLint;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
-		};
 		4488CA0C128B4F89ECE2BC34 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -285,8 +294,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EE0184726B96AEA00AEB059 /* ViewController.swift in Sources */,
+				224FD0AE26BE8FE000D993B5 /* TableViewCell.swift in Sources */,
+				224FD0B626BE90EC00D993B5 /* DialogViewController.swift in Sources */,
 				0EE0184326B96AEA00AEB059 /* AppDelegate.swift in Sources */,
 				0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */,
+				224FD0B226BE90AA00D993B5 /* MatchesTableViewController.swift in Sources */,
+				224FD0C326BE9B8E00D993B5 /* MatchesDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,6 +450,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 78553PNJDP;
 				INFOPLIST_FILE = ITinder/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -457,6 +471,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 78553PNJDP;
 				INFOPLIST_FILE = ITinder/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

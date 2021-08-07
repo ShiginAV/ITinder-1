@@ -8,6 +8,10 @@ target 'ITinder' do
   # Pods for ITinder
 pod 'SwiftLint'
 pod 'Firebase/Core'
+pod 'Firebase'
 pod 'Firebase/Database'
+pod 'Firebase/Auth'
+pod 'Firebase/Storage'
+pod 'MessageKit'
 
 end

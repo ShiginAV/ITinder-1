@@ -3,34 +3,34 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1064837769029-pr0umvcp4htlvub3v089ke0eao2gtdd1.apps.googleusercontent.com</string>
+	<string>572025486763-l8q1t2jh5a5ntjperccufpt9ne4lcipp.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1064837769029-pr0umvcp4htlvub3v089ke0eao2gtdd1</string>
+	<string>com.googleusercontent.apps.572025486763-l8q1t2jh5a5ntjperccufpt9ne4lcipp</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAQS2B3YsO4LsvbR_08TffXSFWQFRI1Pp8</string>
+	<string>AIzaSyBQ2s7RF05ztmsJ_j2JXT05MoO2oi_K68c</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1064837769029</string>
+	<string>572025486763</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.ITinder</string>
 	<key>PROJECT_ID</key>
-	<string>itinder-d6dfb</string>
+	<string>itinder-d319f</string>
 	<key>STORAGE_BUCKET</key>
-	<string>itinder-d6dfb.appspot.com</string>
+	<string>itinder-d319f.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1064837769029:ios:ef2ada0e952c0ac2c7c02c</string>
+	<string>1:572025486763:ios:4cedc53daf45056e7866ee</string>
 	<key>DATABASE_URL</key>
-	<string>https://itinder-d319f-default-rtdb.firebaseio.com/</string>
+	<string>https://itinder-d319f-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>
