@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Root View Controller-->
+        <!--Matches-->
         <scene sceneID="aS5-3W-aoA">
             <objects>
                 <tableViewController id="7dY-jq-Jk1" customClass="MatchesTableViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
@@ -17,28 +17,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="144" id="Y3G-8O-rvR" customClass="TableViewCell" customModule="ITinder" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="144"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="Y3G-8O-rvR" customClass="TableViewCell" customModule="ITinder" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="150.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Y3G-8O-rvR" id="i22-RA-hFQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="144"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="150.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FEJ-cT-e0G">
-                                            <rect key="frame" x="10" y="16" width="135" height="112"/>
+                                            <rect key="frame" x="10" y="10" width="130" height="130.5"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" secondItem="FEJ-cT-e0G" secondAttribute="height" multiplier="1:1" id="6ue-co-pXo"/>
-                                                <constraint firstAttribute="width" constant="135" id="Ner-3N-mRt"/>
+                                                <constraint firstAttribute="width" constant="130" id="MMT-VY-neb"/>
+                                                <constraint firstAttribute="width" secondItem="FEJ-cT-e0G" secondAttribute="height" multiplier="1:1" id="PI3-nT-PWd"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ujy-TE-dF7">
-                                            <rect key="frame" x="195" y="16" width="45" height="21"/>
+                                            <rect key="frame" x="190" y="10" width="194" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last message" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bSG-yu-GaA">
-                                            <rect key="frame" x="195" y="107" width="106" height="21"/>
+                                            <rect key="frame" x="190" y="119.5" width="194" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -46,12 +46,14 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Ujy-TE-dF7" firstAttribute="top" secondItem="FEJ-cT-e0G" secondAttribute="top" id="097-1F-Vaj"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="bSG-yu-GaA" secondAttribute="trailing" constant="10" id="2fP-yY-CRP"/>
                                         <constraint firstItem="Ujy-TE-dF7" firstAttribute="leading" secondItem="bSG-yu-GaA" secondAttribute="leading" id="CNi-e8-h19"/>
                                         <constraint firstItem="FEJ-cT-e0G" firstAttribute="leading" secondItem="i22-RA-hFQ" secondAttribute="leading" constant="10" id="Eyo-PQ-2ox"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="bSG-yu-GaA" secondAttribute="bottom" constant="5" id="Lp1-q1-eaA"/>
+                                        <constraint firstItem="FEJ-cT-e0G" firstAttribute="top" secondItem="i22-RA-hFQ" secondAttribute="top" constant="10" id="Ksw-HF-fnM"/>
                                         <constraint firstItem="bSG-yu-GaA" firstAttribute="bottom" secondItem="FEJ-cT-e0G" secondAttribute="bottom" id="Mp3-SI-Zum"/>
+                                        <constraint firstAttribute="bottom" secondItem="FEJ-cT-e0G" secondAttribute="bottom" constant="10" id="NgQ-eP-NsL"/>
                                         <constraint firstItem="Ujy-TE-dF7" firstAttribute="leading" secondItem="FEJ-cT-e0G" secondAttribute="trailing" constant="50" id="eZI-f9-y7z"/>
-                                        <constraint firstItem="Ujy-TE-dF7" firstAttribute="top" secondItem="i22-RA-hFQ" secondAttribute="topMargin" constant="5" id="yOW-L0-cqI"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Ujy-TE-dF7" secondAttribute="trailing" constant="10" id="qMM-AY-AM7"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -66,7 +68,7 @@
                             <outlet property="delegate" destination="7dY-jq-Jk1" id="MkP-Uz-VOE"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="6ci-Eu-7ZX"/>
+                    <navigationItem key="navigationItem" title="Matches" id="6ci-Eu-7ZX"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="em5-To-BhG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -91,7 +93,7 @@
         <scene sceneID="gJe-SL-83H">
             <objects>
                 <navigationController id="lt1-aZ-wsV" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="L7q-1K-vyO"/>
+                    <tabBarItem key="tabBarItem" title="Item" image="message" catalog="system" id="L7q-1K-vyO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3OL-Vy-b2k">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -158,6 +160,7 @@
     </scenes>
     <resources>
         <image name="heart" catalog="system" width="128" height="109"/>
+        <image name="message" catalog="system" width="128" height="113"/>
         <image name="person.crop.circle" catalog="system" width="128" height="121"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

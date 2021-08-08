@@ -1,0 +1,13 @@
+
+
+disabled_rules:
+ - trailing_whitespace
+ - colon
+ - force_cast
+ - identifier_name
+
+line_length: 1000
+
+type_body_length:
+    warning: 450
+    error: 500
