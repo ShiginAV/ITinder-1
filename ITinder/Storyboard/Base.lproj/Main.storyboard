@@ -69,6 +69,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Matches" id="6ci-Eu-7ZX"/>
+                    <connections>
+                        <segue destination="MAX-BC-6Mc" kind="show" id="0BP-wu-nUN"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="em5-To-BhG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -84,6 +87,7 @@
                         <viewLayoutGuide key="safeArea" id="SUI-4A-VAp"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="fJi-4y-Dnh"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AeJ-A5-RYL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

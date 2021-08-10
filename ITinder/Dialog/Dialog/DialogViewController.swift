@@ -31,8 +31,6 @@ class DialogViewController: MessagesViewController {
     
     private var selfSender: Sender!
     
-    var currentUserId: String!
-    
     var downloadedPhoto = [String: UIImage]() {
         didSet {
             messagesCollectionView.reloadData()

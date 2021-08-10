@@ -48,7 +48,7 @@ class DialogFromFirebase {
             let internetMessages = snapshot.childSnapshot(forPath: "conversations").childSnapshot(forPath: conversationId).childSnapshot(forPath: "messages")
             
             for message in internetMessages.children.allObjects as! [DataSnapshot] {
-                let senderData = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: message.childSnapshot(forPath: "sender").value as! String).childSnapshot(forPath: "data")
+                let senderData = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: message.childSnapshot(forPath: "sender").value as! String)
                 
                 let senderName = senderData.childSnapshot(forPath: "name").value as! String
                 let senderPhotoUrl = senderData.childSnapshot(forPath: "photoUrl").value as! String

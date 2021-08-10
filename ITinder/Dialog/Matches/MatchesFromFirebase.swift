@@ -92,7 +92,7 @@ class MatchesFromFirebase {
     
     func getUserData(userId: String, completion: @escaping (_ name: String?, _ photoUrl: String?) -> Void) {
         Database.database().reference().child("users").getData { (error, snapshot) in
-            let userDataSnap = snapshot.childSnapshot(forPath: userId).childSnapshot(forPath: "data")
+            let userDataSnap = snapshot.childSnapshot(forPath: userId)
             
             let name = userDataSnap.childSnapshot(forPath: "name").value as? String
             let photoUrl = userDataSnap.childSnapshot(forPath: "photoUrl").value as? String
