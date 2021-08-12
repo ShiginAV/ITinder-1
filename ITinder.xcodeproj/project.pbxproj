@@ -9,10 +9,23 @@
 /* Begin PBXBuildFile section */
 		0EE0184326B96AEA00AEB059 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0184226B96AEA00AEB059 /* AppDelegate.swift */; };
 		0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0184426B96AEA00AEB059 /* SceneDelegate.swift */; };
-		0EE0184726B96AEA00AEB059 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0184626B96AEA00AEB059 /* ViewController.swift */; };
 		0EE0184A26B96AEA00AEB059 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184826B96AEA00AEB059 /* Main.storyboard */; };
 		0EE0184C26B96AEF00AEB059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184B26B96AEF00AEB059 /* Assets.xcassets */; };
 		0EE0184F26B96AEF00AEB059 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184D26B96AEF00AEB059 /* LaunchScreen.storyboard */; };
+		1180251F26C510550096A20F /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180251E26C510550096A20F /* Icons.swift */; };
+		1180252126C510840096A20F /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180252026C510840096A20F /* Router.swift */; };
+		1180252326C5109C0096A20F /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180252226C5109C0096A20F /* Colors.swift */; };
+		1180252526C510BD0096A20F /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180252426C510BD0096A20F /* UserService.swift */; };
+		1180252926C5112D0096A20F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180252826C5112D0096A20F /* User.swift */; };
+		1180252B26C511690096A20F /* SwipeCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180252A26C511690096A20F /* SwipeCardModel.swift */; };
+		1180252E26C5119D0096A20F /* SwipeCardInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180252D26C5119D0096A20F /* SwipeCardInfoView.swift */; };
+		1180253026C511BB0096A20F /* SwipeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180252F26C511BB0096A20F /* SwipeCardView.swift */; };
+		1180253226C5125E0096A20F /* SwipeProfileContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180253126C5125E0096A20F /* SwipeProfileContainerView.swift */; };
+		1180253526C512990096A20F /* EditСharacteristicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180253426C512990096A20F /* EditСharacteristicView.swift */; };
+		1180253926C512FB0096A20F /* SwipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180253826C512FB0096A20F /* SwipeViewController.swift */; };
+		1180253B26C5131A0096A20F /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180253A26C5131A0096A20F /* UserProfileViewController.swift */; };
+		1180253D26C513310096A20F /* EditUserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180253C26C513310096A20F /* EditUserProfileViewController.swift */; };
+		1180253F26C513670096A20F /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180253E26C513670096A20F /* TabBarController.swift */; };
 		220280A126BEA04300E37A47 /* DialogFromFirebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220280A026BEA04300E37A47 /* DialogFromFirebase.swift */; };
 		224FD0AE26BE8FE000D993B5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FD0AD26BE8FE000D993B5 /* TableViewCell.swift */; };
 		224FD0B226BE90AA00D993B5 /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FD0B126BE90A900D993B5 /* MatchesTableViewController.swift */; };
@@ -26,11 +39,24 @@
 		0EE0183F26B96AEA00AEB059 /* ITinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ITinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE0184226B96AEA00AEB059 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EE0184426B96AEA00AEB059 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0EE0184626B96AEA00AEB059 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0EE0184926B96AEA00AEB059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0EE0184B26B96AEF00AEB059 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0EE0184E26B96AEF00AEB059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0EE0185026B96AEF00AEB059 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1180251E26C510550096A20F /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
+		1180252026C510840096A20F /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		1180252226C5109C0096A20F /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		1180252426C510BD0096A20F /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		1180252826C5112D0096A20F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		1180252A26C511690096A20F /* SwipeCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeCardModel.swift; sourceTree = "<group>"; };
+		1180252D26C5119D0096A20F /* SwipeCardInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeCardInfoView.swift; sourceTree = "<group>"; };
+		1180252F26C511BB0096A20F /* SwipeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeCardView.swift; sourceTree = "<group>"; };
+		1180253126C5125E0096A20F /* SwipeProfileContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeProfileContainerView.swift; sourceTree = "<group>"; };
+		1180253426C512990096A20F /* EditСharacteristicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EditСharacteristicView.swift"; sourceTree = "<group>"; };
+		1180253826C512FB0096A20F /* SwipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeViewController.swift; sourceTree = "<group>"; };
+		1180253A26C5131A0096A20F /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
+		1180253C26C513310096A20F /* EditUserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserProfileViewController.swift; sourceTree = "<group>"; };
+		1180253E26C513670096A20F /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		220280A026BEA04300E37A47 /* DialogFromFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogFromFirebase.swift; sourceTree = "<group>"; };
 		224FD0AD26BE8FE000D993B5 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		224FD0B126BE90A900D993B5 /* MatchesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +115,9 @@
 		0E7E2A6926BAC2F60012E987 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				1180252726C511070096A20F /* Models */,
+				1180253326C5128C0096A20F /* Views */,
+				1180253726C512DC0096A20F /* ViewControllers */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -96,6 +125,9 @@
 		0E7E2A6A26BAC3020012E987 /* Swipe */ = {
 			isa = PBXGroup;
 			children = (
+				1180252626C510EA0096A20F /* Models */,
+				1180252C26C5118E0096A20F /* Views */,
+				1180253626C512CC0096A20F /* ViewControllers */,
 			);
 			path = Swipe;
 			sourceTree = "<group>";
@@ -121,6 +153,7 @@
 		0EE0184126B96AEA00AEB059 /* ITinder */ = {
 			isa = PBXGroup;
 			children = (
+				1180251D26C510300096A20F /* Utils */,
 				0E7E2A6A26BAC3020012E987 /* Swipe */,
 				0E7E2A6926BAC2F60012E987 /* Profile */,
 				0E7E2A6726BAC2B40012E987 /* Authorization */,
@@ -128,12 +161,74 @@
 				0E7E2A6026BAB0170012E987 /* Onboarding */,
 				0E7E2A5F26BAAFDA0012E987 /* Storyboard */,
 				0E7E2A5E26BAAFA30012E987 /* Supporting Files */,
-				0EE0184626B96AEA00AEB059 /* ViewController.swift */,
+				1180253E26C513670096A20F /* TabBarController.swift */,
 				0EE0185026B96AEF00AEB059 /* Info.plist */,
 				224FD0B926BE938200D993B5 /* GoogleService-Info.plist */,
 				0EE0184B26B96AEF00AEB059 /* Assets.xcassets */,
 			);
 			path = ITinder;
+			sourceTree = "<group>";
+		};
+		1180251D26C510300096A20F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1180251E26C510550096A20F /* Icons.swift */,
+				1180252026C510840096A20F /* Router.swift */,
+				1180252226C5109C0096A20F /* Colors.swift */,
+				1180252426C510BD0096A20F /* UserService.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		1180252626C510EA0096A20F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1180252A26C511690096A20F /* SwipeCardModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1180252726C511070096A20F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1180252826C5112D0096A20F /* User.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1180252C26C5118E0096A20F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1180252D26C5119D0096A20F /* SwipeCardInfoView.swift */,
+				1180252F26C511BB0096A20F /* SwipeCardView.swift */,
+				1180253126C5125E0096A20F /* SwipeProfileContainerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1180253326C5128C0096A20F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1180253426C512990096A20F /* EditСharacteristicView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1180253626C512CC0096A20F /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				1180253826C512FB0096A20F /* SwipeViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		1180253726C512DC0096A20F /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				1180253A26C5131A0096A20F /* UserProfileViewController.swift */,
+				1180253C26C513310096A20F /* EditUserProfileViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		224FD0BD26BE995900D993B5 /* Matches */ = {
@@ -316,13 +411,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				220280A126BEA04300E37A47 /* DialogFromFirebase.swift in Sources */,
-				0EE0184726B96AEA00AEB059 /* ViewController.swift in Sources */,
+				1180253226C5125E0096A20F /* SwipeProfileContainerView.swift in Sources */,
+				1180253B26C5131A0096A20F /* UserProfileViewController.swift in Sources */,
+				1180252326C5109C0096A20F /* Colors.swift in Sources */,
+				1180252126C510840096A20F /* Router.swift in Sources */,
 				224FD0AE26BE8FE000D993B5 /* TableViewCell.swift in Sources */,
 				224FD0B626BE90EC00D993B5 /* DialogViewController.swift in Sources */,
 				0EE0184326B96AEA00AEB059 /* AppDelegate.swift in Sources */,
+				1180253526C512990096A20F /* EditСharacteristicView.swift in Sources */,
+				1180251F26C510550096A20F /* Icons.swift in Sources */,
+				1180252526C510BD0096A20F /* UserService.swift in Sources */,
+				1180252926C5112D0096A20F /* User.swift in Sources */,
+				1180253926C512FB0096A20F /* SwipeViewController.swift in Sources */,
+				1180252E26C5119D0096A20F /* SwipeCardInfoView.swift in Sources */,
 				0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */,
+				1180253D26C513310096A20F /* EditUserProfileViewController.swift in Sources */,
+				1180252B26C511690096A20F /* SwipeCardModel.swift in Sources */,
 				224FD0B226BE90AA00D993B5 /* MatchesTableViewController.swift in Sources */,
+				1180253F26C513670096A20F /* TabBarController.swift in Sources */,
 				224FD0C326BE9B8E00D993B5 /* MatchesFromFirebase.swift in Sources */,
+				1180253026C511BB0096A20F /* SwipeCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

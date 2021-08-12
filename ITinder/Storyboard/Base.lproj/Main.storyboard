@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="TrK-pF-ZNz">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="TrK-pF-ZNz">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,7 +18,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="Y3G-8O-rvR" customClass="TableViewCell" customModule="ITinder" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="150.5"/>
+                                <rect key="frame" x="0.0" y="24.5" width="414" height="150.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Y3G-8O-rvR" id="i22-RA-hFQ">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="150.5"/>
@@ -110,26 +110,10 @@
             </objects>
             <point key="canvasLocation" x="2128" y="102"/>
         </scene>
-        <!--Profile-->
-        <scene sceneID="0nn-2t-1WK">
-            <objects>
-                <viewController id="0Wa-hW-Hlw" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="7L3-4M-0U3">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="jJQ-m9-gF3"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" id="7vk-eI-TYZ"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hEG-Sg-XSr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2128" y="867"/>
-        </scene>
         <!--swipe-->
         <scene sceneID="HB8-xE-B3K">
             <objects>
-                <viewController title="swipe" id="W23-jB-kQh" sceneMemberID="viewController">
+                <viewController title="swipe" id="W23-jB-kQh" customClass="SwipeViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YLb-U2-wpR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -145,7 +129,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="iKr-7S-kG7">
             <objects>
-                <tabBarController id="TrK-pF-ZNz" sceneMemberID="viewController">
+                <tabBarController id="TrK-pF-ZNz" customClass="TabBarController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="DS9-ik-AEd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -153,7 +137,6 @@
                     </tabBar>
                     <connections>
                         <segue destination="W23-jB-kQh" kind="relationship" relationship="viewControllers" id="UHJ-rc-B1J"/>
-                        <segue destination="0Wa-hW-Hlw" kind="relationship" relationship="viewControllers" id="SiA-4F-tps"/>
                         <segue destination="lt1-aZ-wsV" kind="relationship" relationship="viewControllers" id="0QC-uf-CtT"/>
                     </connections>
                 </tabBarController>
@@ -165,7 +148,6 @@
     <resources>
         <image name="heart" catalog="system" width="128" height="109"/>
         <image name="message" catalog="system" width="128" height="113"/>
-        <image name="person.crop.circle" catalog="system" width="128" height="121"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
