@@ -17,6 +17,7 @@ class SwipeViewController: UIViewController {
     
     private let cardsLimit = 3
     private var cards = [SwipeCardModel]()
+    private var lastUserId = "1"
     
     private lazy var profileContainerView: SwipeProfileContainerView = {
         let view = SwipeProfileContainerView()
@@ -38,28 +39,30 @@ class SwipeViewController: UIViewController {
     }
     
     private func addCards() {
-        let users = [
-            UserService.shared.getUserBy(id: "2"),
-            UserService.shared.getUserBy(id: "3"),
-            UserService.shared.getUserBy(id: "4")
-        ]
-        
-        var colors = [UIColor.systemBlue, .systemYellow, .systemGray] // for debug
-        let cardModels = users
-            .compactMap { $0 }
-            .map { SwipeCardModel(from: $0, color: colors.removeFirst()) }
-        
-        profileContainerView.fill(cardModels)
-        
-        cards.append(contentsOf: cardModels)
+        UserService.shared.getNextUsers(usersCount: cardsLimit) { [weak self] users in
+            guard let self = self else { return }
+            guard let users = users else {
+                // TODO: show empty shimmer "new users not found"
+                return
+            }
+            
+            var colors = [UIColor.systemBlue, .systemYellow, .systemGray] // for debug
+            let cardModels = users
+                .compactMap { $0 }
+                .map { SwipeCardModel(from: $0, color: colors.removeFirst()) }
+            
+            self.profileContainerView.fill(cardModels)
+            self.cards.append(contentsOf: cardModels)
+        }
     }
 }
 
 extension SwipeViewController: SwipeCardDelegate {
     func profileInfoDidTap() {
         guard let currentUserId = cards.first?.userId else { return }
-        guard let user = UserService.shared.getUserBy(id: currentUserId) else { assertionFailure(); return }
-        Router.showUserProfile(user: user, parent: self)
+        UserService.shared.getUserBy(id: currentUserId) { user in
+            Router.showUserProfile(user: user, parent: self)
+        }
     }
     
     func swipeDidEnd() {

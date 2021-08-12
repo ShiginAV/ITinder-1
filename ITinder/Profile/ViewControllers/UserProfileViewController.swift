@@ -9,7 +9,7 @@ import UIKit
 
 final class UserProfileViewController: UIViewController {
     
-    init(user: User) {
+    init(user: User?) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }
@@ -22,7 +22,7 @@ final class UserProfileViewController: UIViewController {
         super.viewDidLoad()
         configure()
         fill()
-        isOwner = user.isOwner
+        isOwner = user?.isOwner ?? false
     }
     
     override func viewDidLayoutSubviews() {
@@ -30,7 +30,7 @@ final class UserProfileViewController: UIViewController {
         profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
     }
     
-    private let user: User
+    private let user: User?
     
     private var isOwner: Bool = false {
         didSet {
@@ -111,8 +111,8 @@ final class UserProfileViewController: UIViewController {
     }()
     
     private func fill() {
-        nameLabel.text = user.name
-        descriptionView.text = user.description
+        nameLabel.text = user?.name
+        descriptionView.text = user?.description
     }
     
     private func configure() {
@@ -172,6 +172,7 @@ final class UserProfileViewController: UIViewController {
     }
     
     private func addAndFillCharacteristics() {
+        guard let user = user else { return }
         СharacteristicType.allCases.forEach { type in
             let label = UILabel()
             let title = type.text + ": "
@@ -216,6 +217,7 @@ final class UserProfileViewController: UIViewController {
     }
     
     @objc private func editButtonDidTap() {
-        Router.showEditUserProfile(parent: self)
+        guard let user = user else { return }
+        Router.showEditUserProfile(parent: self, user: user)
     }
 }
