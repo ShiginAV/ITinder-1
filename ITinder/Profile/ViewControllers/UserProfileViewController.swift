@@ -9,9 +9,16 @@ import UIKit
 
 final class UserProfileViewController: UIViewController {
     
+    var user: User? {
+        didSet { fill() }
+    }
+    
     init(user: User?) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
+        
+        title = "Profile"
+        tabBarItem.image = UIImage(systemName: "person.crop.circle")
     }
     
     required init?(coder: NSCoder) {
@@ -22,7 +29,6 @@ final class UserProfileViewController: UIViewController {
         super.viewDidLoad()
         configure()
         fill()
-        isOwner = user?.isOwner ?? false
     }
     
     override func viewDidLayoutSubviews() {
@@ -30,7 +36,9 @@ final class UserProfileViewController: UIViewController {
         profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
     }
     
-    private let user: User?
+    private var isLoading: Bool = false {
+        didSet { loaderView.isHidden = !isLoading }
+    }
     
     private var isOwner: Bool = false {
         didSet {
@@ -48,10 +56,25 @@ final class UserProfileViewController: UIViewController {
     private var characteristicStackTopC: NSLayoutConstraint?
     private var characteristicStackNoOwnerTopC: NSLayoutConstraint?
     
-    private let profileImageView: UIImageView = {
-        let image = UIImageView()
-        image.backgroundColor = .systemPink
-        return image
+    private var characteristics = [СharacteristicType: ProfileCharacteristicView]()
+    
+    private lazy var loaderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        
+        let spinner = UIActivityIndicatorView()
+        spinner.frame.origin = self.view.center
+        spinner.startAnimating()
+        view.addSubview(spinner)
+        return view
+    }()
+    
+    private let profileImageView: CustomImageView = {
+        let view = CustomImageView()
+        view.backgroundColor = .lightGray
+        view.clipsToBounds = true
+        view.contentMode = .scaleAspectFill
+        return view
     }()
     
     private let nameLabel: UILabel = {
@@ -110,13 +133,10 @@ final class UserProfileViewController: UIViewController {
         return view
     }()
     
-    private func fill() {
-        nameLabel.text = user?.name
-        descriptionView.text = user?.description
-    }
-    
     private func configure() {
         view.backgroundColor = .white
+        
+        addCharacteristics()
         
         [profileImageView,
          settingsButton,
@@ -125,12 +145,18 @@ final class UserProfileViewController: UIViewController {
          editLabel,
          nameLabel,
          characteristicStack,
-         descriptionView].forEach { subview in
+         descriptionView,
+         loaderView].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
         
         NSLayoutConstraint.activate([
+            loaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            loaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loaderView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
             profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
             profileImageView.widthAnchor.constraint(equalToConstant: 160),
@@ -160,55 +186,53 @@ final class UserProfileViewController: UIViewController {
             characteristicStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             characteristicStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             
-            descriptionView.topAnchor.constraint(equalTo: characteristicStack.bottomAnchor, constant: 10),
+            descriptionView.topAnchor.constraint(equalTo: characteristicStack.bottomAnchor, constant: 40),
             descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             descriptionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             descriptionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
         ])
         characteristicStackTopC = characteristicStack.topAnchor.constraint(equalTo: settingsLabel.bottomAnchor, constant: 40)
         characteristicStackNoOwnerTopC = characteristicStack.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 40)
-        
-        addAndFillCharacteristics()
     }
     
-    private func addAndFillCharacteristics() {
+    private func fill() {
+        isLoading = (user == nil)
+        
+        profileImageView.loadImage(from: URL(string: user?.imageUrl ?? ""))
+        nameLabel.text = user?.name
+        descriptionView.text = user?.description
+        fillCharacteristics()
+        isOwner = user?.isOwner ?? false
+        view.layoutIfNeeded()
+    }
+    
+    private func addCharacteristics() {
+        СharacteristicType.allCases.forEach { type in
+            let characteristic = ProfileCharacteristicView(type: type)
+            characteristicStack.addArrangedSubview(characteristic)
+            characteristics[type] = characteristic
+        }
+    }
+    
+    private func fillCharacteristics() {
         guard let user = user else { return }
         СharacteristicType.allCases.forEach { type in
-            let label = UILabel()
-            let title = type.text + ": "
-            var subtitle: String = ""
-            
             switch type {
             case .name:
-                return
+                characteristics[type]?.text = nil
             case .position:
-                guard user.position != "" else { return }
-                subtitle = user.position
+                characteristics[type]?.text = user.position
             case .birthDate:
-                guard let birthDate = user.birthDate, birthDate != "" else { return }
-                subtitle = birthDate
+                characteristics[type]?.text = user.birthDate ?? ""
             case .company:
-                guard let company = user.company, company != "" else { return }
-                subtitle = company
+                characteristics[type]?.text = user.company ?? ""
             case .education:
-                guard let education = user.education, education != "" else { return }
-                subtitle = education
+                characteristics[type]?.text = user.education ?? ""
             case .city:
-                guard let city = user.city, city != "" else { return }
-                subtitle = city
+                characteristics[type]?.text = user.city ?? ""
             case .employment:
-                guard let employment = user.employment, employment != "" else { return }
-                subtitle = employment
+                characteristics[type]?.text = user.employment ?? ""
             }
-            let titleAttrStr = NSMutableAttributedString(string: title,
-                                                         attributes: [.font: UIFont.systemFont(ofSize: 16, weight: .regular),
-                                                                      .foregroundColor: UIColor.darkGray])
-            let subtitleAttrStr = NSMutableAttributedString(string: subtitle,
-                                                            attributes: [.font: UIFont.systemFont(ofSize: 16, weight: .regular),
-                                                                         .foregroundColor: UIColor.black])
-            titleAttrStr.append(subtitleAttrStr)
-            label.attributedText = titleAttrStr
-            characteristicStack.addArrangedSubview(label)
         }
     }
     

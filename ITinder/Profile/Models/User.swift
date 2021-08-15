@@ -11,7 +11,7 @@ struct User {
     let identifier: String
     let isOwner: Bool
     let email: String
-    let imageUrl: String
+    var imageUrl: String
     var name: String
     var position: String
     var description: String?
@@ -20,4 +20,6 @@ struct User {
     var education: String?
     var company: String?
     var employment: String?
+    var likes: [String]
+    var matches: [String]
 }

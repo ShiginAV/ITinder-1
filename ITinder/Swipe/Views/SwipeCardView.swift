@@ -52,7 +52,7 @@ final class SwipeCardView: UIView {
     }
     
     func fill(_ card: SwipeCardModel) {
-        profileImageView.backgroundColor = card.color
+        profileImageView.loadImage(from: URL(string: card.imageUrl))
         profileInfoView.fill(card)
     }
     
@@ -72,9 +72,10 @@ final class SwipeCardView: UIView {
     
     private let profileImageOverlayView = UIView()
     
-    private lazy var profileImageView: UIImageView = {
-        let view = UIImageView()
-        
+    private lazy var profileImageView: CustomImageView = {
+        let view = CustomImageView()
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
         return view
     }()
     

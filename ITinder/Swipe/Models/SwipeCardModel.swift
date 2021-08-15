@@ -13,16 +13,12 @@ struct SwipeCardModel {
     let name: String
     let position: String
     let description: String?
-    
-    let color: UIColor // for debug
-    
-    init(from user: User, color: UIColor) {
+
+    init(from user: User) {
         userId = user.identifier
         imageUrl = user.imageUrl
         name = user.name
         position = user.position
         description = user.description
-        
-        self.color = color // for debug
     }
 }

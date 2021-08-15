@@ -23,6 +23,11 @@ final class EditUserProfileViewController: UIViewController {
         configure()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+    }
+    
     private var isDoneButtonEnabled: Bool = false {
         didSet {
             doneButton.isUserInteractionEnabled = isDoneButtonEnabled
@@ -33,8 +38,34 @@ final class EditUserProfileViewController: UIViewController {
     
     private var user: User
     private let padding: CGFloat = 20
+    private var isImageChanged = false
     
-    private lazy var stackView: UIStackView = {
+    private lazy var loaderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black.withAlphaComponent(0.5)
+        view.isHidden = true
+        
+        let spinner = UIActivityIndicatorView()
+        spinner.frame.origin = self.view.center
+        spinner.color = .white
+        spinner.startAnimating()
+        view.addSubview(spinner)
+        return view
+    }()
+    
+    private lazy var profileImageView: CustomImageView = {
+        let view = CustomImageView()
+        view.backgroundColor = .lightGray
+        view.clipsToBounds = true
+        view.contentMode = .scaleAspectFill
+        view.isUserInteractionEnabled = true
+        let gr = UITapGestureRecognizer(target: self, action: #selector(profileImageDidTap))
+        view.addGestureRecognizer(gr)
+        view.loadImage(from: URL(string: user.imageUrl))
+        return view
+    }()
+    
+    private lazy var characteristicsStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 20
@@ -58,20 +89,37 @@ final class EditUserProfileViewController: UIViewController {
         return button
     }()
     
+    private let cancelButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Отмена", for: .normal)
+        button.setTitleColor(Colors.blue, for: .normal)
+        button.setTitleColor(Colors.blue.withAlphaComponent(0.5), for: .highlighted)
+        button.addTarget(self, action: #selector(cancelButtonDidTap), for: .touchUpInside)
+        return button
+    }()
+    
     private func configure() {
         view.backgroundColor = .white
-        view.addSubview(scrollView)
+        [scrollView, loaderView].forEach { subview in
+            subview.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(subview)
+        }
         
         let contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         
-        [doneButton, stackView].forEach { subview in
+        [cancelButton, doneButton, profileImageView, characteristicsStackView].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(subview)
         }
         
         NSLayoutConstraint.activate([
+            loaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            loaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loaderView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -86,20 +134,28 @@ final class EditUserProfileViewController: UIViewController {
             doneButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
             doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             
-            stackView.topAnchor.constraint(equalTo: doneButton.bottomAnchor, constant: padding),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding)
+            cancelButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
+            cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            
+            profileImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            profileImageView.topAnchor.constraint(equalTo: doneButton.bottomAnchor, constant: padding),
+            profileImageView.widthAnchor.constraint(equalToConstant: 160),
+            profileImageView.heightAnchor.constraint(equalTo: profileImageView.widthAnchor),
+            
+            characteristicsStackView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: padding * 2),
+            characteristicsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            characteristicsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            characteristicsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding)
         ])
         addCharacteristicsToStack()
     }
     
     private func addCharacteristicsToStack() {
-        СharacteristicType.allCases.forEach {
-            let characteristic = EditСharacteristicView(type: $0)
+        СharacteristicType.allCases.forEach { type in
+            let characteristic = EditСharacteristicView(type: type)
             characteristic.delegate = self
-            stackView.addArrangedSubview(characteristic)
-            fill(characteristic, by: $0)
+            characteristicsStackView.addArrangedSubview(characteristic)
+            fill(characteristic, by: type)
         }
     }
     
@@ -122,9 +178,41 @@ final class EditUserProfileViewController: UIViewController {
         }
     }
     
+    private func showImagePicker() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .photoLibrary
+        picker.allowsEditing = true
+        present(picker, animated: true)
+    }
+    
     @objc private func doneButtonDidTap() {
-        UserService.shared.persist(user)
-        self.dismiss(animated: true, completion: nil)
+        view.endEditing(true)
+        
+        loaderView.isHidden = false
+        let image = isImageChanged ? profileImageView.image : nil
+        
+        UserService.shared.persist(user: self.user, withImage: image) { [weak self] newUser in
+            guard let self = self else { return }
+            guard let newUser = newUser else {
+                self.loaderView.isHidden = true
+                return
+            }
+            
+            guard let tabBarController = self.presentingViewController as? UITabBarController else { return }
+            guard let userProfileVC = tabBarController.viewControllers?.last as? UserProfileViewController else { return }
+            userProfileVC.user = newUser
+            
+            self.dismiss(animated: true)
+        }
+    }
+    
+    @objc private func cancelButtonDidTap() {
+        dismiss(animated: true)
+    }
+    
+    @objc private func profileImageDidTap() {
+        showImagePicker()
     }
 }
 
@@ -157,5 +245,18 @@ extension EditUserProfileViewController: EditСharacteristicDelegate {
         case .employment:
             user.employment = text
         }
+    }
+}
+
+extension EditUserProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        profileImageView.image = image
+        isImageChanged = true
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
     }
 }

@@ -24,6 +24,13 @@ final class SwipeProfileContainerView: UIView {
         cards.forEach { add(card: $0) }
     }
     
+    private var isButtonsEnabled: Bool = false {
+        didSet {
+            likeButton.isEnabled = isButtonsEnabled
+            dislikeButton.isEnabled = isButtonsEnabled
+        }
+    }
+    
     private var loadedCards = [SwipeCardView]()
     
     private let buttonsStakView: UIStackView = {
@@ -62,27 +69,24 @@ final class SwipeProfileContainerView: UIView {
     
     private func add(card: SwipeCardModel) {
         let cardView = SwipeCardView()
+        cardView.layer.frame = bounds
         cardView.delegate = self
         cardView.fill(card)
         
-        cardView.translatesAutoresizingMaskIntoConstraints = false
         insertSubview(cardView, at: 0)
-        NSLayoutConstraint.activate([
-            cardView.topAnchor.constraint(equalTo: topAnchor),
-            cardView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            cardView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            cardView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
-        
         loadedCards.append(cardView)
+        
+        layoutIfNeeded()
     }
     
     @objc private func likeDidTap() {
+        isButtonsEnabled = false
         guard let cardView = loadedCards.first else { return }
         cardView.swipeCardToRight()
     }
     
     @objc private func dislikeDidTap() {
+        isButtonsEnabled = false
         guard let cardView = loadedCards.first else { return }
         cardView.swipeCradToLeft()
     }
@@ -96,5 +100,8 @@ extension SwipeProfileContainerView: SwipeCardDelegate {
     func swipeDidEnd() {
         delegate?.swipeDidEnd()
         loadedCards.removeFirst()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.isButtonsEnabled = true
+        }
     }
 }

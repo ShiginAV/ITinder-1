@@ -113,7 +113,7 @@ enum СharacteristicType: CaseIterable {
         switch self {
         case .name: return UserProfileIcons.nameIcon.image
         case .position: return UserProfileIcons.positionIcon.image
-        case .birthDate: return UserProfileIcons.positionIcon.image
+        case .birthDate: return UserProfileIcons.birthDateIcon.image
         case .company: return UserProfileIcons.companyIcon.image
         case .education: return UserProfileIcons.educationIcon.image
         case .city: return UserProfileIcons.cityIcon.image
