@@ -22,4 +22,5 @@ struct User {
     var employment: String?
     var likes: [String]
     var matches: [String]
+    var isLiked: Bool
 }

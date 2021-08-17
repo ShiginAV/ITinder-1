@@ -8,8 +8,6 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-    let currentUserId = "4" //TODO: get current user id
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         addUserProfileViewController()
@@ -22,6 +20,7 @@ final class TabBarController: UITabBarController {
         viewControllers.append(userProfileVC)
         self.viewControllers = viewControllers
         
+        let currentUserId = "4" //guard let currentUserId = UserService.shared.getCurrentUserId() else { return }
         UserService.shared.getUserBy(id: currentUserId) { user in
             userProfileVC.user = user
         }

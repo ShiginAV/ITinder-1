@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SwipeCardDelegate: AnyObject {
-    func swipeDidEnd()
+    func swipeDidEnd(type: SwipeCardType)
     func profileInfoDidTap()
 }
 
@@ -190,7 +190,7 @@ final class SwipeCardView: UIView {
                                   y: parentCenter.y + directionPoint.y + 75)
             self.alpha = 0.5
         } completion: { _ in
-            self.delegate?.swipeDidEnd()
+            self.delegate?.swipeDidEnd(type: type)
             self.removeFromSuperview()
         }
     }

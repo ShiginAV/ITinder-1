@@ -18,6 +18,10 @@ class SwipeViewController: UIViewController {
     private let cardsLimit = 3
     private var cards = [SwipeCardModel]()
     
+    private var shownUserId: String? {
+        cards.first?.userId
+    }
+    
     private var isLoading: Bool = false {
         didSet {
             if isLoading {
@@ -77,6 +81,7 @@ class SwipeViewController: UIViewController {
             
             guard let users = users else {
                 self.isLoading = false
+                self.showEmptyShimmer()
                 return
             }
             
@@ -97,22 +102,34 @@ class SwipeViewController: UIViewController {
             profileContainerView.isHidden = true
         }
     }
+    
+    private func checkForMatch(currentUser: User?) {
+        guard let shownUserId = shownUserId else { return }
+        //UserService.shared.set(match: shownUserId)
+        //show match
+    }
 }
 
 extension SwipeViewController: SwipeCardDelegate {
     func profileInfoDidTap() {
-        guard let currentUserId = cards.first?.userId else { return }
-        UserService.shared.getUserBy(id: currentUserId) { user in
+        guard let shownUserId = shownUserId else { return }
+        UserService.shared.getUserBy(id: shownUserId) { user in
             Router.showUserProfile(user: user, parent: self)
         }
     }
     
-    func swipeDidEnd() {
+    func swipeDidEnd(type: SwipeCardType) {
         cards.removeFirst()
         
         if !isLoading && cards.count < cardsLimit {
             addCards()
         }
-        showEmptyShimmer()
+        
+        if type == .like {
+            guard let shownUserId = shownUserId else { return }
+//            UserService.shared.set(like: shownUserId) { [weak self] user in
+//                self?.checkForMatch(currentUser: user)
+//            }
+        }
     }
 }

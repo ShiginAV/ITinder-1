@@ -16,6 +16,10 @@ class UserService {
     private var lastUserId = ""
     
     private let imageStorage = Storage.storage().reference().child("Avatars")
+    
+    func getCurrentUserId() -> String? {
+        return Auth.auth().currentUser.map { $0.uid }
+    }
 
     func getUserBy(id: String, completion: @escaping (User?) -> Void) {
         usersDatabase.observeSingleEvent(of: .value) { snapshot in
@@ -57,8 +61,7 @@ class UserService {
                 }
             }
             
-            guard let lastValue = children.last?.value as? [String: Any],
-                  let lastUserId = lastValue["identifier"] as? String else {
+            guard let lastUserId = users.last?.identifier else {
                 completion(nil)
                 return
             }
@@ -124,7 +127,8 @@ class UserService {
             "company": user.company ?? "",
             "employment": user.employment ?? "",
             "likes": user.likes,
-            "matches": user.matches
+            "matches": user.matches,
+            "isLiked": user.isLiked
         ]
         usersDatabase.child(user.identifier).setValue(userDict) { error, _ in
             guard error == nil else {
@@ -133,6 +137,41 @@ class UserService {
             }
             completion(user)
         }
+    }
+    
+    func set(like: String, forUserId: String, completion: @escaping ((User?) -> Void)) {
+//        guard let currentUserId = UserService.shared.getCurrentUserId() else {
+//            assertionFailure()
+//            completion(nil)
+//            return
+//        }
+        
+        let currentUserId = "4" // TODO: no authorization yet
+        
+        getUserBy(id: forUserId) { user in
+            guard var user = user else {
+                assertionFailure()
+                completion(nil)
+                return
+            }
+            
+            let dict: [String: Any] = [
+                "isLiked": true,
+                "likes": ["1", "2"]
+            ]
+            
+            self.usersDatabase.child(forUserId).updateChildValues(dict) { error, _ in
+                guard error == nil else {
+                    completion(nil)
+                    return
+                }
+                completion(user)
+            }
+        }
+    }
+    
+    func set(match: String) {
+        
     }
 }
 
@@ -152,5 +191,6 @@ extension User {
         employment = dictionary["employment"] as? String
         likes = dictionary["likes"] as? [String] ?? []
         matches = dictionary["matches"] as? [String] ?? []
+        isLiked = dictionary["isLiked"] as? Bool ?? false
     }
 }

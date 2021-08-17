@@ -131,14 +131,14 @@ final class EditUserProfileViewController: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
 
-            doneButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
+            doneButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
             doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             
-            cancelButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
+            cancelButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
             cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
             
             profileImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            profileImageView.topAnchor.constraint(equalTo: doneButton.bottomAnchor, constant: padding),
+            profileImageView.topAnchor.constraint(equalTo: doneButton.bottomAnchor),
             profileImageView.widthAnchor.constraint(equalToConstant: 160),
             profileImageView.heightAnchor.constraint(equalTo: profileImageView.widthAnchor),
             

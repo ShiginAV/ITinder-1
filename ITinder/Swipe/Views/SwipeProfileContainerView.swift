@@ -97,8 +97,8 @@ extension SwipeProfileContainerView: SwipeCardDelegate {
         delegate?.profileInfoDidTap()
     }
     
-    func swipeDidEnd() {
-        delegate?.swipeDidEnd()
+    func swipeDidEnd(type: SwipeCardType) {
+        delegate?.swipeDidEnd(type: type)
         loadedCards.removeFirst()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.isButtonsEnabled = true
