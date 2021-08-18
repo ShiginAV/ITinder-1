@@ -196,13 +196,18 @@ final class UserProfileViewController: UIViewController {
     }
     
     private func fill() {
-        isLoading = (user == nil)
+        let currentUserId = UserService.shared.currentUserId
+        guard let user = user, let currentUserId = currentUserId else {
+            isLoading = true
+            return
+        }
+        isLoading = false
         
-        profileImageView.loadImage(from: URL(string: user?.imageUrl ?? ""))
-        nameLabel.text = user?.name
-        descriptionView.text = user?.description
+        profileImageView.loadImage(from: URL(string: user.imageUrl))
+        nameLabel.text = user.name
+        descriptionView.text = user.description
         fillCharacteristics()
-        isOwner = user?.isOwner ?? false
+        isOwner = user.identifier == currentUserId
         view.layoutIfNeeded()
     }
     

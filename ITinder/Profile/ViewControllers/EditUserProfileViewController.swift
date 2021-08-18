@@ -42,7 +42,7 @@ final class EditUserProfileViewController: UIViewController {
     
     private lazy var loaderView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black.withAlphaComponent(0.5)
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         view.isHidden = true
         
         let spinner = UIActivityIndicatorView()

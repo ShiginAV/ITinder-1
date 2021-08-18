@@ -13,12 +13,12 @@ class UserService {
     private init() { }
     
     private let usersDatabase = Database.database().reference().child("users")
-    private var lastUserId = ""
+    private var lastFilterId = ""
     
     private let imageStorage = Storage.storage().reference().child("Avatars")
     
-    func getCurrentUserId() -> String? {
-        return Auth.auth().currentUser.map { $0.uid }
+    var currentUserId: String? {
+        "4"//Auth.auth().currentUser.map { $0.uid }
     }
 
     func getUserBy(id: String, completion: @escaping (User?) -> Void) {
@@ -36,12 +36,13 @@ class UserService {
     }
     
     func getNextUsers(usersCount: Int, completion: @escaping ([User]?) -> Void) {
-        var query = usersDatabase.queryOrderedByKey()
-        if lastUserId != "" {
-            query = query.queryStarting(afterValue: lastUserId)
-        }
-        
-        query.queryLimited(toFirst: UInt(usersCount)).observeSingleEvent(of: .value) { [weak self] snapshot in
+        usersDatabase
+            .queryOrdered(byChild: "filterId")
+            .queryStarting(afterValue: lastFilterId)
+            .queryEnding(atValue: "N-\\uf8ff")
+            .queryLimited(toFirst: UInt(usersCount))
+            .observeSingleEvent(of: .value) { [weak self] snapshot in
+                
             guard let self = self else {
                 assertionFailure()
                 completion(nil)
@@ -61,11 +62,11 @@ class UserService {
                 }
             }
             
-            guard let lastUserId = users.last?.identifier else {
+            guard let lastFilterId = users.last?.filterId else {
                 completion(nil)
                 return
             }
-            self.lastUserId = lastUserId
+            self.lastFilterId = lastFilterId
             completion(users)
         } withCancel: { _ in
             completion(nil)
@@ -115,7 +116,6 @@ class UserService {
     private func persist(_ user: User, completion: @escaping ((User?) -> Void)) {
         let userDict: [String: Any] = [
             "identifier": user.identifier,
-            "isOwner": user.isOwner,
             "email": user.email,
             "imageUrl": user.imageUrl,
             "name": user.name,
@@ -128,7 +128,7 @@ class UserService {
             "employment": user.employment ?? "",
             "likes": user.likes,
             "matches": user.matches,
-            "isLiked": user.isLiked
+            "filterId": user.filterId
         ]
         usersDatabase.child(user.identifier).setValue(userDict) { error, _ in
             guard error == nil else {
@@ -140,13 +140,7 @@ class UserService {
     }
     
     func set(like: String, forUserId: String, completion: @escaping ((User?) -> Void)) {
-//        guard let currentUserId = UserService.shared.getCurrentUserId() else {
-//            assertionFailure()
-//            completion(nil)
-//            return
-//        }
-        
-        let currentUserId = "4" // TODO: no authorization yet
+        guard let currentUserId = UserService.shared.currentUserId else { return }
         
         getUserBy(id: forUserId) { user in
             guard var user = user else {
@@ -154,10 +148,10 @@ class UserService {
                 completion(nil)
                 return
             }
+            user.likes.append(currentUserId)
             
             let dict: [String: Any] = [
-                "isLiked": true,
-                "likes": ["1", "2"]
+                "likes": user.likes
             ]
             
             self.usersDatabase.child(forUserId).updateChildValues(dict) { error, _ in
@@ -178,7 +172,6 @@ class UserService {
 extension User {
     init(dictionary: [String: Any]) {
         identifier = dictionary["identifier"] as? String ?? ""
-        isOwner = dictionary["isOwner"] as? Bool ?? false
         email = dictionary["email"] as? String ?? ""
         imageUrl = dictionary["imageUrl"] as? String ?? ""
         name = dictionary["name"] as? String ?? ""
@@ -191,6 +184,6 @@ extension User {
         employment = dictionary["employment"] as? String
         likes = dictionary["likes"] as? [String] ?? []
         matches = dictionary["matches"] as? [String] ?? []
-        isLiked = dictionary["isLiked"] as? Bool ?? false
+        filterId = dictionary["filterId"] as? String ?? ""
     }
 }

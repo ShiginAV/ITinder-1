@@ -20,7 +20,7 @@ final class TabBarController: UITabBarController {
         viewControllers.append(userProfileVC)
         self.viewControllers = viewControllers
         
-        let currentUserId = "4" //guard let currentUserId = UserService.shared.getCurrentUserId() else { return }
+        guard let currentUserId = UserService.shared.currentUserId else { return }
         UserService.shared.getUserBy(id: currentUserId) { user in
             userProfileVC.user = user
         }

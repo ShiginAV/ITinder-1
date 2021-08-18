@@ -28,9 +28,9 @@ final class SwipeCardView: UIView {
             case .neutral:
                 profileImageOverlayView.backgroundColor = .clear
             case .like:
-                profileImageOverlayView.backgroundColor = .systemGreen.withAlphaComponent(0.5)
+                profileImageOverlayView.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.5)
             case .dislike:
-                profileImageOverlayView.backgroundColor = .systemRed.withAlphaComponent(0.5)
+                profileImageOverlayView.backgroundColor = UIColor.systemRed.withAlphaComponent(0.5)
             }
         }
     }

@@ -9,7 +9,6 @@ import Foundation
 
 struct User {
     let identifier: String
-    let isOwner: Bool
     let email: String
     var imageUrl: String
     var name: String
@@ -22,5 +21,5 @@ struct User {
     var employment: String?
     var likes: [String]
     var matches: [String]
-    var isLiked: Bool
+    var filterId: String // needed for filtering and pagination from firebase
 }
