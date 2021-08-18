@@ -197,7 +197,7 @@ final class UserProfileViewController: UIViewController {
     
     private func fill() {
         let currentUserId = UserService.shared.currentUserId
-        guard let user = user, let currentUserId = currentUserId else {
+        guard let user = user, let _ = currentUserId else {
             isLoading = true
             return
         }
