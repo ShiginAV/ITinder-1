@@ -2,20 +2,7 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 
-struct Message: MessageType {
-    var sender: SenderType
-    var messageId: String
-    var sentDate: Date
-    var kind: MessageKind
-}
-
-struct Sender: SenderType {
-    var photoUrl: String
-    var senderId: String
-    var displayName: String
-}
-
-class DialogViewController: MessagesViewController {
+class MessageViewController: MessagesViewController {
     
     deinit {
         print("out")
@@ -27,19 +14,21 @@ class DialogViewController: MessagesViewController {
     var selfSenderId: String!
     var selfSenderName: String!
     
+    var companionId: String!
+    
     var conversationId: String!
     
     private var selfSender: Sender!
     
     var downloadedPhoto = [String: UIImage]() {
         didSet {
-            messagesCollectionView.reloadData()
+//            messagesCollectionView.reloadData()
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         model = DialogFromFirebase(conversationId: conversationId)
         model.delegate = self
         
@@ -48,12 +37,13 @@ class DialogViewController: MessagesViewController {
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        messagesCollectionView.messageCellDelegate = self
         
         selfSender = Sender(photoUrl: selfSenderPhotoUrl, senderId: selfSenderId, displayName: selfSenderName)
     }
 }
 
-extension DialogViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
+extension MessageViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
     func currentSender() -> SenderType {
         return selfSender
     }
@@ -80,9 +70,9 @@ extension DialogViewController: MessagesDataSource, MessagesLayoutDelegate, Mess
     }
 }
 
-extension DialogViewController: InputBarAccessoryViewDelegate {
+extension MessageViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        model.createMessage(convId: conversationId, text: text, selfSender: selfSender)
+        ConversationService.createMessage(convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
         messageInputBar.inputTextView.text = ""
     }
     
@@ -95,9 +85,23 @@ extension DialogViewController: InputBarAccessoryViewDelegate {
     }
 }
 
-extension DialogViewController: DialogDelegate {
+extension MessageViewController: DialogDelegate {
+    func getCompanionsId() -> [String : String] {
+        return ["currentUserId": selfSenderId,
+                "companionId": companionId]
+    }
+    
     func reloadMessages() {
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem()
+    }
+}
+
+extension MessageViewController: MessageCellDelegate {
+    func didTapAvatar(in cell: MessageCollectionViewCell) {
+        guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
+        guard let messagesDataSourse = messagesCollectionView.messagesDataSource else { return }
+        let message = messagesDataSourse.messageForItem(at: indexPath, in: messagesCollectionView)
+        print(message.sender.senderId)
     }
 }
