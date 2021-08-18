@@ -13,14 +13,14 @@ class UserService {
     private init() { }
     
     private let usersDatabase = Database.database().reference().child("users")
-    private var lastFilterId = ""
+    private var lastUserId = ""
     
     private let imageStorage = Storage.storage().reference().child("Avatars")
     
     var currentUserId: String? {
         "4"//Auth.auth().currentUser.map { $0.uid }
     }
-
+    
     func getUserBy(id: String, completion: @escaping (User?) -> Void) {
         usersDatabase.observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.childSnapshot(forPath: id).value as? [String: Any] else {
@@ -36,13 +36,11 @@ class UserService {
     }
     
     func getNextUsers(usersCount: Int, completion: @escaping ([User]?) -> Void) {
-        usersDatabase
-            .queryOrdered(byChild: "filterId")
-            .queryStarting(afterValue: lastFilterId)
-            .queryEnding(atValue: "N-\\uf8ff")
-            .queryLimited(toFirst: UInt(usersCount))
-            .observeSingleEvent(of: .value) { [weak self] snapshot in
-                
+        var query = usersDatabase.queryOrderedByKey()
+        if lastUserId != "" {
+            query = query.queryEnding(beforeValue: lastUserId)
+        }
+        query.queryLimited(toLast: UInt(usersCount)).observeSingleEvent(of: .value) { [weak self] snapshot in
             guard let self = self else {
                 assertionFailure()
                 completion(nil)
@@ -51,7 +49,7 @@ class UserService {
             guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
                 assertionFailure()
                 completion(nil)
-              return
+                return
             }
             
             var users = [User]()
@@ -62,14 +60,34 @@ class UserService {
                 }
             }
             
-            guard let lastFilterId = users.last?.filterId else {
+            guard let lastUserId = users.first?.identifier else {
                 completion(nil)
                 return
             }
-            self.lastFilterId = lastFilterId
-            completion(users)
+            self.lastUserId = lastUserId
+            users.reverse()
+            
+            let filterdUsers = self.filtered(users)
+            
+            if filterdUsers.isEmpty {
+                self.getNextUsers(usersCount: usersCount) { user in
+                    completion(user)
+                }
+            } else {
+                completion(filterdUsers)
+            }
         } withCancel: { _ in
             completion(nil)
+        }
+    }
+    
+    private func filtered(_ users: [User]) -> [User] {
+        return users.filter { user in
+            if user.identifier != self.currentUserId && !user.likes.contains(self.currentUserId ?? "") {
+                return true
+            } else {
+                return false
+            }
         }
     }
     
@@ -115,20 +133,20 @@ class UserService {
     
     private func persist(_ user: User, completion: @escaping ((User?) -> Void)) {
         let userDict: [String: Any] = [
-            "identifier": user.identifier,
-            "email": user.email,
-            "imageUrl": user.imageUrl,
-            "name": user.name,
-            "position": user.position,
-            "description": user.description ?? "",
-            "birthDate": user.birthDate ?? "",
-            "city": user.city ?? "",
-            "education": user.education ?? "",
-            "company": user.company ?? "",
-            "employment": user.employment ?? "",
-            "likes": user.likes,
-            "matches": user.matches,
-            "filterId": user.filterId
+            kIdentifier: user.identifier,
+            kEmail: user.email,
+            kImageUrl: user.imageUrl,
+            kName: user.name,
+            kPosition: user.position,
+            kDescription: user.description ?? "",
+            kBirthDate: user.birthDate ?? "",
+            kCity: user.city ?? "",
+            kEducation: user.education ?? "",
+            kCompany: user.company ?? "",
+            kEmployment: user.employment ?? "",
+            kLikes: user.likes,
+            kMatches: user.matches,
+            kRegisteredDate: user.registeredDate
         ]
         usersDatabase.child(user.identifier).setValue(userDict) { error, _ in
             guard error == nil else {
@@ -171,19 +189,19 @@ class UserService {
 
 extension User {
     init(dictionary: [String: Any]) {
-        identifier = dictionary["identifier"] as? String ?? ""
-        email = dictionary["email"] as? String ?? ""
-        imageUrl = dictionary["imageUrl"] as? String ?? ""
-        name = dictionary["name"] as? String ?? ""
-        position = dictionary["position"] as? String ?? ""
-        description = dictionary["description"] as? String
-        birthDate = dictionary["birthDate"] as? String
-        city = dictionary["city"] as? String
-        education = dictionary["education"] as? String
-        company = dictionary["company"] as? String
-        employment = dictionary["employment"] as? String
-        likes = dictionary["likes"] as? [String] ?? []
-        matches = dictionary["matches"] as? [String] ?? []
-        filterId = dictionary["filterId"] as? String ?? ""
+        identifier = dictionary[kIdentifier] as? String ?? ""
+        email = dictionary[kEmail] as? String ?? ""
+        imageUrl = dictionary[kImageUrl] as? String ?? ""
+        name = dictionary[kName] as? String ?? ""
+        position = dictionary[kPosition] as? String ?? ""
+        description = dictionary[kDescription] as? String
+        birthDate = dictionary[kBirthDate] as? String
+        city = dictionary[kCity] as? String
+        education = dictionary[kEducation] as? String
+        company = dictionary[kCompany] as? String
+        employment = dictionary[kEmployment] as? String
+        likes = dictionary[kLikes] as? [String] ?? []
+        matches = dictionary[kMatches] as? [String] ?? []
+        registeredDate = dictionary[kRegisteredDate] as? String ?? ""
     }
 }

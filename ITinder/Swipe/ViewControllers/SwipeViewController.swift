@@ -119,17 +119,22 @@ extension SwipeViewController: SwipeCardDelegate {
     }
     
     func swipeDidEnd(type: SwipeCardType) {
+        setLike(type: type)
+        
         cards.removeFirst()
         
         if !isLoading && cards.count < cardsLimit {
             addCards()
         }
-        
+    }
+    
+    private func setLike(type: SwipeCardType) {
         if type == .like {
+            guard let currentUserId = UserService.shared.currentUserId else { return }
             guard let shownUserId = shownUserId else { return }
-//            UserService.shared.set(like: shownUserId) { [weak self] user in
-//                self?.checkForMatch(currentUser: user)
-//            }
+            UserService.shared.set(like: currentUserId, forUserId: shownUserId) { [weak self] user in
+                self?.checkForMatch(currentUser: user)
+            }
         }
     }
 }
