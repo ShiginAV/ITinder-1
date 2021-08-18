@@ -17,7 +17,7 @@ type_body_length:
     error: 500
     
 function_body_length:
-    warning: 50
+    warning: 300
     
 file_length:
     warning: 1000

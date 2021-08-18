@@ -26,12 +26,12 @@ class DialogFromFirebase {
             let companionsId = delegate?.getCompanionsId()
             guard let currentUserId = companionsId?["currentUserId"] else { return }
             guard let companionId = companionsId?["companionId"] else { return }
-            FirebaseService.setLastMessageWasRead(currentUserId: currentUserId, companionId: companionId)
+            ConversationService.setLastMessageWasRead(currentUserId: currentUserId, companionId: companionId)
         }
     }
     
     init(conversationId: String) {
-        FirebaseService.messagesFromConversations(conversationId: conversationId) { [weak self] (internetMessages) in
+        ConversationService.messagesFromConversations(conversationId: conversationId) { [weak self] (internetMessages) in
             self?.messages = internetMessages
         }
     }

@@ -64,7 +64,7 @@ class MatchesFromFirebase {
         
         downloadPhoto(photoUrl: currentUserPhotoUrl, userId: currentUserId)
         
-        FirebaseService.getConversations(userId: currentUserId) { [weak self] (conversations) in
+        ConversationService.getConversations(userId: currentUserId) { [weak self] (conversations) in
             
             var conv = conversations
             
@@ -97,13 +97,13 @@ class MatchesFromFirebase {
     // MARK: - Firebase data
     
     func getLastMessage(conv: [CompanionStruct], index: Int) {
-        FirebaseService.getLastMessage(conversationId: conv[index].conversationId, completion: { [weak self] (lastMessage) in
+        ConversationService.getLastMessage(conversationId: conv[index].conversationId, completion: { [weak self] (lastMessage) in
             self?.lastMessages[conv[index].conversationId] = lastMessage
         })
     }
     
     func getUserData(conv: [CompanionStruct], index: Int, completion: @escaping (String?, String?) -> Void) {
-        FirebaseService.getUserData(userId: conv[index].userId) { [weak self] (name, photoUrl) in
+        ConversationService.getUserData(userId: conv[index].userId) { [weak self] (name, photoUrl) in
             
             if let notifyFlag = self?.notificationFlag {
                 if !conv[index].lastMessageWasRead && notifyFlag {
@@ -122,13 +122,13 @@ class MatchesFromFirebase {
     
     func downloadPhoto(photoUrl: String?, userId: String) {
         guard let photo = photoUrl else { return }
-        FirebaseService.downloadPhoto(stringUrl: photo, userId: userId) { (data) in
+        ConversationService.downloadPhoto(stringUrl: photo, userId: userId) { (data) in
             self.downloadedPhoto[userId] = UIImage(data: data)
         }
     }
     
     func deleteMatch(currentUserId: String, companionId: String, conversationId: String) {
-        FirebaseService.deleteMatch(currentUserId: currentUserId, companionId: companionId, conversationId: conversationId)
+        ConversationService.deleteMatch(currentUserId: currentUserId, companionId: companionId, conversationId: conversationId)
     }
     
     // MARK: - Logic

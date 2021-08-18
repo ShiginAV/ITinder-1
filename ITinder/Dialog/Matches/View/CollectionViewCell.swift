@@ -20,4 +20,9 @@ class CollectionViewCell: UICollectionViewCell {
         avatarImage.backgroundColor = .lightGray
         avatarImage.layer.cornerRadius = avatarImage.bounds.height / 2
     }
+    
+    func fill(avatarImage: UIImage?, name: String?) {
+        self.avatarImage.image = avatarImage
+        nameLable.text = name
+    }
 }

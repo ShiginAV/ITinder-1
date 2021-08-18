@@ -23,7 +23,7 @@ class MatchesViewController: UIViewController {
         
         setAllHidden()
         
-        let user = 1
+        let user = 3
         
         switch user {
         case 1:
@@ -34,6 +34,10 @@ class MatchesViewController: UIViewController {
             currentUserId = "2VXr50Su49fSS13VdF6cqBHAMVq2"
             currentUserName = "Andrey"
             currentUserPhotoUrl = "https://firebasestorage.googleapis.com/v0/b/itinder-d319f.appspot.com/o/Avatars%2FgsjHaM2Wqz0.jpg?alt=media&token=c669e780-2558-4b54-b571-f30a29f26ab9"
+        case 3:
+            currentUserId = "userTestId3"
+            currentUserName = "Andrey"
+            currentUserPhotoUrl = "https://firebasestorage.googleapis.com/v0/b/itinder-d319f.appspot.com/o/Avatars%2FJYo_0l-Uhlo.jpg?alt=media&token=da994315-5a1e-4c14-b9b2-60def878dc7a"
         default:
             return
         }
@@ -112,10 +116,7 @@ extension MatchesViewController: UITableViewDataSource, UITableViewDelegate {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
             
-            cell.nameLable.text = currentCompamion.userName
-            cell.avatarImage.image = model.downloadedPhoto[currentCompamion.userId]
-            cell.lastMessage.text = model.lastMessages[currentCompamion.conversationId]
-            cell.unreadMessageIndicator.isHidden = currentCompamion.lastMessageWasRead
+            cell.fill(avatarImage: model.downloadedPhoto[currentCompamion.userId], name: currentCompamion.userName, lastMessage: model.lastMessages[currentCompamion.conversationId], lastMessageWasRead: currentCompamion.lastMessageWasRead)
             return cell
         } else {
             matchesTableView.allowsSelection = false
@@ -179,8 +180,7 @@ extension MatchesViewController: UICollectionViewDelegate, UICollectionViewDataS
             
             let currentCompamion = model.newCompanions[indexPath.row]
             
-            cell.nameLable.text = currentCompamion.userName
-            cell.avatarImage.image = model.downloadedPhoto[currentCompamion.userId]
+            cell.fill(avatarImage: model.downloadedPhoto[currentCompamion.userId], name: currentCompamion.userName)
             
             return cell
         } else {

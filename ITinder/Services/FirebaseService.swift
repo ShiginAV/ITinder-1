@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 
-class FirebaseService {
+class ConversationService {
     
     static func getConversations(userId: String, completion: @escaping ([CompanionStruct]) -> Void) {
         Database.database().reference().child("users").child(userId).child("conversations").observe(.value) { (snapshot) in

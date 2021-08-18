@@ -72,7 +72,7 @@ extension MessageViewController: MessagesDataSource, MessagesLayoutDelegate, Mes
 
 extension MessageViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        FirebaseService.createMessage(convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
+        ConversationService.createMessage(convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
         messageInputBar.inputTextView.text = ""
     }
     

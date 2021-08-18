@@ -29,4 +29,11 @@ class TableViewCell: UITableViewCell {
         unreadMessageIndicator.backgroundColor = .systemBlue
         unreadMessageIndicator.layer.cornerRadius = unreadMessageIndicator.bounds.width / 2
     }
+    
+    func fill(avatarImage: UIImage?, name: String?, lastMessage: String?, lastMessageWasRead: Bool) {
+        self.avatarImage.image = avatarImage
+        nameLable.text = name
+        self.lastMessage.text = lastMessage
+        unreadMessageIndicator.isHidden = lastMessageWasRead
+    }
 }
