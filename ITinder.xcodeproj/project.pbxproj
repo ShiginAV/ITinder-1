@@ -7,11 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E75C76C26C997F8007ECBFB /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E75C76B26C997F8007ECBFB /* MainTabBarViewController.swift */; };
+		0EC4A9BB26CA95E700E603A3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC4A9BA26CA95E700E603A3 /* Extensions.swift */; };
+		0ED1481826C512C3007BF90B /* AuthMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED1481726C512C3007BF90B /* AuthMethodsViewController.swift */; };
+		0ED1481A26C51326007BF90B /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED1481926C51326007BF90B /* SignUpViewController.swift */; };
+		0ED1481C26C5133A007BF90B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED1481B26C5133A007BF90B /* LoginViewController.swift */; };
+		0ED1481E26C514AF007BF90B /* CreatingUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED1481D26C514AF007BF90B /* CreatingUserInfoViewController.swift */; };
+		0ED1482026C51FF9007BF90B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0ED1481F26C51FF9007BF90B /* Assets.xcassets */; };
+		0ED1482326C53281007BF90B /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED1482226C53281007BF90B /* Utilities.swift */; };
 		0EE0184326B96AEA00AEB059 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0184226B96AEA00AEB059 /* AppDelegate.swift */; };
 		0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0184426B96AEA00AEB059 /* SceneDelegate.swift */; };
 		0EE0184726B96AEA00AEB059 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0184626B96AEA00AEB059 /* ViewController.swift */; };
 		0EE0184A26B96AEA00AEB059 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184826B96AEA00AEB059 /* Main.storyboard */; };
-		0EE0184C26B96AEF00AEB059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184B26B96AEF00AEB059 /* Assets.xcassets */; };
 		0EE0184F26B96AEF00AEB059 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184D26B96AEF00AEB059 /* LaunchScreen.storyboard */; };
 		220280A126BEA04300E37A47 /* DialogFromFirebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220280A026BEA04300E37A47 /* DialogFromFirebase.swift */; };
 		224FD0AE26BE8FE000D993B5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FD0AD26BE8FE000D993B5 /* TableViewCell.swift */; };
@@ -23,12 +30,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E75C76B26C997F8007ECBFB /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
+		0EC4A9BA26CA95E700E603A3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0ED1481726C512C3007BF90B /* AuthMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthMethodsViewController.swift; sourceTree = "<group>"; };
+		0ED1481926C51326007BF90B /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		0ED1481B26C5133A007BF90B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		0ED1481D26C514AF007BF90B /* CreatingUserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatingUserInfoViewController.swift; sourceTree = "<group>"; };
+		0ED1481F26C51FF9007BF90B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0ED1482226C53281007BF90B /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		0EE0183F26B96AEA00AEB059 /* ITinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ITinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE0184226B96AEA00AEB059 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EE0184426B96AEA00AEB059 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0EE0184626B96AEA00AEB059 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0EE0184926B96AEA00AEB059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		0EE0184B26B96AEF00AEB059 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0EE0184E26B96AEF00AEB059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0EE0185026B96AEF00AEB059 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		220280A026BEA04300E37A47 /* DialogFromFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogFromFirebase.swift; sourceTree = "<group>"; };
@@ -68,6 +82,7 @@
 			children = (
 				0EE0184D26B96AEF00AEB059 /* LaunchScreen.storyboard */,
 				0EE0184826B96AEA00AEB059 /* Main.storyboard */,
+				0E75C76B26C997F8007ECBFB /* MainTabBarViewController.swift */,
 			);
 			path = Storyboard;
 			sourceTree = "<group>";
@@ -82,6 +97,10 @@
 		0E7E2A6726BAC2B40012E987 /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
+				0ED1481726C512C3007BF90B /* AuthMethodsViewController.swift */,
+				0ED1481926C51326007BF90B /* SignUpViewController.swift */,
+				0ED1481B26C5133A007BF90B /* LoginViewController.swift */,
+				0ED1481D26C514AF007BF90B /* CreatingUserInfoViewController.swift */,
 			);
 			path = Authorization;
 			sourceTree = "<group>";
@@ -98,6 +117,15 @@
 			children = (
 			);
 			path = Swipe;
+			sourceTree = "<group>";
+		};
+		0ED1482126C5325E007BF90B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				0ED1482226C53281007BF90B /* Utilities.swift */,
+				0EC4A9BA26CA95E700E603A3 /* Extensions.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		0EE0183626B96AEA00AEB059 = {
@@ -121,6 +149,7 @@
 		0EE0184126B96AEA00AEB059 /* ITinder */ = {
 			isa = PBXGroup;
 			children = (
+				0ED1482126C5325E007BF90B /* Helpers */,
 				0E7E2A6A26BAC3020012E987 /* Swipe */,
 				0E7E2A6926BAC2F60012E987 /* Profile */,
 				0E7E2A6726BAC2B40012E987 /* Authorization */,
@@ -131,7 +160,7 @@
 				0EE0184626B96AEA00AEB059 /* ViewController.swift */,
 				0EE0185026B96AEF00AEB059 /* Info.plist */,
 				224FD0B926BE938200D993B5 /* GoogleService-Info.plist */,
-				0EE0184B26B96AEF00AEB059 /* Assets.xcassets */,
+				0ED1481F26C51FF9007BF90B /* Assets.xcassets */,
 			);
 			path = ITinder;
 			sourceTree = "<group>";
@@ -188,8 +217,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0EE0185326B96AEF00AEB059 /* Build configuration list for PBXNativeTarget "ITinder" */;
 			buildPhases = (
-				2263769726BFE59F00836AA5 /* Swift lint */,
 				4488CA0C128B4F89ECE2BC34 /* [CP] Check Pods Manifest.lock */,
+				2263769726BFE59F00836AA5 /* Swift lint */,
 				0EE0183B26B96AEA00AEB059 /* Sources */,
 				0EE0183C26B96AEA00AEB059 /* Frameworks */,
 				0EE0183D26B96AEA00AEB059 /* Resources */,
@@ -243,7 +272,7 @@
 			files = (
 				0EE0184F26B96AEF00AEB059 /* LaunchScreen.storyboard in Resources */,
 				224FD0BA26BE938200D993B5 /* GoogleService-Info.plist in Resources */,
-				0EE0184C26B96AEF00AEB059 /* Assets.xcassets in Resources */,
+				0ED1482026C51FF9007BF90B /* Assets.xcassets in Resources */,
 				0EE0184A26B96AEA00AEB059 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,11 +347,18 @@
 				220280A126BEA04300E37A47 /* DialogFromFirebase.swift in Sources */,
 				0EE0184726B96AEA00AEB059 /* ViewController.swift in Sources */,
 				224FD0AE26BE8FE000D993B5 /* TableViewCell.swift in Sources */,
+				0E75C76C26C997F8007ECBFB /* MainTabBarViewController.swift in Sources */,
 				224FD0B626BE90EC00D993B5 /* DialogViewController.swift in Sources */,
+				0ED1482326C53281007BF90B /* Utilities.swift in Sources */,
+				0ED1481A26C51326007BF90B /* SignUpViewController.swift in Sources */,
 				0EE0184326B96AEA00AEB059 /* AppDelegate.swift in Sources */,
+				0ED1481E26C514AF007BF90B /* CreatingUserInfoViewController.swift in Sources */,
 				0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */,
+				0EC4A9BB26CA95E700E603A3 /* Extensions.swift in Sources */,
 				224FD0B226BE90AA00D993B5 /* MatchesTableViewController.swift in Sources */,
 				224FD0C326BE9B8E00D993B5 /* MatchesFromFirebase.swift in Sources */,
+				0ED1481826C512C3007BF90B /* AuthMethodsViewController.swift in Sources */,
+				0ED1481C26C5133A007BF90B /* LoginViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
