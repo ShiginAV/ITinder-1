@@ -9,6 +9,7 @@ target 'ITinder' do
 pod 'SwiftLint'
 pod 'Firebase/Core'
 pod 'Firebase'
+pod 'Firebase/Firestore'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
 pod 'Firebase/Storage'
