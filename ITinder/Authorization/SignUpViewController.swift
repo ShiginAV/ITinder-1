@@ -16,6 +16,7 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var repeatedPasswordTextField: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var toLoginLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +29,7 @@ class SignUpViewController: UIViewController {
         Utilities.stylePrimaryTextField(emailTextField)
         Utilities.stylePrimaryTextField(passwordTextField)
         Utilities.stylePrimaryTextField(repeatedPasswordTextField)
+        Utilities.styleCaptionLabel(toLoginLabel)
     }
 
     @IBAction func signUpButtonTapped(_ sender: Any) {

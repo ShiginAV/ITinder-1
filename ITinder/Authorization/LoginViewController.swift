@@ -13,6 +13,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var toSignUpLabel: UILabel!
+    @IBOutlet weak var forgotPasswordLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +24,10 @@ class LoginViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         Utilities.stylePrimaryButton(loginButton)
+        Utilities.styleCaptionLabel(toSignUpLabel)
+        Utilities.styleCaptionLabel(forgotPasswordLabel)
+        Utilities.stylePrimaryTextField(emailTextField)
+        Utilities.stylePrimaryTextField(passwordTextField)
     }
     @IBAction func loginButtonTapped(_ sender: Any) {
         let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)

@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="itinder_logo" translatesAutoresizingMaskIntoConstraints="NO" id="IOW-eh-2aY">
-                                <rect key="frame" x="138" y="369" width="138" height="168"/>
+                                <rect key="frame" x="103.5" y="369" width="207" height="168"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BY STRANGE DEVELOPERS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lhB-aq-7jl">
                                 <rect key="frame" x="132.5" y="807" width="149" height="15"/>
@@ -31,7 +31,7 @@
                         <constraints>
                             <constraint firstItem="IOW-eh-2aY" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="8bn-Tv-f0J"/>
                             <constraint firstItem="lhB-aq-7jl" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="F52-tK-SIe"/>
-                            <constraint firstItem="IOW-eh-2aY" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="1:3" id="dbe-im-5mZ"/>
+                            <constraint firstItem="IOW-eh-2aY" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="1:2" id="dbe-im-5mZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="lhB-aq-7jl" secondAttribute="bottom" constant="40" id="kdk-Tq-j6n"/>
                             <constraint firstItem="IOW-eh-2aY" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="zXi-OT-Kh1"/>
                         </constraints>
