@@ -7,6 +7,8 @@
 
 import UIKit
 import Firebase
+import FirebaseDatabase
+import FirebaseStorage
 
 class UserService {
     static let shared = UserService()

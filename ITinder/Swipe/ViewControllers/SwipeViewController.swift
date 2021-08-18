@@ -103,10 +103,12 @@ class SwipeViewController: UIViewController {
         }
     }
     
-    private func checkForMatch(currentUser: User?) {
-        guard let shownUserId = shownUserId else { return }
-        //UserService.shared.set(match: shownUserId)
-        //show match
+    private func checkMatchWith(likedUser: User?) {
+        guard let likedUser = likedUser else { return }
+        guard let currentUserId = UserService.shared.currentUserId else { return }
+        if likedUser.likes.contains(currentUserId) {
+            //show match alert
+        }
     }
 }
 
@@ -133,7 +135,7 @@ extension SwipeViewController: SwipeCardDelegate {
             guard let currentUserId = UserService.shared.currentUserId else { return }
             guard let shownUserId = shownUserId else { return }
             UserService.shared.set(like: currentUserId, forUserId: shownUserId) { [weak self] user in
-                self?.checkForMatch(currentUser: user)
+                self?.checkMatchWith(likedUser: user)
             }
         }
     }
