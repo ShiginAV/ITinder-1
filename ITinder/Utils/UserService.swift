@@ -18,7 +18,7 @@ class UserService {
     private let imageStorage = Storage.storage().reference().child("Avatars")
     
     var currentUserId: String? {
-        "4"//Auth.auth().currentUser.map { $0.uid }
+        Auth.auth().currentUser.map { $0.uid }
     }
 
     func getUserBy(id: String, completion: @escaping (User?) -> Void) {
