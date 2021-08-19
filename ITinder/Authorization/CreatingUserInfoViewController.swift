@@ -89,6 +89,8 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
             ref.child("users/" + self.userID + "/description").setValue(cleanedUserInfo)
             ref.child("users/" + self.userID + "/imageUrl").setValue(url?.absoluteString ?? "defaultURL")
             
+//            UserService.shared.persist(user: <#T##User#>, withImage: <#T##UIImage?#>, completion: <#T##((User?) -> Void)##((User?) -> Void)##(User?) -> Void#>)
+            
         }
         
         transitionToMainTabBar()

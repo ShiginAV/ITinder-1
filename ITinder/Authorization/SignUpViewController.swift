@@ -6,9 +6,6 @@
 //
 
 import UIKit
-import FirebaseAuth
-import Firebase
-import FirebaseStorage
 
 class SignUpViewController: UIViewController {
 
@@ -41,30 +38,8 @@ class SignUpViewController: UIViewController {
             // Create the user
             let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-            Auth.auth().createUser(withEmail: email, password: password) { result, error in
-                if error != nil {
-                    self.showAlert(title: "Ошибка регистрации пользователя", message: nil)
-                } else {
-                    // clean data
-                    let email = self.emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-                    let uid = result?.user.uid
-                    
-                    // User was created sucessfully, store uid and email in database
-                    let ref = Database.database().reference()
-                    ref.child("users/" + result!.user.uid + "/email").setValue(email)
-                    ref.child("users/" + result!.user.uid + "/identifier").setValue(uid)
-                    
-                    self.transitionToNextScreen(uid: (result?.user.uid)!)
-                }
-            }
+            AuthorizationService.createUserInFiresore(email: email, password: password, vc: self)
         }
-    }
-    
-    private func transitionToNextScreen(uid: String) {
-        let creatingUserInfoVC = (storyboard?.instantiateViewController(identifier: "CreatingUserInfoViewController"))! as CreatingUserInfoViewController
-        creatingUserInfoVC.userID = uid
-        view.window?.rootViewController = creatingUserInfoVC
-        view.window?.makeKeyAndVisible()
     }
     
     private func validateFields() -> String? {

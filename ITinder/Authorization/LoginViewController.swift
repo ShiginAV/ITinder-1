@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
@@ -31,20 +30,8 @@ class LoginViewController: UIViewController {
     }
     @IBAction func loginButtonTapped(_ sender: Any) {
         let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let pasword = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        Auth.auth().signIn(withEmail: email, password: pasword) { result, error in
-            if error != nil {
-                self.showAlert(title: "Ошибка входа", message: error?.localizedDescription)
-            } else {
-                self.transitionToMainTabBar()
-            }
-        }
-    }
-    
-    private func transitionToMainTabBar() {
-        let creatingUserInfoVC = storyboard?.instantiateViewController(identifier: "TabBarController")
-        view.window?.rootViewController = creatingUserInfoVC
-        view.window?.makeKeyAndVisible()
+        AuthorizationService.signInUserInFirebase(email: email, password: password, vc: self)
     }
 }
