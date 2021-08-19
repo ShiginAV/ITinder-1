@@ -148,8 +148,7 @@ class UserService {
             kCompany: user.company ?? "",
             kEmployment: user.employment ?? "",
             kLikes: user.likes,
-            kMatches: user.matches,
-            kRegisteredDate: user.registeredDate
+            kMatches: user.matches
         ]
         usersDatabase.child(user.identifier).setValue(userDict) { error, _ in
             guard error == nil else {
@@ -236,6 +235,5 @@ extension User {
         employment = dictionary[kEmployment] as? String
         likes = dictionary[kLikes] as? [String] ?? []
         matches = dictionary[kMatches] as? [String] ?? []
-        registeredDate = dictionary[kRegisteredDate] as? String ?? ""
     }
 }
