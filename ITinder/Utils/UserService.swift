@@ -73,14 +73,14 @@ class UserService {
             Self.lastUserId = lastUserId
             users.reverse()
             
-            let filterdUsers = filtered(users)
+            let filteredUsers = filtered(users)
             
-            if filterdUsers.isEmpty {
-                getNextUsers(usersCount: usersCount) { user in
-                    completion(user)
+            if filteredUsers.isEmpty {
+                getNextUsers(usersCount: usersCount) { users in
+                    completion(users)
                 }
             } else {
-                completion(filterdUsers)
+                completion(filteredUsers)
             }
         } withCancel: { _ in
             completion(nil)
@@ -88,13 +88,7 @@ class UserService {
     }
     
     private static func filtered(_ users: [User]) -> [User] {
-        return users.filter { user in
-            if user.identifier != currentUserId && !user.likes.contains(currentUserId ?? "") {
-                return true
-            } else {
-                return false
-            }
-        }
+        users.filter { $0.identifier != currentUserId && !$0.likes.contains(currentUserId ?? "") }
     }
     
     static func persist(user: User, withImage: UIImage?, completion: @escaping ((User?) -> Void)) {
@@ -105,56 +99,39 @@ class UserService {
             return
         }
         
-        guard let imageData = image.jpegData(compressionQuality: 0.5) else {
-            completion(nil)
-            return
+        upload(image: image, forUserId: user.identifier) { urlString in
+            guard let urlString = urlString else { completion(nil); return }
+            
+            var newUser = user
+            newUser.imageUrl = urlString
+            persist(newUser) { user in
+                completion(user)
+            }
         }
+    }
+    
+    private static func upload(image: UIImage, forUserId: String, completion: @escaping ((String?) -> Void)) {
+        guard let imageData = image.jpegData(compressionQuality: 0.5) else { completion(nil); return }
         
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
         
-        imageStorage.child("\(user.identifier).jpg").putData(imageData, metadata: metadata) { _, error in
-            guard error == nil else {
-                completion(nil)
-                return
-            }
+        imageStorage.child("\(forUserId).jpg").putData(imageData, metadata: metadata) { _, error in
+            guard error == nil else { completion(nil); return }
             
-            imageStorage.child("\(user.identifier).jpg").downloadURL { url, error in
+            imageStorage.child("\(forUserId).jpg").downloadURL { url, error in
                 guard error == nil, let urlString = url?.absoluteString else {
                     completion(nil)
                     return
                 }
-                
-                var newUser = user
-                newUser.imageUrl = urlString
-                persist(newUser) { user in
-                    completion(user)
-                }
+                completion(urlString)
             }
         }
     }
     
     private static func persist(_ user: User, completion: @escaping ((User?) -> Void)) {
-        let userDict: [String: Any] = [
-            kIdentifier: user.identifier,
-            kEmail: user.email,
-            kImageUrl: user.imageUrl,
-            kName: user.name,
-            kPosition: user.position,
-            kDescription: user.description ?? "",
-            kBirthDate: user.birthDate ?? "",
-            kCity: user.city ?? "",
-            kEducation: user.education ?? "",
-            kCompany: user.company ?? "",
-            kEmployment: user.employment ?? "",
-            kLikes: user.likes,
-            kMatches: user.matches
-        ]
-        usersDatabase.child(user.identifier).setValue(userDict) { error, _ in
-            guard error == nil else {
-                completion(nil)
-                return
-            }
+        usersDatabase.child(user.identifier).setValue(user.userDictionary) { error, _ in
+            guard error == nil else { completion(nil); return }
             completion(user)
         }
     }
@@ -175,20 +152,15 @@ class UserService {
             user.likes.append(currentUserId)
             
             usersDatabase.child(forUserId).updateChildValues([kLikes: user.likes]) { error, _ in
-                guard error == nil else {
-                    completion(nil)
-                    return
-                }
+                guard error == nil else { completion(nil); return }
                 completion(user)
             }
         }
     }
     
     static func setMatchIfNeededWith(likedUser: User?, completion: @escaping ((User?) -> Void)) {
-        guard var likedUser = likedUser else {
-            completion(nil)
-            return
-        }
+        guard var likedUser = likedUser else { completion(nil); return }
+        
         getCurrentUser { user in
             guard var currentUser = user else {
                 assertionFailure()
@@ -196,25 +168,18 @@ class UserService {
                 return
             }
             
-            if currentUser.likes.contains(likedUser.identifier) {
-                currentUser.matches.append(likedUser.identifier)
-                likedUser.matches.append(currentUser.identifier)
+            guard currentUser.likes.contains(likedUser.identifier) else { completion(nil); return }
+            
+            currentUser.matches.append(likedUser.identifier)
+            likedUser.matches.append(currentUser.identifier)
+            
+            usersDatabase.child(currentUser.identifier).updateChildValues([kMatches: currentUser.matches]) { error, _ in
+                guard error == nil else { completion(nil); return }
                 
-                usersDatabase.child(currentUser.identifier).updateChildValues([kMatches: currentUser.matches]) { error, _ in
-                    guard error == nil else {
-                        completion(nil)
-                        return
-                    }
-                    usersDatabase.child(likedUser.identifier).updateChildValues([kMatches: likedUser.matches]) { error, _ in
-                        guard error == nil else {
-                            completion(nil)
-                            return
-                        }
-                        completion(likedUser)
-                    }
+                usersDatabase.child(likedUser.identifier).updateChildValues([kMatches: likedUser.matches]) { error, _ in
+                    guard error == nil else { completion(nil); return }
+                    completion(likedUser)
                 }
-            } else {
-                completion(nil)
             }
         }
     }
@@ -235,5 +200,21 @@ extension User {
         employment = dictionary[kEmployment] as? String
         likes = dictionary[kLikes] as? [String] ?? []
         matches = dictionary[kMatches] as? [String] ?? []
+    }
+    
+    var userDictionary: [String: Any] {
+        [kIdentifier: identifier,
+         kEmail: email,
+         kImageUrl: imageUrl,
+         kName: name,
+         kPosition: position,
+         kDescription: description ?? "",
+         kBirthDate: birthDate ?? "",
+         kCity: city ?? "",
+         kEducation: education ?? "",
+         kCompany: company ?? "",
+         kEmployment: employment ?? "",
+         kLikes: likes,
+         kMatches: matches]
     }
 }
