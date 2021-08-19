@@ -14,6 +14,7 @@ class Transitor {
     static func transitionToCreatingUserInfoVC(view: UIView, storyboard: UIStoryboard?, uid: String) {
         let creatingUserInfoVC = (storyboard?.instantiateViewController(identifier: "CreatingUserInfoViewController"))! as CreatingUserInfoViewController
         creatingUserInfoVC.userID = uid
+        
         view.window?.rootViewController = creatingUserInfoVC
         view.window?.makeKeyAndVisible()
     }

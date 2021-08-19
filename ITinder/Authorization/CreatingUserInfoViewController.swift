@@ -21,6 +21,8 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var userInfoLabel: UILabel!
     @IBOutlet weak var signUpButton: UIButton!
     var userID = "default"
+    
+    let userEmail = Auth.auth().currentUser?.email
     private var imagePicker: UIImagePickerController!
     
     override func viewDidLoad() {
@@ -81,19 +83,16 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         let cleanedBirthday = dateOfBirthTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let cleanedPosition = positionTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let cleanedUserInfo = (userInfoTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "") as NSString
-        
+
         self.upload( photo: profileImageView.image!) { url in
             ref.child("users/" + self.userID + "/name").setValue(cleanedName + " " + cleanedSurname)
             ref.child("users/" + self.userID + "/birthDate").setValue(cleanedBirthday)
             ref.child("users/" + self.userID + "/position").setValue(cleanedPosition)
             ref.child("users/" + self.userID + "/description").setValue(cleanedUserInfo)
             ref.child("users/" + self.userID + "/imageUrl").setValue(url?.absoluteString ?? "defaultURL")
-            
-//            UserService.shared.persist(user: <#T##User#>, withImage: <#T##UIImage?#>, completion: <#T##((User?) -> Void)##((User?) -> Void)##(User?) -> Void#>)
-            
         }
         
-        transitionToMainTabBar()
+        Transitor.transitionToMainTabBar(view: view, storyboard: storyboard)
     }
     
     func upload(photo: UIImage, completion: @escaping ((_ url:URL?) -> Void)) {
@@ -117,12 +116,6 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
             }
         }
         
-    }
-    
-    private func transitionToMainTabBar() {
-        let creatingUserInfoVC = storyboard?.instantiateViewController(identifier: "TabBarController")
-        view.window?.rootViewController = creatingUserInfoVC
-        view.window?.makeKeyAndVisible()
     }
     
     func textViewDidChange(_ textView: UITextView) {
