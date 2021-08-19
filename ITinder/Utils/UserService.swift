@@ -11,19 +11,15 @@ import FirebaseDatabase
 import FirebaseStorage
 
 class UserService {
-    static let shared = UserService()
-    private init() { }
+    private static let imageStorage = Storage.storage().reference().child(kAvatarsRef)
+    private static let usersDatabase = Database.database().reference().child(kUsersRef)
+    private static var lastUserId = ""
     
-    private let usersDatabase = Database.database().reference().child("users")
-    private var lastUserId = ""
-    
-    private let imageStorage = Storage.storage().reference().child("Avatars")
-    
-    var currentUserId: String? {
+    static var currentUserId: String? {
         "4"//Auth.auth().currentUser.map { $0.uid }
     }
     
-    func getUserBy(id: String, completion: @escaping (User?) -> Void) {
+    static func getUserBy(id: String, completion: @escaping (User?) -> Void) {
         usersDatabase.observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.childSnapshot(forPath: id).value as? [String: Any] else {
                 assertionFailure()
@@ -37,17 +33,25 @@ class UserService {
         }
     }
     
-    func getNextUsers(usersCount: Int, completion: @escaping ([User]?) -> Void) {
+    static func getCurrentUser(completion: @escaping (User?) -> Void) {
+        guard let currentUserId = currentUserId else {
+            assertionFailure()
+            completion(nil)
+            return
+        }
+        getUserBy(id: currentUserId) { user in
+            completion(user)
+        }
+    }
+    
+    static func getNextUsers(usersCount: Int, completion: @escaping ([User]?) -> Void) {
         var query = usersDatabase.queryOrderedByKey()
+        
         if lastUserId != "" {
             query = query.queryEnding(beforeValue: lastUserId)
         }
-        query.queryLimited(toLast: UInt(usersCount)).observeSingleEvent(of: .value) { [weak self] snapshot in
-            guard let self = self else {
-                assertionFailure()
-                completion(nil)
-                return
-            }
+        
+        query.queryLimited(toLast: UInt(usersCount)).observeSingleEvent(of: .value) { snapshot in
             guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
                 assertionFailure()
                 completion(nil)
@@ -66,13 +70,13 @@ class UserService {
                 completion(nil)
                 return
             }
-            self.lastUserId = lastUserId
+            Self.lastUserId = lastUserId
             users.reverse()
             
-            let filterdUsers = self.filtered(users)
+            let filterdUsers = filtered(users)
             
             if filterdUsers.isEmpty {
-                self.getNextUsers(usersCount: usersCount) { user in
+                getNextUsers(usersCount: usersCount) { user in
                     completion(user)
                 }
             } else {
@@ -83,9 +87,9 @@ class UserService {
         }
     }
     
-    private func filtered(_ users: [User]) -> [User] {
+    private static func filtered(_ users: [User]) -> [User] {
         return users.filter { user in
-            if user.identifier != self.currentUserId && !user.likes.contains(self.currentUserId ?? "") {
+            if user.identifier != currentUserId && !user.likes.contains(currentUserId ?? "") {
                 return true
             } else {
                 return false
@@ -93,7 +97,7 @@ class UserService {
         }
     }
     
-    func persist(user: User, withImage: UIImage?, completion: @escaping ((User?) -> Void)) {
+    static func persist(user: User, withImage: UIImage?, completion: @escaping ((User?) -> Void)) {
         guard let image = withImage else {
             persist(user) { user in
                 completion(user)
@@ -109,31 +113,28 @@ class UserService {
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
         
-        imageStorage.child("\(user.identifier).jpg").putData(imageData, metadata: metadata) { [weak self] _, error in
-            guard error == nil,
-                  let self = self else {
+        imageStorage.child("\(user.identifier).jpg").putData(imageData, metadata: metadata) { _, error in
+            guard error == nil else {
                 completion(nil)
                 return
             }
             
-            self.imageStorage.child("\(user.identifier).jpg").downloadURL { [weak self] url, error in
-                guard error == nil,
-                      let self = self,
-                      let urlString = url?.absoluteString else {
+            imageStorage.child("\(user.identifier).jpg").downloadURL { url, error in
+                guard error == nil, let urlString = url?.absoluteString else {
                     completion(nil)
                     return
                 }
                 
                 var newUser = user
                 newUser.imageUrl = urlString
-                self.persist(newUser) { user in
+                persist(newUser) { user in
                     completion(user)
                 }
             }
         }
     }
     
-    private func persist(_ user: User, completion: @escaping ((User?) -> Void)) {
+    private static func persist(_ user: User, completion: @escaping ((User?) -> Void)) {
         let userDict: [String: Any] = [
             kIdentifier: user.identifier,
             kEmail: user.email,
@@ -159,8 +160,12 @@ class UserService {
         }
     }
     
-    func set(like: String, forUserId: String, completion: @escaping ((User?) -> Void)) {
-        guard let currentUserId = UserService.shared.currentUserId else { return }
+    static func set(like: String, forUserId: String, completion: @escaping ((User?) -> Void)) {
+        guard let currentUserId = currentUserId else {
+            assertionFailure()
+            completion(nil)
+            return
+        }
         
         getUserBy(id: forUserId) { user in
             guard var user = user else {
@@ -170,11 +175,7 @@ class UserService {
             }
             user.likes.append(currentUserId)
             
-            let dict: [String: Any] = [
-                "likes": user.likes
-            ]
-            
-            self.usersDatabase.child(forUserId).updateChildValues(dict) { error, _ in
+            usersDatabase.child(forUserId).updateChildValues([kLikes: user.likes]) { error, _ in
                 guard error == nil else {
                     completion(nil)
                     return
@@ -184,8 +185,39 @@ class UserService {
         }
     }
     
-    func set(match: String) {
-        
+    static func setMatchIfNeededWith(likedUser: User?, completion: @escaping ((User?) -> Void)) {
+        guard var likedUser = likedUser else {
+            completion(nil)
+            return
+        }
+        getCurrentUser { user in
+            guard var currentUser = user else {
+                assertionFailure()
+                completion(nil)
+                return
+            }
+            
+            if currentUser.likes.contains(likedUser.identifier) {
+                currentUser.matches.append(likedUser.identifier)
+                likedUser.matches.append(currentUser.identifier)
+                
+                usersDatabase.child(currentUser.identifier).updateChildValues([kMatches: currentUser.matches]) { error, _ in
+                    guard error == nil else {
+                        completion(nil)
+                        return
+                    }
+                    usersDatabase.child(likedUser.identifier).updateChildValues([kMatches: likedUser.matches]) { error, _ in
+                        guard error == nil else {
+                            completion(nil)
+                            return
+                        }
+                        completion(likedUser)
+                    }
+                }
+            } else {
+                completion(nil)
+            }
+        }
     }
 }
 

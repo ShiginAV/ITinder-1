@@ -192,7 +192,7 @@ final class EditUserProfileViewController: UIViewController {
         loaderView.isHidden = false
         let image = isImageChanged ? profileImageView.image : nil
         
-        UserService.shared.persist(user: self.user, withImage: image) { [weak self] newUser in
+        UserService.persist(user: self.user, withImage: image) { [weak self] newUser in
             guard let self = self else { return }
             guard let newUser = newUser else {
                 self.loaderView.isHidden = true

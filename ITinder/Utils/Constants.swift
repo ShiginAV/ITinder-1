@@ -7,6 +7,9 @@
 
 import Foundation
 
+let kUsersRef = "users"
+let kAvatarsRef = "Avatars"
+
 let kIdentifier = "identifier"
 let kEmail = "email"
 let kImageUrl = "imageUrl"

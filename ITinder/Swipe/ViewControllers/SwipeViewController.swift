@@ -76,7 +76,7 @@ class SwipeViewController: UIViewController {
     
     private func addCards() {
         isLoading = true
-        UserService.shared.getNextUsers(usersCount: cardsLimit) { [weak self] users in
+        UserService.getNextUsers(usersCount: cardsLimit) { [weak self] users in
             guard let self = self else { return }
             
             guard let users = users else {
@@ -102,26 +102,18 @@ class SwipeViewController: UIViewController {
             profileContainerView.isHidden = true
         }
     }
-    
-    private func checkMatchWith(likedUser: User?) {
-        guard let likedUser = likedUser else { return }
-        guard let currentUserId = UserService.shared.currentUserId else { return }
-        if likedUser.likes.contains(currentUserId) {
-            //show match alert
-        }
-    }
 }
 
 extension SwipeViewController: SwipeCardDelegate {
     func profileInfoDidTap() {
         guard let shownUserId = shownUserId else { return }
-        UserService.shared.getUserBy(id: shownUserId) { user in
+        UserService.getUserBy(id: shownUserId) { user in
             Router.showUserProfile(user: user, parent: self)
         }
     }
     
     func swipeDidEnd(type: SwipeCardType) {
-        setLike(type: type)
+        setLikeAndMatchIfNeeded(type: type)
         
         cards.removeFirst()
         
@@ -130,12 +122,15 @@ extension SwipeViewController: SwipeCardDelegate {
         }
     }
     
-    private func setLike(type: SwipeCardType) {
+    private func setLikeAndMatchIfNeeded(type: SwipeCardType) {
         if type == .like {
-            guard let currentUserId = UserService.shared.currentUserId else { return }
+            guard let currentUserId = UserService.currentUserId else { return }
             guard let shownUserId = shownUserId else { return }
-            UserService.shared.set(like: currentUserId, forUserId: shownUserId) { [weak self] user in
-                self?.checkMatchWith(likedUser: user)
+            
+            UserService.set(like: currentUserId, forUserId: shownUserId) { user in
+                UserService.setMatchIfNeededWith(likedUser: user) { user in
+                    print("show match with user-\(user?.identifier)")
+                }
             }
         }
     }
