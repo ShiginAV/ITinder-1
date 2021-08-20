@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="yUU-p2-yJp">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="yUU-p2-yJp">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -22,33 +22,33 @@
                                 <rect key="frame" x="0.0" y="285" width="414" height="528"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="Y5z-rk-3CV" customClass="TableViewCell" customModule="ITinder" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="70.5"/>
+                                        <rect key="frame" x="0.0" y="28" width="414" height="70.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Y5z-rk-3CV" id="iNb-j3-Ckf">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="70.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UM8-4i-3Cf">
-                                                    <rect key="frame" x="10" y="10" width="50" height="50.5"/>
+                                                    <rect key="frame" x="10" y="10" width="50.5" height="50.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="UM8-4i-3Cf" secondAttribute="height" multiplier="1:1" id="2p8-RK-wfX"/>
-                                                        <constraint firstAttribute="width" constant="50" id="OOm-b5-0J6"/>
+                                                        <constraint firstAttribute="width" priority="999" constant="50" id="OOm-b5-0J6"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o2p-iK-yGz">
-                                                    <rect key="frame" x="110" y="10" width="274" height="21"/>
+                                                    <rect key="frame" x="110.5" y="10" width="273.5" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last message" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wEv-XB-zcH">
-                                                    <rect key="frame" x="110" y="40" width="274" height="20.5"/>
+                                                    <rect key="frame" x="110.5" y="40" width="273.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E9h-p6-ctA">
-                                                    <rect key="frame" x="90" y="30.5" width="10" height="10"/>
+                                                    <rect key="frame" x="90.5" y="30.5" width="10" height="10"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="10" id="BAO-Ih-goc"/>
                                                         <constraint firstAttribute="width" secondItem="E9h-p6-ctA" secondAttribute="height" multiplier="1:1" id="OGv-zz-WAn"/>
@@ -76,23 +76,27 @@
                                             <outlet property="unreadMessageIndicator" destination="E9h-p6-ctA" id="vu9-ED-UsK"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="emptyCell" id="Zkj-Uf-VLZ">
-                                        <rect key="frame" x="0.0" y="95" width="414" height="43.5"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="emptyCell" rowHeight="50" id="Zkj-Uf-VLZ">
+                                        <rect key="frame" x="0.0" y="98.5" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Zkj-Uf-VLZ" id="Gf8-en-wbc">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No messages yet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Bs-Gy-gz6">
-                                                    <rect key="frame" x="20" y="11.5" width="374" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Пока нет сообщений" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Bs-Gy-gz6">
+                                                    <rect key="frame" x="20" y="11" width="374" height="28"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="3Bs-Gy-gz6" firstAttribute="trailing" secondItem="Gf8-en-wbc" secondAttribute="trailingMargin" id="2vp-of-kot"/>
                                                 <constraint firstItem="3Bs-Gy-gz6" firstAttribute="centerX" secondItem="Gf8-en-wbc" secondAttribute="centerX" id="3uX-id-HCp"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="3Bs-Gy-gz6" secondAttribute="bottom" id="70Q-pl-F1B"/>
+                                                <constraint firstItem="3Bs-Gy-gz6" firstAttribute="top" secondItem="Gf8-en-wbc" secondAttribute="topMargin" id="cD8-Ui-3Mr"/>
                                                 <constraint firstItem="3Bs-Gy-gz6" firstAttribute="centerY" secondItem="Gf8-en-wbc" secondAttribute="centerY" id="e0M-iG-pAq"/>
+                                                <constraint firstItem="3Bs-Gy-gz6" firstAttribute="leading" secondItem="Gf8-en-wbc" secondAttribute="leadingMargin" id="j7y-9v-4MR"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="3Bs-Gy-gz6" secondAttribute="trailing" id="uCc-sl-HJY"/>
                                                 <constraint firstItem="3Bs-Gy-gz6" firstAttribute="leading" secondItem="Gf8-en-wbc" secondAttribute="leadingMargin" id="yiD-Or-wlR"/>
                                             </constraints>
@@ -154,7 +158,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="128" height="130"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No new matches yet" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRI-4r-0Ck">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Пока нет новых пар" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRI-4r-0Ck">
                                                     <rect key="frame" x="0.0" y="44.5" width="128" height="41"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -172,13 +176,13 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New matches" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fE7-2Q-gDI">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Новые пары" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fE7-2Q-gDI">
                                 <rect key="frame" x="20" y="64" width="394" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" name="AccentColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Messages" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1e3-oY-pIJ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сообщения" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1e3-oY-pIJ">
                                 <rect key="frame" x="20" y="254" width="394" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" name="AccentColor"/>
@@ -234,8 +238,8 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="130"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Ro-Yh-b39">
-                                        <rect key="frame" x="30" y="50" width="34" height="30"/>
-                                        <state key="normal" title="Back"/>
+                                        <rect key="frame" x="30" y="50" width="45" height="30"/>
+                                        <state key="normal" title="Назад"/>
                                         <connections>
                                             <action selector="backButton:" destination="MAX-BC-6Mc" eventType="touchUpInside" id="P4P-kb-HbB"/>
                                         </connections>
@@ -612,7 +616,7 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Нажмите, чтобы добавить фото" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C16-lf-in3">
-                                <rect key="frame" x="120.5" y="203.5" width="173.5" height="28"/>
+                                <rect key="frame" x="113.5" y="203.5" width="187.5" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="6yJ-Cv-I5a"/>
                                 </constraints>

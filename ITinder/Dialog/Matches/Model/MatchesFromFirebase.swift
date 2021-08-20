@@ -60,7 +60,9 @@ class MatchesFromFirebase {
         }
     }
     
-    init(currentUserPhotoUrl: String, currentUserId: String) {
+    init(user: User) {
+        let currentUserPhotoUrl = user.imageUrl
+        let currentUserId = user.identifier
         
         downloadPhoto(photoUrl: currentUserPhotoUrl, userId: currentUserId)
         
@@ -80,9 +82,9 @@ class MatchesFromFirebase {
                 
                 self?.getLastMessage(conv: conv, index: index)
                 
-                self?.getUserData(conv: conv, index: index) { (name, photoUrl) in
-                    conv[index].userName = name
-                    conv[index].imageUrl = photoUrl
+                self?.getUserData(conv: conv, index: index) { (user) in
+                    conv[index].userName = user.name
+                    conv[index].imageUrl = user.imageUrl
                     self?.companions = conv
                     self?.startGroup.leave()
                 }
@@ -102,21 +104,22 @@ class MatchesFromFirebase {
         })
     }
     
-    func getUserData(conv: [CompanionStruct], index: Int, completion: @escaping (String?, String?) -> Void) {
-        ConversationService.getUserData(userId: conv[index].userId) { [weak self] (name, photoUrl) in
+    func getUserData(conv: [CompanionStruct], index: Int, completion: @escaping (User) -> Void) {
+        
+        ConversationService.getUserData(userId: conv[index].userId) { [weak self] (user) in
             
             if let notifyFlag = self?.notificationFlag {
                 if !conv[index].lastMessageWasRead && notifyFlag {
                     print("was not read")
-                    self?.sendNotification(companionName: name!, message: "You have a massage from \(name!)")
+                    self?.sendNotification(companionName: user.name, message: "You have a massage from \(user.name)")
                 }
             }
-            
+
             let userId = conv[index].userId
-            
-            self?.downloadPhoto(photoUrl: photoUrl, userId: userId)
-            
-            completion(name, photoUrl)
+
+            self?.downloadPhoto(photoUrl: user.imageUrl, userId: userId)
+
+            completion(user)
         }
     }
     

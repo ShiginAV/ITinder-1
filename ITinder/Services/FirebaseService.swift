@@ -10,6 +10,13 @@ import Firebase
 
 class ConversationService {
     
+    static func getCurrentUser(completion: @escaping (User) -> Void ) {
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        getUserData(userId: currentUserId) { (user) in
+            completion(user)
+        }
+    }
+    
     static func getConversations(userId: String, completion: @escaping ([CompanionStruct]) -> Void) {
         Database.database().reference().child("users").child(userId).child("conversations").observe(.value) { (snapshot) in
             var conversations = [CompanionStruct]()
@@ -32,13 +39,18 @@ class ConversationService {
         }
     }
     
-    static func getUserData(userId: String, completion: @escaping (_ name: String?, _ photoUrl: String?) -> Void) {
+    static func getUserData(userId: String, completion: @escaping (User) -> Void) {
         Database.database().reference().getData { (error, snapshot) in
             if error != nil { return }
             let userDataSnap = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: userId)
             let name = userDataSnap.childSnapshot(forPath: "name").value as? String
             let photoUrl = userDataSnap.childSnapshot(forPath: "imageUrl").value as? String
-            completion(name, photoUrl)
+
+            guard let userDataTest = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: userId).value as? [String: Any] else { return }
+            let user = User(dictionary: userDataTest)
+            print(user)
+            completion(user)
+//            completion(name, photoUrl)
         }
     }
     

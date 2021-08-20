@@ -10,15 +10,15 @@ class MessageViewController: MessagesViewController {
 
     var model: DialogFromFirebase!
     
-    var selfSenderPhotoUrl: String!
-    var selfSenderId: String!
-    var selfSenderName: String!
-    
     var companionId: String!
+    
+    var currentUser: User!
     
     var conversationId: String!
     
-    private var selfSender: Sender!
+    private var selfSender: Sender {
+        Sender(photoUrl: currentUser.imageUrl, senderId: currentUser.identifier, displayName: currentUser.name)
+    }
     
     var downloadedPhoto = [String: UIImage]() {
         didSet {
@@ -38,8 +38,6 @@ class MessageViewController: MessagesViewController {
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.messageCellDelegate = self
-        
-        selfSender = Sender(photoUrl: selfSenderPhotoUrl, senderId: selfSenderId, displayName: selfSenderName)
     }
 }
 
@@ -87,7 +85,7 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
 
 extension MessageViewController: DialogDelegate {
     func getCompanionsId() -> [String : String] {
-        return ["currentUserId": selfSenderId,
+        return ["currentUserId": currentUser.identifier,
                 "companionId": companionId]
     }
     
