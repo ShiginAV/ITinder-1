@@ -4,9 +4,6 @@ class MatchesViewController: UIViewController {
     
     var model: MatchesFromFirebase!
 
-//    var currentUserId: String!
-//    var currentUserName: String!
-//    var currentUserPhotoUrl: String!
     var currentUser: User!
     
     @IBOutlet weak var matchesCollectionView: UICollectionView!
@@ -26,9 +23,6 @@ class MatchesViewController: UIViewController {
         
         startGroup.enter()
         ConversationService.getCurrentUser { (user) in
-//            self.currentUserId = user.identifier
-//            self.currentUserName = user.name
-//            self.currentUserPhotoUrl = user.imageUrl
             self.currentUser = user
             self.startGroup.leave()
         }
@@ -136,7 +130,7 @@ extension MatchesViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func createDialog (companion: CompanionStruct) {
-        let dialogViewController = self.storyboard?.instantiateViewController(withIdentifier: "Dialog") as! DialogViewController
+        guard let dialogViewController = self.storyboard?.instantiateViewController(withIdentifier: "Dialog") as? DialogViewController else { return }
         
         let companionId = companion.userId
         let convId = companion.conversationId

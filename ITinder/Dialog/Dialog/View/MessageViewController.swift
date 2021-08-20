@@ -7,7 +7,7 @@ class MessageViewController: MessagesViewController {
     deinit {
         print("out")
     }
-
+    
     var model: DialogFromFirebase!
     
     var companionId: String!
@@ -76,7 +76,7 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         avatarView.isHidden = model.isNextMessageSameSender(indexPath: indexPath)
-        let sender = message.sender as! Sender
+        guard let sender = message.sender as? Sender else { return }
         let senderId = sender.senderId
  
         avatarView.image = downloadedPhoto[senderId]
