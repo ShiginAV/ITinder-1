@@ -44,14 +44,10 @@ class ConversationService {
         Database.database().reference().getData { (error, snapshot) in
             if error != nil { return }
             let userDataSnap = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: userId)
-            let name = userDataSnap.childSnapshot(forPath: "name").value as? String
-            let photoUrl = userDataSnap.childSnapshot(forPath: "imageUrl").value as? String
 
-            guard let userDataTest = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: userId).value as? [String: Any] else { return }
-            let user = User(dictionary: userDataTest)
-            print(user)
+            guard let userData = userDataSnap.value as? [String: Any] else { return }
+            let user = User(dictionary: userData)
             completion(user)
-//            completion(name, photoUrl)
         }
     }
     

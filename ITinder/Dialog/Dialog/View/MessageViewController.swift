@@ -20,11 +20,7 @@ class MessageViewController: MessagesViewController {
         Sender(photoUrl: currentUser.imageUrl, senderId: currentUser.identifier, displayName: currentUser.name)
     }
     
-    var downloadedPhoto = [String: UIImage]() {
-        didSet {
-//            messagesCollectionView.reloadData()
-        }
-    }
+    var downloadedPhoto = [String: UIImage]()
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="TrK-pF-ZNz">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="yUU-p2-yJp">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
@@ -54,6 +54,9 @@
                                                         <constraint firstAttribute="width" secondItem="E9h-p6-ctA" secondAttribute="height" multiplier="1:1" id="OGv-zz-WAn"/>
                                                     </constraints>
                                                 </view>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="nhz-YO-aZM">
+                                                    <rect key="frame" x="25.5" y="25.5" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="UM8-4i-3Cf" firstAttribute="top" secondItem="iNb-j3-Ckf" secondAttribute="top" constant="10" id="4MT-zG-PPV"/>
@@ -61,6 +64,8 @@
                                                 <constraint firstItem="wEv-XB-zcH" firstAttribute="bottom" secondItem="UM8-4i-3Cf" secondAttribute="bottom" id="IHp-Pc-fSX"/>
                                                 <constraint firstItem="UM8-4i-3Cf" firstAttribute="leading" secondItem="iNb-j3-Ckf" secondAttribute="leading" constant="10" id="UbG-2K-mOH"/>
                                                 <constraint firstItem="o2p-iK-yGz" firstAttribute="leading" secondItem="UM8-4i-3Cf" secondAttribute="trailing" constant="50" id="YWq-zN-zzU"/>
+                                                <constraint firstItem="nhz-YO-aZM" firstAttribute="centerY" secondItem="UM8-4i-3Cf" secondAttribute="centerY" id="Ycq-nu-Cw0"/>
+                                                <constraint firstItem="nhz-YO-aZM" firstAttribute="centerX" secondItem="UM8-4i-3Cf" secondAttribute="centerX" id="cqm-CC-WZB"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="o2p-iK-yGz" secondAttribute="trailing" constant="10" id="d6d-oH-dd0"/>
                                                 <constraint firstItem="o2p-iK-yGz" firstAttribute="top" secondItem="UM8-4i-3Cf" secondAttribute="top" id="hIc-Ue-eBl"/>
                                                 <constraint firstItem="o2p-iK-yGz" firstAttribute="leading" secondItem="wEv-XB-zcH" secondAttribute="leading" id="jpp-dG-ORl"/>
@@ -71,6 +76,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="avatarImage" destination="UM8-4i-3Cf" id="QVP-wY-tDa"/>
+                                            <outlet property="imageIndicator" destination="nhz-YO-aZM" id="ou8-np-UjB"/>
                                             <outlet property="lastMessage" destination="wEv-XB-zcH" id="Wsg-Uj-KNS"/>
                                             <outlet property="nameLable" destination="o2p-iK-yGz" id="e99-qk-ypi"/>
                                             <outlet property="unreadMessageIndicator" destination="E9h-p6-ctA" id="vu9-ED-UsK"/>
@@ -137,17 +143,23 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="2Nb-Ir-dRN">
+                                                    <rect key="frame" x="54" y="39" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="9Xp-rv-wLO" firstAttribute="centerX" secondItem="w8J-2J-OWI" secondAttribute="centerX" id="5wg-i5-KTK"/>
                                                 <constraint firstItem="xqj-EI-9vz" firstAttribute="centerX" secondItem="w8J-2J-OWI" secondAttribute="centerX" id="S1x-K2-TpY"/>
+                                                <constraint firstItem="2Nb-Ir-dRN" firstAttribute="centerX" secondItem="xqj-EI-9vz" secondAttribute="centerX" id="gAh-oW-9aw"/>
                                                 <constraint firstItem="9Xp-rv-wLO" firstAttribute="top" secondItem="xqj-EI-9vz" secondAttribute="bottom" constant="10" id="ieB-y0-zNR"/>
+                                                <constraint firstItem="2Nb-Ir-dRN" firstAttribute="centerY" secondItem="xqj-EI-9vz" secondAttribute="centerY" id="lgC-w4-Suq"/>
                                                 <constraint firstItem="xqj-EI-9vz" firstAttribute="top" secondItem="w8J-2J-OWI" secondAttribute="top" constant="8" id="wZ8-o6-MGx"/>
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="128" height="130"/>
                                         <connections>
                                             <outlet property="avatarImage" destination="xqj-EI-9vz" id="sWM-Wa-ksM"/>
+                                            <outlet property="imageIndicator" destination="2Nb-Ir-dRN" id="Jbq-on-IId"/>
                                             <outlet property="nameLable" destination="9Xp-rv-wLO" id="fda-SK-oER"/>
                                         </connections>
                                     </collectionViewCell>

@@ -46,7 +46,7 @@ class MatchesViewController: UIViewController {
         configureNotificationCenter()
     }
     
-    func setAllHidden() {
+    private func setAllHidden() {
         activityIndicator.startAnimating()
         let status = true
         matchesTableView.isHidden = status
@@ -55,7 +55,7 @@ class MatchesViewController: UIViewController {
         messagesLable.isHidden = status
     }
     
-    func configureNotificationCenter() {
+    private func configureNotificationCenter() {
         notificationCenter.delegate = self
         
         notificationCenter.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
@@ -66,12 +66,12 @@ class MatchesViewController: UIViewController {
         }
     }
     
-    func configureEmptyLines() {
+    private func configureEmptyLines() {
         let buttomView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 100))
         matchesTableView.tableFooterView = buttomView
     }
     
-    func configereNonEmptyLines() {
+    private func configereNonEmptyLines() {
         let buttomView = createLineView()
         matchesTableView.tableFooterView = buttomView
         
@@ -79,7 +79,7 @@ class MatchesViewController: UIViewController {
         matchesTableView.tableHeaderView = topView
     }
     
-    func createLineView() -> UIView {
+    private func createLineView() -> UIView {
         let newView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 0.5))
         newView.backgroundColor = .lightGray
         return newView
