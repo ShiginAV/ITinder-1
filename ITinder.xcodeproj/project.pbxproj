@@ -195,7 +195,6 @@
 				1180252026C510840096A20F /* Router.swift */,
 				1180252226C5109C0096A20F /* Colors.swift */,
 				11647D0126CD0BAC002787FF /* Constants.swift */,
-				1180252426C510BD0096A20F /* UserService.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -322,6 +321,7 @@
 			isa = PBXGroup;
 			children = (
 				224F40D926CD150B00A95715 /* FirebaseService.swift */,
+				1180252426C510BD0096A20F /* UserService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -478,7 +478,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				11647D0226CD0BAC002787FF /* Constants.swift in Sources */,
-				220280A126BEA04300E37A47 /* DialogFromFirebase.swift in Sources */,
 				224F40C426CD149900A95715 /* MessageAndSenderModel.swift in Sources */,
 				1180253226C5125E0096A20F /* SwipeProfileContainerView.swift in Sources */,
 				117CEB0726C7E1F70018A753 /* CustomImageView.swift in Sources */,

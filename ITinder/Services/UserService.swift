@@ -88,7 +88,10 @@ class UserService {
     }
     
     private static func filtered(_ users: [User]) -> [User] {
-        users.filter { $0.identifier != currentUserId && !$0.likes.contains(currentUserId ?? "") }
+        users.filter {
+            guard let currentUserId = currentUserId else { return false }
+            return $0.identifier != currentUserId && !$0.likes.contains(currentUserId)
+        }
     }
     
     static func persist(user: User, withImage: UIImage?, completion: @escaping ((User?) -> Void)) {
@@ -182,6 +185,32 @@ class UserService {
                 }
             }
         }
+    }
+    
+    static func resetUsers(completion: @escaping ((Bool) -> Void)) {
+        lastUserId = ""
+        usersDatabase
+            .queryOrderedByKey()
+            .observeSingleEvent(of: .value) { snapshot in
+                guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
+                    completion(false)
+                    return
+                }
+                
+                var updates = [String: Any]()
+                children.forEach {
+                    if let value = $0.value as? [String: Any] {
+                        if let userId = value[kIdentifier] as? String {
+                            updates[userId + "/" + kLikes] = []
+                            updates[userId + "/" + kMatches] = []
+                        }
+                    }
+                }
+                usersDatabase.updateChildValues(updates) { error, _ in
+                    guard error == nil else { completion(false); return }
+                    completion(true)
+                }
+            }
     }
 }
 
