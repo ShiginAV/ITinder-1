@@ -431,7 +431,7 @@
         <!--Login View Controller-->
         <scene sceneID="pjX-Mc-XJP">
             <objects>
-                <viewController id="PNF-6p-Stq" customClass="LoginViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="PNF-6p-Stq" customClass="LoginViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nNB-SV-iEN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -516,7 +516,7 @@
         <!--Sign Up View Controller-->
         <scene sceneID="IPb-vb-JzO">
             <objects>
-                <viewController id="lBl-gg-bsX" customClass="SignUpViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignUpViewController" id="lBl-gg-bsX" customClass="SignUpViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KFS-zR-Fec">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

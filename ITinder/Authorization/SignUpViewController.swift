@@ -19,8 +19,20 @@ class SignUpViewController: UIViewController {
         super.viewDidLoad()
 
         self.hideKeyboardWhenTappedAround()
+        loginLabelTapped()
     }
 
+    private func loginLabelTapped() {
+        let loginLabelTap = UITapGestureRecognizer(target: self, action: #selector(transitionToLoginScreen))
+        toLoginLabel.isUserInteractionEnabled = true
+        toLoginLabel.addGestureRecognizer(loginLabelTap)
+    }
+    @objc func transitionToLoginScreen(_ sender: Any) {
+        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true)
+    }
+    
     override func viewDidLayoutSubviews() {
         Utilities.stylePrimaryButton(signUpButton)
         Utilities.stylePrimaryTextField(emailTextField)
