@@ -30,40 +30,13 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
 
         self.hideKeyboardWhenTappedAround()
         userInfoTextView.delegate = self
+        
         let errorMessage = validateFields()
         if errorMessage != nil {
             showAlert(title: "Ошибка регистрации", message: errorMessage)
         }
         
-        let imageTap = UITapGestureRecognizer(target: self, action: #selector(openImagePicker))
-        profileImageView.isUserInteractionEnabled = true
-        profileImageView.addGestureRecognizer(imageTap)
-        profileImageView.clipsToBounds = true
-        
-        imagePicker = UIImagePickerController()
-        imagePicker.allowsEditing = true
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.delegate = self
-        
-    }
-    
-    @objc func openImagePicker(_ sender: Any) {
-        self.present(imagePicker, animated: true, completion: nil)
-    }
-    
-    @IBAction func signUpButtonTapped(_ sender: Any) {
-        createUserData()
-    }
-    override func viewDidLayoutSubviews() {
-        Utilities.stylePrimaryButton(signUpButton)
-        Utilities.stylePrimaryTextField(nameTextField)
-        Utilities.stylePrimaryTextField(surnameTextField)
-        Utilities.stylePrimaryTextField(dateOfBirthTextField)
-        Utilities.stylePrimaryTextField(positionTextField)
-        Utilities.stylePrimaryTextView(userInfoTextView)
-        Utilities.styleCaptionLabel(captionLabel)
-        Utilities.stylePlaceholderLabel(userInfoLabel)
-        profileImageView.layer.cornerRadius = profileImageView.bounds.height / 2
+        profileImageTapped()
     }
     
     private func validateFields() -> String! {
@@ -74,6 +47,38 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
             return "Пожалуйста, заполните все поля регистрации"
         }
         return nil
+    }
+    
+    private func profileImageTapped() {
+        let imageTap = UITapGestureRecognizer(target: self, action: #selector(openImagePicker))
+        profileImageView.isUserInteractionEnabled = true
+        profileImageView.addGestureRecognizer(imageTap)
+        profileImageView.clipsToBounds = true
+        
+        imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = true
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+    }
+    
+    @objc func openImagePicker(_ sender: Any) {
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    @IBAction func signUpButtonTapped(_ sender: Any) {
+        createUserData()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        Utilities.stylePrimaryButton(signUpButton)
+        Utilities.stylePrimaryTextField(nameTextField)
+        Utilities.stylePrimaryTextField(surnameTextField)
+        Utilities.stylePrimaryTextField(dateOfBirthTextField)
+        Utilities.stylePrimaryTextField(positionTextField)
+        Utilities.stylePrimaryTextView(userInfoTextView)
+        Utilities.styleCaptionLabel(captionLabel)
+        Utilities.stylePlaceholderLabel(userInfoLabel)
+        profileImageView.layer.cornerRadius = profileImageView.bounds.height / 2
     }
     
     private func createUserData() {
