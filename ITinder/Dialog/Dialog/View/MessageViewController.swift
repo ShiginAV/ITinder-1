@@ -29,11 +29,15 @@ class MessageViewController: MessagesViewController {
         model.delegate = self
         
         showMessageTimestampOnSwipeLeft = true
-        messageInputBar.delegate = self
+        
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.messageCellDelegate = self
+        
+        messageInputBar = CameraInputBarAccessoryView()
+        messageInputBar.delegate = self
+        messageInputBar.inputTextView.isUserInteractionEnabled = true
     }
 }
 
@@ -65,6 +69,7 @@ extension MessageViewController: MessagesDataSource, MessagesLayoutDelegate, Mes
 }
 
 extension MessageViewController: InputBarAccessoryViewDelegate {
+
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         ConversationService.createMessage(convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
         messageInputBar.inputTextView.text = ""
@@ -97,5 +102,45 @@ extension MessageViewController: MessageCellDelegate {
         guard let messagesDataSourse = messagesCollectionView.messagesDataSource else { return }
         let message = messagesDataSourse.messageForItem(at: indexPath, in: messagesCollectionView)
         print(message.sender.senderId)
+    }
+    
+    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        if message.sender.senderId == selfSender.senderId {
+            return Colors.blue
+        } else {
+            return .lightGray
+        }
+    }
+}
+
+extension MessageViewController: CameraInputBarAccessoryViewDelegate {
+    
+    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith attachments: [AttachmentManager.Attachment]) {
+        var images = [UIImage]()
+        
+        for item in attachments {
+            
+            if case .image(let image) = item {
+                images.append(image)
+            }
+        }
+        self.sendImageMessage(photo: images)
+        inputBar.invalidatePlugins()
+    }
+    
+    func sendImageMessage(photo: [UIImage]) {
+        print(photo)
+        ConversationService.createAttachmentMessage(convId: conversationId, images: photo, selfSender: selfSender, companionId: companionId)
+        messageInputBar.inputTextView.text = ""
+    }
+}
+
+extension MessageViewController {
+    func getSelf() -> UIViewController {
+        return self
+    }
+    
+    func showAlert(alert: UIAlertController) {
+        present(alert, animated: true, completion: nil)
     }
 }

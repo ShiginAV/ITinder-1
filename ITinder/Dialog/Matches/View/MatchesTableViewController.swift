@@ -21,6 +21,8 @@ class MatchesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ConversationService.createMatchConversation(currentUserId: "userTestId1", companionId: "userTestId2")
+        
         startGroup.enter()
         ConversationService.getCurrentUser { (user) in
             self.currentUser = user
@@ -212,7 +214,7 @@ extension MatchesViewController: MatchesDelegate {
     
     func sendNotification(request: UNNotificationRequest) {
         notificationCenter.add(request) { (error) in
-            print(error)
+            print(error as Any)
         }
     }
     

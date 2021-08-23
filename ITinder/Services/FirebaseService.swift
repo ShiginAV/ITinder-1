@@ -71,38 +71,108 @@ class ConversationService {
 
         let date = convertStringFromDate()
         
-        referenceConversation.child(convId).child("messages").child(messageId.uuidString).updateChildValues(["date": date, "messageId": messageId.uuidString, "sender": selfSender.senderId, "text": text])
+        referenceConversation.child(convId).child("messages").child(messageId.uuidString).updateChildValues(["date": date,
+                                                                                                             "messageId": messageId.uuidString,
+                                                                                                             "sender": selfSender.senderId,
+                                                                                                             "messageType": "text",
+                                                                                                             "text": text])
         referenceConversation.child(convId).child("lastMessage").setValue(messageId.uuidString)
         Database.database().reference().child("users").child(companionId).child("conversations").child(selfSender.senderId).child("lastMessageWasRead").setValue(false)
     }
     
-    static func messagesFromConversations(conversationId: String, completion: @escaping ([Message]) -> Void) {
-        Database.database().reference().observe(.value) { (snapshot) in
-            guard snapshot.exists() else { return }
-            var messagesFromFirebase = [Message]()
+    static func createAttachmentMessage(convId: String, images: [UIImage], selfSender: Sender, companionId: String) {
+        let messageId = UUID()
+        let referenceConversation = Database.database().reference().child("conversations")
+
+        let date = convertStringFromDate()
+        for index in 0..<images.count {
+            guard let image = images[index].jpegData(compressionQuality: 0.5) else { return }
             
-            let internetMessages = snapshot.childSnapshot(forPath: "conversations").childSnapshot(forPath: conversationId).childSnapshot(forPath: "messages")
+            let metadata1 = StorageMetadata()
+            metadata1.contentType = "image/jpeg"
+            
+            let ref = Storage.storage().reference().child(convId).child(messageId.uuidString).child("Attachment\(index)")
+            
+            ref.putData(image, metadata: metadata1) { (metadata, _) in
+                ref.downloadURL { (url, _) in
+                    referenceConversation.child(convId).child("messages").child(messageId.uuidString).updateChildValues(["date": date,
+                                                                                                                         "messageId": messageId.uuidString,
+                                                                                                                         "sender": selfSender.senderId,
+                                                                                                                         "attachmentCount": images.count,
+                                                                                                                         "messageType": "photo",
+                                                                                                                         "attachment\(index)": url?.absoluteString ?? "",
+                                                                                                                         "text": "Вложение"])
+                }
+            }
+        }
+        referenceConversation.child(convId).child("lastMessage").setValue(messageId.uuidString)
+        Database.database().reference().child("users").child(companionId).child("conversations").child(selfSender.senderId).child("lastMessageWasRead").setValue(false)
+    }
+    
+    static func messagesFromConversations(conversationId: String, messagesComplition: () -> ([String: Message]), completion: @escaping ([String: Message]) -> Void) {
+        let currentMessages = messagesComplition()
+        Database.database().reference().child("conversations").child(conversationId).child("messages").observe(.value) { (snapshot) in
+        
+            guard snapshot.exists() else { return }
+            var messagesFromFirebase = [String: Message]()
+            
+            let internetMessages = snapshot
+
+            var senders = [String: Sender]()
+            let group = DispatchGroup()
             
             guard let messages = internetMessages.children.allObjects as? [DataSnapshot] else { return }
             for message in messages {
-                let senderData = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: message.childSnapshot(forPath: "sender").value as? String ?? "")
-                
-                guard let senderName = senderData.childSnapshot(forPath: "name").value as? String else { return }
-                guard let senderPhotoUrl = senderData.childSnapshot(forPath: "imageUrl").value as? String else { return }
-                guard let senderId = message.childSnapshot(forPath: "sender").value as? String else { return }
-                
-                let sender = Sender(photoUrl: senderPhotoUrl, senderId: senderId, displayName: senderName)
                 
                 guard let messageId = message.childSnapshot(forPath: "messageId").value as? String else { return }
-                guard let text = message.childSnapshot(forPath: "text").value as? String else { return }
                 guard let stringDate = message.childSnapshot(forPath: "date").value as? String else { return }
+                guard let type = message.childSnapshot(forPath: "messageType").value as? String else { return }
                 
                 guard let date = convertStringToDate(stringDate: stringDate) else { return }
                 
-                let currentMessage = Message(sender: sender, messageId: messageId, sentDate: date, kind: .text(text))
-                messagesFromFirebase.append(currentMessage)
+                if currentMessages[messageId] != nil { continue }
+                
+                let senderId = message.childSnapshot(forPath: "sender").value as? String ?? ""
+                
+                if senders[senderId] == nil {
+                    group.enter()
+                    getUserData(userId: message.childSnapshot(forPath: "sender").value as? String ?? "") { (user) in
+                        let senderName = user.name
+                        let senderPhotoUrl = user.imageUrl
+                        let senderId = user.identifier
+                        
+                        senders[senderId] = Sender(photoUrl: senderPhotoUrl, senderId: senderId, displayName: senderName)
+                        group.leave()
+                    }
+                }
+                group.wait()
+                
+                var currentMessage: Message!
+                if type == "text" {
+                    
+                    guard let text = message.childSnapshot(forPath: "text").value as? String else { return }
+                    currentMessage = Message(sender: senders[senderId]!, messageId: messageId, sentDate: date, kind: .text(text))
+                    messagesFromFirebase[currentMessage.messageId] = currentMessage
+                    completion(messagesFromFirebase)
+                    
+                } else if type == "photo" {
+                    
+                    guard let attachmentCount = message.childSnapshot(forPath: "attachmentCount").value as? Int else { return }
+                    for index in 0..<attachmentCount {
+                        
+                        messagesFromFirebase[messageId] = Message(sender: senders[senderId]!, messageId: messageId, sentDate: date, kind: .photo(MyMedia(image: UIImage(named: "birth_date_icon") ?? UIImage(), placeholderImage: UIImage(), size: CGSize(width: 150, height: 150))))
+                    
+                        guard let attachmentUrl = message.childSnapshot(forPath: "attachment\(index)").value as? String else { return }
+                        downloadPhoto(stringUrl: attachmentUrl, userId: "") { (data) in
+                            let media = MyMedia(image: UIImage(data: data) ?? UIImage(), placeholderImage: UIImage(named: "birth_date_icon") ?? UIImage(), size: CGSize(width: 150, height: 150))
+                            currentMessage = Message(sender: senders[senderId]!, messageId: messageId, sentDate: date, kind: .photo(media))
+                            messagesFromFirebase[messageId] = currentMessage
+                            completion(messagesFromFirebase)
+                        }
+                    }
+                }
             }
-            completion(messagesFromFirebase)
+            //            completion(messagesFromFirebase)
         }
     }
     
@@ -123,6 +193,36 @@ class ConversationService {
         dateFormater.dateFormat = "yy-MM-dd H:m:ss.SSSS Z"
         guard let date = dateFormater.date(from: stringDate) else { return nil }
         return date
+    }
+    
+    static func createMatchConversation(currentUserId: String, companionId: String) {
+        let newConversationId = UUID().uuidString
+        let currentUserRef = Database.database().reference().child("users").child(currentUserId).child("conversations").child(companionId)
+        
+        let group = DispatchGroup()
+        
+        var escape = false
+        
+        group.enter()
+        currentUserRef.getData { (error, snapshot) in
+            if snapshot.exists() {
+                escape = true
+            }
+            group.leave()
+        }
+        
+        group.wait()
+        if escape {
+            return
+        }
+        
+        currentUserRef.child("conversationId").setValue(newConversationId)
+        currentUserRef.child("lastMessageWasRead").setValue(true)
+        
+        let companionUserRef = Database.database().reference().child("users").child(companionId).child("conversations").child(currentUserId)
+        
+        companionUserRef.child("conversationId").setValue(newConversationId)
+        companionUserRef.child("lastMessageWasRead").setValue(true)
     }
     
 }

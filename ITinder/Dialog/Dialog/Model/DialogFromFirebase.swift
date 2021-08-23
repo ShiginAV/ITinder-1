@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import MessageKit
 
 protocol DialogDelegate: AnyObject {
     func reloadMessages()
@@ -16,6 +17,16 @@ protocol DialogDelegate: AnyObject {
 class DialogFromFirebase {
     
     weak var delegate: DialogDelegate?
+    
+    var messagesDict = [String: Message]() {
+        didSet {
+            var messagesArray = [Message]()
+            messagesDict.values.forEach { (message) in
+                messagesArray.append(message)
+            }
+            messages = messagesArray
+        }
+    }
     
     var messages = [Message]() {
         didSet {
@@ -31,14 +42,20 @@ class DialogFromFirebase {
     }
     
     init(conversationId: String) {
-        ConversationService.messagesFromConversations(conversationId: conversationId) { [weak self] (internetMessages) in
-            self?.messages = internetMessages
+        ConversationService.messagesFromConversations(conversationId: conversationId) { [weak self] () -> ([String : Message]) in
+            return messagesDict
+        } completion: { [weak self] (internetMessages) in
+            var messagesArray = [Message]()
+            //            internetMessages.values.forEach { (message) in
+            //                messagesArray.append(message)
+            //            }
+            //            self?.messages = messagesArray
+                        self?.messagesDict = internetMessages
         }
     }
 }
 
 extension DialogFromFirebase {
-    
     func isPreviousMessageSameSender(indexPath: IndexPath) -> Bool {
         guard indexPath.section - 1 >= 0 else { return false}
         return messages[indexPath.section].sender.senderId == messages[indexPath.section - 1].sender.senderId

@@ -68,7 +68,7 @@ class MatchesFromFirebase {
             
             if let notifyFlag = self?.notificationFlag {
                 if conv.count > self?.companions.count ?? 0 && notifyFlag {
-                    self?.sendNotification(companionName: "Match!", message: "You have a new match!")
+                    self?.sendNotification(companionName: "Пара!", message: "У вас есть новая пара!")
                 }
             }
             
@@ -105,7 +105,7 @@ class MatchesFromFirebase {
             
             if let notifyFlag = self?.notificationFlag {
                 if !conv[index].lastMessageWasRead && notifyFlag {
-                    self?.sendNotification(companionName: user.name, message: "You have a massage from \(user.name)")
+                    self?.sendNotification(companionName: user.name, message: "У вас новое сообщение от \(user.name)")
                 }
             }
 
