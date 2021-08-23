@@ -7,24 +7,20 @@ class MessageViewController: MessagesViewController {
     deinit {
         print("out")
     }
-
-    var model: DialogFromFirebase!
     
-    var selfSenderPhotoUrl: String!
-    var selfSenderId: String!
-    var selfSenderName: String!
+    var model: DialogFromFirebase!
     
     var companionId: String!
     
+    var currentUser: User!
+    
     var conversationId: String!
     
-    private var selfSender: Sender!
-    
-    var downloadedPhoto = [String: UIImage]() {
-        didSet {
-//            messagesCollectionView.reloadData()
-        }
+    private var selfSender: Sender {
+        Sender(photoUrl: currentUser.imageUrl, senderId: currentUser.identifier, displayName: currentUser.name)
     }
+    
+    var downloadedPhoto = [String: UIImage]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +34,6 @@ class MessageViewController: MessagesViewController {
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.messageCellDelegate = self
-        
-        selfSender = Sender(photoUrl: selfSenderPhotoUrl, senderId: selfSenderId, displayName: selfSenderName)
     }
 }
 
@@ -78,7 +72,7 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         avatarView.isHidden = model.isNextMessageSameSender(indexPath: indexPath)
-        let sender = message.sender as! Sender
+        guard let sender = message.sender as? Sender else { return }
         let senderId = sender.senderId
  
         avatarView.image = downloadedPhoto[senderId]
@@ -87,7 +81,7 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
 
 extension MessageViewController: DialogDelegate {
     func getCompanionsId() -> [String : String] {
-        return ["currentUserId": selfSenderId,
+        return ["currentUserId": currentUser.identifier,
                 "companionId": companionId]
     }
     

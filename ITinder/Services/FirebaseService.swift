@@ -10,13 +10,21 @@ import Firebase
 
 class ConversationService {
     
+    static func getCurrentUser(completion: @escaping (User) -> Void ) {
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        getUserData(userId: currentUserId) { (user) in
+            completion(user)
+        }
+    }
+    
     static func getConversations(userId: String, completion: @escaping ([CompanionStruct]) -> Void) {
         Database.database().reference().child("users").child(userId).child("conversations").observe(.value) { (snapshot) in
             var conversations = [CompanionStruct]()
-            for conversation in snapshot.children.allObjects as! [DataSnapshot] {
+            guard let dialogs = snapshot.children.allObjects as? [DataSnapshot] else { return }
+            for conversation in dialogs {
                 let userId = conversation.key
-                let convId = conversation.childSnapshot(forPath: "conversationId").value as! String
-                let lastMessageWasRead = conversation.childSnapshot(forPath: "lastMessageWasRead").value as! Bool
+                guard let convId = conversation.childSnapshot(forPath: "conversationId").value as? String else { return }
+                guard let lastMessageWasRead = conversation.childSnapshot(forPath: "lastMessageWasRead").value as? Bool else { return }
                 conversations.append(CompanionStruct(userId: userId, conversationId: convId, lastMessageWasRead: lastMessageWasRead))
             }
             completion(conversations)
@@ -32,13 +40,14 @@ class ConversationService {
         }
     }
     
-    static func getUserData(userId: String, completion: @escaping (_ name: String?, _ photoUrl: String?) -> Void) {
+    static func getUserData(userId: String, completion: @escaping (User) -> Void) {
         Database.database().reference().getData { (error, snapshot) in
             if error != nil { return }
             let userDataSnap = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: userId)
-            let name = userDataSnap.childSnapshot(forPath: "name").value as? String
-            let photoUrl = userDataSnap.childSnapshot(forPath: "imageUrl").value as? String
-            completion(name, photoUrl)
+
+            guard let userData = userDataSnap.value as? [String: Any] else { return }
+            let user = User(dictionary: userData)
+            completion(user)
         }
     }
     
@@ -74,20 +83,21 @@ class ConversationService {
             
             let internetMessages = snapshot.childSnapshot(forPath: "conversations").childSnapshot(forPath: conversationId).childSnapshot(forPath: "messages")
             
-            for message in internetMessages.children.allObjects as! [DataSnapshot] {
-                let senderData = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: message.childSnapshot(forPath: "sender").value as! String)
+            guard let messages = internetMessages.children.allObjects as? [DataSnapshot] else { return }
+            for message in messages {
+                let senderData = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: message.childSnapshot(forPath: "sender").value as? String ?? "")
                 
-                let senderName = senderData.childSnapshot(forPath: "name").value as! String
-                let senderPhotoUrl = senderData.childSnapshot(forPath: "imageUrl").value as! String
-                let senderId = message.childSnapshot(forPath: "sender").value as! String
+                guard let senderName = senderData.childSnapshot(forPath: "name").value as? String else { return }
+                guard let senderPhotoUrl = senderData.childSnapshot(forPath: "imageUrl").value as? String else { return }
+                guard let senderId = message.childSnapshot(forPath: "sender").value as? String else { return }
                 
                 let sender = Sender(photoUrl: senderPhotoUrl, senderId: senderId, displayName: senderName)
                 
-                let messageId = message.childSnapshot(forPath: "messageId").value as! String
-                let text = message.childSnapshot(forPath: "text").value as! String
-                let stringDate = message.childSnapshot(forPath: "date").value as! String
+                guard let messageId = message.childSnapshot(forPath: "messageId").value as? String else { return }
+                guard let text = message.childSnapshot(forPath: "text").value as? String else { return }
+                guard let stringDate = message.childSnapshot(forPath: "date").value as? String else { return }
                 
-                let date = convertStringToDate(stringDate: stringDate)
+                guard let date = convertStringToDate(stringDate: stringDate) else { return }
                 
                 let currentMessage = Message(sender: sender, messageId: messageId, sentDate: date, kind: .text(text))
                 messagesFromFirebase.append(currentMessage)
@@ -107,11 +117,11 @@ class ConversationService {
         return dateFormater.string(from: date)
     }
     
-    static private func convertStringToDate(stringDate: String) -> Date {
+    static private func convertStringToDate(stringDate: String) -> Date? {
         let dateFormater = DateFormatter()
         dateFormater.locale = Locale(identifier: "en_US_POSIX")
         dateFormater.dateFormat = "yy-MM-dd H:m:ss.SSSS Z"
-        let date = dateFormater.date(from: stringDate)!
+        guard let date = dateFormater.date(from: stringDate) else { return nil }
         return date
     }
     
