@@ -371,8 +371,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0EE0185326B96AEF00AEB059 /* Build configuration list for PBXNativeTarget "ITinder" */;
 			buildPhases = (
-				2263769726BFE59F00836AA5 /* Swift lint */,
 				4488CA0C128B4F89ECE2BC34 /* [CP] Check Pods Manifest.lock */,
+				2263769726BFE59F00836AA5 /* Swift lint */,
 				0EE0183B26B96AEA00AEB059 /* Sources */,
 				0EE0183C26B96AEA00AEB059 /* Frameworks */,
 				0EE0183D26B96AEA00AEB059 /* Resources */,

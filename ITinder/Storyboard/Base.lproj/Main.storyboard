@@ -420,6 +420,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="F1L-ha-5fb"/>
                     <connections>
+                        <outlet property="googleImageView" destination="6OQ-In-Uk6" id="3kJ-1H-s9r"/>
                         <outlet property="loginButton" destination="fYL-d9-AtH" id="aga-Vc-FoZ"/>
                         <outlet property="signUpButton" destination="Mnh-9Y-QzZ" id="AaH-6v-LNC"/>
                     </connections>
