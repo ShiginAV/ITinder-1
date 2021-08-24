@@ -16,7 +16,7 @@ class UserService {
     private static var lastUserId = ""
     
     static var currentUserId: String? {
-        "4"//Auth.auth().currentUser.map { $0.uid }
+        Auth.auth().currentUser.map { $0.uid }
     }
     
     static func getUserBy(id: String, completion: @escaping (User?) -> Void) {
@@ -187,6 +187,7 @@ class UserService {
         }
     }
     
+    // reset likes and matches for all users
     static func resetUsers(completion: @escaping ((Bool) -> Void)) {
         lastUserId = ""
         usersDatabase
