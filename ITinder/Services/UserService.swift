@@ -11,8 +11,8 @@ import FirebaseDatabase
 import FirebaseStorage
 
 class UserService {
-    private static let imageStorage = Storage.storage().reference().child(kAvatarsRef)
-    private static let usersDatabase = Database.database().reference().child(kUsersRef)
+    private static let imageStorage = Storage.storage().reference().child(avatarsRefKey)
+    private static let usersDatabase = Database.database().reference().child(usersRefKey)
     private static var lastUserId = ""
     
     static var currentUserId: String? {
@@ -154,7 +154,7 @@ class UserService {
             }
             user.likes.append(currentUserId)
             
-            usersDatabase.child(forUserId).updateChildValues([kLikes: user.likes]) { error, _ in
+            usersDatabase.child(forUserId).updateChildValues([likesKey: user.likes]) { error, _ in
                 guard error == nil else { completion(nil); return }
                 completion(user)
             }
@@ -176,10 +176,10 @@ class UserService {
             currentUser.matches.append(likedUser.identifier)
             likedUser.matches.append(currentUser.identifier)
             
-            usersDatabase.child(currentUser.identifier).updateChildValues([kMatches: currentUser.matches]) { error, _ in
+            usersDatabase.child(currentUser.identifier).updateChildValues([matchesKey: currentUser.matches]) { error, _ in
                 guard error == nil else { completion(nil); return }
                 
-                usersDatabase.child(likedUser.identifier).updateChildValues([kMatches: likedUser.matches]) { error, _ in
+                usersDatabase.child(likedUser.identifier).updateChildValues([matchesKey: likedUser.matches]) { error, _ in
                     guard error == nil else { completion(nil); return }
                     completion(likedUser)
                 }
@@ -201,9 +201,9 @@ class UserService {
                 var updates = [String: Any]()
                 children.forEach {
                     if let value = $0.value as? [String: Any] {
-                        if let userId = value[kIdentifier] as? String {
-                            updates[userId + "/" + kLikes] = []
-                            updates[userId + "/" + kMatches] = []
+                        if let userId = value[identifierKey] as? String {
+                            updates[userId + "/" + likesKey] = []
+                            updates[userId + "/" + matchesKey] = []
                         }
                     }
                 }
@@ -217,34 +217,34 @@ class UserService {
 
 extension User {
     init(dictionary: [String: Any]) {
-        identifier = dictionary[kIdentifier] as? String ?? ""
-        email = dictionary[kEmail] as? String ?? ""
-        imageUrl = dictionary[kImageUrl] as? String ?? ""
-        name = dictionary[kName] as? String ?? ""
-        position = dictionary[kPosition] as? String ?? ""
-        description = dictionary[kDescription] as? String
-        birthDate = dictionary[kBirthDate] as? String
-        city = dictionary[kCity] as? String
-        education = dictionary[kEducation] as? String
-        company = dictionary[kCompany] as? String
-        employment = dictionary[kEmployment] as? String
-        likes = dictionary[kLikes] as? [String] ?? []
-        matches = dictionary[kMatches] as? [String] ?? []
+        identifier = dictionary[identifierKey] as? String ?? ""
+        email = dictionary[emailKey] as? String ?? ""
+        imageUrl = dictionary[imageUrlKey] as? String ?? ""
+        name = dictionary[nameKey] as? String ?? ""
+        position = dictionary[positionKey] as? String ?? ""
+        description = dictionary[descriptionKey] as? String
+        birthDate = dictionary[birthDateKey] as? String
+        city = dictionary[cityKey] as? String
+        education = dictionary[educationKey] as? String
+        company = dictionary[companyKey] as? String
+        employment = dictionary[employmentKey] as? String
+        likes = dictionary[likesKey] as? [String] ?? []
+        matches = dictionary[matchesKey] as? [String] ?? []
     }
     
     var userDictionary: [String: Any] {
-        [kIdentifier: identifier,
-         kEmail: email,
-         kImageUrl: imageUrl,
-         kName: name,
-         kPosition: position,
-         kDescription: description ?? "",
-         kBirthDate: birthDate ?? "",
-         kCity: city ?? "",
-         kEducation: education ?? "",
-         kCompany: company ?? "",
-         kEmployment: employment ?? "",
-         kLikes: likes,
-         kMatches: matches]
+        [identifierKey: identifier,
+         emailKey: email,
+         imageUrlKey: imageUrl,
+         nameKey: name,
+         positionKey: position,
+         descriptionKey: description ?? "",
+         birthDateKey: birthDate ?? "",
+         cityKey: city ?? "",
+         educationKey: education ?? "",
+         companyKey: company ?? "",
+         employmentKey: employment ?? "",
+         likesKey: likes,
+         matchesKey: matches]
     }
 }
