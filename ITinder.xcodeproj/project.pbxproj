@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */; };
+		0EA8271D26CE803A00A69C32 /* Transitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8271C26CE803A00A69C32 /* Transitor.swift */; };
+		0EC7545826CE6203008DA01A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545426CE6203008DA01A /* LoginViewController.swift */; };
+		0EC7545926CE6203008DA01A /* AuthMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545526CE6203008DA01A /* AuthMethodsViewController.swift */; };
+		0EC7545A26CE6203008DA01A /* CreatingUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545626CE6203008DA01A /* CreatingUserInfoViewController.swift */; };
+		0EC7545B26CE6203008DA01A /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545726CE6203008DA01A /* SignUpViewController.swift */; };
+		0EC7545D26CE6238008DA01A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545C26CE6238008DA01A /* Extensions.swift */; };
+		0EC7545F26CE624A008DA01A /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545E26CE624A008DA01A /* Utilities.swift */; };
 		0EE0184326B96AEA00AEB059 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0184226B96AEA00AEB059 /* AppDelegate.swift */; };
 		0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0184426B96AEA00AEB059 /* SceneDelegate.swift */; };
 		0EE0184A26B96AEA00AEB059 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184826B96AEA00AEB059 /* Main.storyboard */; };
@@ -45,6 +53,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
+		0EA8271C26CE803A00A69C32 /* Transitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transitor.swift; sourceTree = "<group>"; };
+		0EC7545426CE6203008DA01A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		0EC7545526CE6203008DA01A /* AuthMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthMethodsViewController.swift; sourceTree = "<group>"; };
+		0EC7545626CE6203008DA01A /* CreatingUserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreatingUserInfoViewController.swift; sourceTree = "<group>"; };
+		0EC7545726CE6203008DA01A /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		0EC7545C26CE6238008DA01A /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0EC7545E26CE624A008DA01A /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		0EE0183F26B96AEA00AEB059 /* ITinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ITinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE0184226B96AEA00AEB059 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EE0184426B96AEA00AEB059 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -126,6 +142,10 @@
 		0E7E2A6726BAC2B40012E987 /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
+				0EC7545526CE6203008DA01A /* AuthMethodsViewController.swift */,
+				0EC7545626CE6203008DA01A /* CreatingUserInfoViewController.swift */,
+				0EC7545426CE6203008DA01A /* LoginViewController.swift */,
+				0EC7545726CE6203008DA01A /* SignUpViewController.swift */,
 			);
 			path = Authorization;
 			sourceTree = "<group>";
@@ -191,9 +211,12 @@
 		1180251D26C510300096A20F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				0EC7545E26CE624A008DA01A /* Utilities.swift */,
+				0EC7545C26CE6238008DA01A /* Extensions.swift */,
 				1180251E26C510550096A20F /* Icons.swift */,
 				1180252026C510840096A20F /* Router.swift */,
 				1180252226C5109C0096A20F /* Colors.swift */,
+				0EA8271C26CE803A00A69C32 /* Transitor.swift */,
 				11647D0126CD0BAC002787FF /* Constants.swift */,
 			);
 			path = Utils;
@@ -321,6 +344,7 @@
 			isa = PBXGroup;
 			children = (
 				224F40D926CD150B00A95715 /* FirebaseService.swift */,
+				0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */,
 				1180252426C510BD0096A20F /* UserService.swift */,
 			);
 			path = Services;
@@ -477,6 +501,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EC7545B26CE6203008DA01A /* SignUpViewController.swift in Sources */,
 				11647D0226CD0BAC002787FF /* Constants.swift in Sources */,
 				224F40C426CD149900A95715 /* MessageAndSenderModel.swift in Sources */,
 				1180253226C5125E0096A20F /* SwipeProfileContainerView.swift in Sources */,
@@ -496,16 +521,23 @@
 				1180253926C512FB0096A20F /* SwipeViewController.swift in Sources */,
 				224F40CA26CD14A100A95715 /* DialogViewController.swift in Sources */,
 				224F40CF26CD14AC00A95715 /* MatchesFromFirebase.swift in Sources */,
+				0EC7545826CE6203008DA01A /* LoginViewController.swift in Sources */,
 				1180252E26C5119D0096A20F /* SwipeCardInfoView.swift in Sources */,
 				0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */,
 				1180253D26C513310096A20F /* EditUserProfileViewController.swift in Sources */,
+				0EC7545F26CE624A008DA01A /* Utilities.swift in Sources */,
+				0EC7545A26CE6203008DA01A /* CreatingUserInfoViewController.swift in Sources */,
 				1180252B26C511690096A20F /* SwipeCardModel.swift in Sources */,
 				224F40D526CD14B500A95715 /* CollectionViewCell.swift in Sources */,
+				0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */,
+				0EA8271D26CE803A00A69C32 /* Transitor.swift in Sources */,
 				1180253F26C513670096A20F /* TabBarController.swift in Sources */,
 				224F40C926CD14A100A95715 /* MessageViewController.swift in Sources */,
 				224F40CE26CD14AC00A95715 /* CompanionModel.swift in Sources */,
 				11812D4426C6D5F6007399A2 /* EmptyShimmerView.swift in Sources */,
 				1180253026C511BB0096A20F /* SwipeCardView.swift in Sources */,
+				0EC7545D26CE6238008DA01A /* Extensions.swift in Sources */,
+				0EC7545926CE6203008DA01A /* AuthMethodsViewController.swift in Sources */,
 				117CEB0926C825790018A753 /* ProfileCharacteristicView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

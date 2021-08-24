@@ -4,9 +4,7 @@ class MatchesViewController: UIViewController {
     
     var model: MatchesFromFirebase!
 
-    var currentUserId: String!
-    var currentUserName: String!
-    var currentUserPhotoUrl: String!
+    var currentUser: User!
     
     @IBOutlet weak var matchesCollectionView: UICollectionView!
     @IBOutlet weak var matchesTableView: UITableView!
@@ -18,31 +16,22 @@ class MatchesViewController: UIViewController {
     
     let notificationCenter = UNUserNotificationCenter.current()
     
+    let startGroup = DispatchGroup()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setAllHidden()
-        
-        let user = 3
-        
-        switch user {
-        case 1:
-            currentUserId = "QY9pgcIFrMc4FiQRqyzrEaWayQ53"
-            currentUserName = "Alex"
-            currentUserPhotoUrl = "https://firebasestorage.googleapis.com/v0/b/itinder-d319f.appspot.com/o/Avatars%2Fbrad1.jpg?alt=media&token=66eb65d3-a8a8-4ca5-8874-6f085ebd7f0d"
-        case 2:
-            currentUserId = "2VXr50Su49fSS13VdF6cqBHAMVq2"
-            currentUserName = "Andrey"
-            currentUserPhotoUrl = "https://firebasestorage.googleapis.com/v0/b/itinder-d319f.appspot.com/o/Avatars%2FgsjHaM2Wqz0.jpg?alt=media&token=c669e780-2558-4b54-b571-f30a29f26ab9"
-        case 3:
-            currentUserId = "userTestId3"
-            currentUserName = "Andrey"
-            currentUserPhotoUrl = "https://firebasestorage.googleapis.com/v0/b/itinder-d319f.appspot.com/o/Avatars%2FJYo_0l-Uhlo.jpg?alt=media&token=da994315-5a1e-4c14-b9b2-60def878dc7a"
-        default:
-            return
+        startGroup.enter()
+        ConversationService.getCurrentUser { (user) in
+            self.currentUser = user
+            self.startGroup.leave()
         }
         
-        model = MatchesFromFirebase(currentUserPhotoUrl: currentUserPhotoUrl, currentUserId: currentUserId)
+        startGroup.wait()
+        
+        setAllHidden()
+        
+        model = MatchesFromFirebase(user: currentUser)
         model.delegate = self
         
         navigationController?.navigationBar.isHidden = true
@@ -57,7 +46,7 @@ class MatchesViewController: UIViewController {
         configureNotificationCenter()
     }
     
-    func setAllHidden() {
+    private func setAllHidden() {
         activityIndicator.startAnimating()
         let status = true
         matchesTableView.isHidden = status
@@ -66,24 +55,23 @@ class MatchesViewController: UIViewController {
         messagesLable.isHidden = status
     }
     
-    func configureNotificationCenter() {
+    private func configureNotificationCenter() {
         notificationCenter.delegate = self
         
         notificationCenter.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
             guard granted else { return }
             self.notificationCenter.getNotificationSettings { (settings) in
-                print(settings)
                 guard settings.authorizationStatus == .authorized else { return }
             }
         }
     }
     
-    func configureEmptyLines() {
+    private func configureEmptyLines() {
         let buttomView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 100))
         matchesTableView.tableFooterView = buttomView
     }
     
-    func configereNonEmptyLines() {
+    private func configereNonEmptyLines() {
         let buttomView = createLineView()
         matchesTableView.tableFooterView = buttomView
         
@@ -91,7 +79,7 @@ class MatchesViewController: UIViewController {
         matchesTableView.tableHeaderView = topView
     }
     
-    func createLineView() -> UIView {
+    private func createLineView() -> UIView {
         let newView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 0.5))
         newView.backgroundColor = .lightGray
         return newView
@@ -136,13 +124,13 @@ extension MatchesViewController: UITableViewDataSource, UITableViewDelegate {
         if editingStyle == .delete {
             let companionId = model.oldCompanions[indexPath.row].userId
             let conversationId = model.oldCompanions[indexPath.row].conversationId
-            model.deleteMatch(currentUserId: currentUserId, companionId: companionId, conversationId: conversationId)
+            model.deleteMatch(currentUserId: currentUser.identifier, companionId: companionId, conversationId: conversationId)
             
         }
     }
     
     func createDialog (companion: CompanionStruct) {
-        let dialogViewController = self.storyboard?.instantiateViewController(withIdentifier: "Dialog") as! DialogViewController
+        guard let dialogViewController = self.storyboard?.instantiateViewController(withIdentifier: "Dialog") as? DialogViewController else { return }
         
         let companionId = companion.userId
         let convId = companion.conversationId
@@ -150,12 +138,10 @@ extension MatchesViewController: UITableViewDataSource, UITableViewDelegate {
         dialogViewController.companion = companion
         dialogViewController.companionPhoto = model.downloadedPhoto[companionId]
         
-        dialogViewController.messageViewController.selfSenderId = self.currentUserId
-        dialogViewController.messageViewController.selfSenderName = self.currentUserName
-        dialogViewController.messageViewController.selfSenderPhotoUrl = self.currentUserPhotoUrl
+        dialogViewController.messageViewController.currentUser = currentUser
         dialogViewController.messageViewController.conversationId = convId
         
-        dialogViewController.messageViewController.downloadedPhoto[currentUserId] = model.downloadedPhoto[currentUserId]
+        dialogViewController.messageViewController.downloadedPhoto[currentUser.identifier] = model.downloadedPhoto[currentUser.identifier]
         dialogViewController.messageViewController.downloadedPhoto[companionId] = model.downloadedPhoto[companionId]
         
         dialogViewController.messageViewController.companionId = companionId

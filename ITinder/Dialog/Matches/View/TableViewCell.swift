@@ -17,8 +17,11 @@ class TableViewCell: UITableViewCell {
     
     @IBOutlet weak var lastMessage: UILabel!
     
+    @IBOutlet weak var imageIndicator: UIActivityIndicatorView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+        avatarImage.isHidden = true
     }
     
     override func layoutSubviews() {
@@ -35,5 +38,17 @@ class TableViewCell: UITableViewCell {
         nameLable.text = name
         self.lastMessage.text = lastMessage
         unreadMessageIndicator.isHidden = lastMessageWasRead
+        setIndicator()
+    }
+    
+    private func setIndicator() {
+        if self.avatarImage.image == nil {
+            imageIndicator.isHidden = false
+            imageIndicator.startAnimating()
+        } else {
+            avatarImage.isHidden = false
+            imageIndicator.isHidden = true
+            imageIndicator.stopAnimating()
+        }
     }
 }
