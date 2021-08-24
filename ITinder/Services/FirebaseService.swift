@@ -80,7 +80,7 @@ class ConversationService {
         Database.database().reference().child("users").child(companionId).child("conversations").child(selfSender.senderId).child("lastMessageWasRead").setValue(false)
     }
     
-    static func createAttachmentMessage(convId: String, images: [UIImage], selfSender: Sender, companionId: String) {
+    static func createMessage(convId: String, images: [UIImage], selfSender: Sender, companionId: String) {
         let messageId = UUID()
         let referenceConversation = Database.database().reference().child("conversations")
 

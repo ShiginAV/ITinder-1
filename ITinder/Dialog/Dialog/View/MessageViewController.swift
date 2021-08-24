@@ -108,7 +108,7 @@ extension MessageViewController: MessageCellDelegate {
         if message.sender.senderId == selfSender.senderId {
             return Colors.blue
         } else {
-            return .lightGray
+            return .systemGray5
         }
     }
 }
@@ -130,7 +130,7 @@ extension MessageViewController: CameraInputBarAccessoryViewDelegate {
     
     func sendImageMessage(photo: [UIImage]) {
         print(photo)
-        ConversationService.createAttachmentMessage(convId: conversationId, images: photo, selfSender: selfSender, companionId: companionId)
+        ConversationService.createMessage(convId: conversationId, images: photo, selfSender: selfSender, companionId: companionId)
         messageInputBar.inputTextView.text = ""
     }
 }
