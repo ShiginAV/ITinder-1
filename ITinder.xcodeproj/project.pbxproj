@@ -283,8 +283,6 @@
 		224F40BB26CD140A00A95715 /* Dialog */ = {
 			isa = PBXGroup;
 			children = (
-				22F7E5CA26D11F13009EE3B2 /* AlertService.swift */,
-				22F7E5C726D11EA3009EE3B2 /* CameraInputBarAccessoryView.swift */,
 				224F40BD26CD142D00A95715 /* Matches */,
 				224F40BC26CD142100A95715 /* Dialog */,
 			);
@@ -294,6 +292,7 @@
 		224F40BC26CD142100A95715 /* Dialog */ = {
 			isa = PBXGroup;
 			children = (
+				22AE212F26D4EB2E006153AD /* ModuleFromMessagekit */,
 				224F40BE26CD143A00A95715 /* Model */,
 				224F40BF26CD144100A95715 /* View */,
 			);
@@ -352,8 +351,17 @@
 			children = (
 				224F40D926CD150B00A95715 /* FirebaseService.swift */,
 				0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */,
+				22F7E5CA26D11F13009EE3B2 /* AlertService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		22AE212F26D4EB2E006153AD /* ModuleFromMessagekit */ = {
+			isa = PBXGroup;
+			children = (
+				22F7E5C726D11EA3009EE3B2 /* CameraInputBarAccessoryView.swift */,
+			);
+			path = ModuleFromMessagekit;
 			sourceTree = "<group>";
 		};
 		22AE25192213948A06A1F7FD /* Pods */ = {

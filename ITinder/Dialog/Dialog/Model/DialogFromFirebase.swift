@@ -43,9 +43,9 @@ class DialogFromFirebase {
     
     init(conversationId: String) {
         ConversationService.messagesFromConversations(conversationId: conversationId) { [weak self] () -> ([String : Message]) in
-            return messagesDict
+            return (self?.messagesDict ?? [String: Message]())
         } completion: { [weak self] (internetMessages) in
-            var messagesArray = [Message]()
+//            var messagesArray = [Message]()
             //            internetMessages.values.forEach { (message) in
             //                messagesArray.append(message)
             //            }

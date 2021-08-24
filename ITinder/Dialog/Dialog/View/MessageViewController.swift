@@ -116,21 +116,19 @@ extension MessageViewController: MessageCellDelegate {
 extension MessageViewController: CameraInputBarAccessoryViewDelegate {
     
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith attachments: [AttachmentManager.Attachment]) {
-        var images = [UIImage]()
         
         for item in attachments {
-            
             if case .image(let image) = item {
-                images.append(image)
+                self.sendImageMessage(photo: image)
             }
         }
-        self.sendImageMessage(photo: images)
+        
         inputBar.invalidatePlugins()
     }
     
-    func sendImageMessage(photo: [UIImage]) {
-        print(photo)
-        ConversationService.createMessage(convId: conversationId, images: photo, selfSender: selfSender, companionId: companionId)
+    func sendImageMessage(photo: UIImage) {
+        
+        ConversationService.createMessage(convId: conversationId, image: photo, selfSender: selfSender, companionId: companionId)
         messageInputBar.inputTextView.text = ""
     }
 }
