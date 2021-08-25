@@ -83,8 +83,8 @@ final class EditUserProfileViewController: UIViewController {
     private let doneButton: UIButton = {
         let button = UIButton()
         button.setTitle("Готово", for: .normal)
-        button.setTitleColor(Colors.blue, for: .normal)
-        button.setTitleColor(Colors.blue.withAlphaComponent(0.5), for: .highlighted)
+        button.setTitleColor(Colors.primary, for: .normal)
+        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
         button.addTarget(self, action: #selector(doneButtonDidTap), for: .touchUpInside)
         return button
     }()
@@ -92,8 +92,8 @@ final class EditUserProfileViewController: UIViewController {
     private let cancelButton: UIButton = {
         let button = UIButton()
         button.setTitle("Отмена", for: .normal)
-        button.setTitleColor(Colors.blue, for: .normal)
-        button.setTitleColor(Colors.blue.withAlphaComponent(0.5), for: .highlighted)
+        button.setTitleColor(Colors.primary, for: .normal)
+        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
         button.addTarget(self, action: #selector(cancelButtonDidTap), for: .touchUpInside)
         return button
     }()
@@ -192,7 +192,7 @@ final class EditUserProfileViewController: UIViewController {
         loaderView.isHidden = false
         let image = isImageChanged ? profileImageView.image : nil
         
-        UserService.shared.persist(user: self.user, withImage: image) { [weak self] newUser in
+        UserService.persist(user: self.user, withImage: image) { [weak self] newUser in
             guard let self = self else { return }
             guard let newUser = newUser else {
                 self.loaderView.isHidden = true

@@ -10,6 +10,7 @@ import UIKit
 final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabBar.tintColor = Colors.primary
         addUserProfileViewController()
     }
     
@@ -20,8 +21,7 @@ final class TabBarController: UITabBarController {
         viewControllers.append(userProfileVC)
         self.viewControllers = viewControllers
         
-        guard let currentUserId = UserService.shared.currentUserId else { return }
-        UserService.shared.getUserBy(id: currentUserId) { user in
+        UserService.getCurrentUser { user in
             userProfileVC.user = user
         }
     }

@@ -8,5 +8,5 @@
 import UIKit
 
 struct Colors {
-    static let blue = UIColor(red: 0.384, green: 0.482, blue: 0.976, alpha: 1)
+    static let primary = UIColor(red: 0.384, green: 0.482, blue: 0.976, alpha: 1)
 }
