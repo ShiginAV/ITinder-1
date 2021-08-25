@@ -83,8 +83,8 @@ final class EditUserProfileViewController: UIViewController {
     private let doneButton: UIButton = {
         let button = UIButton()
         button.setTitle("Готово", for: .normal)
-        button.setTitleColor(Colors.blue, for: .normal)
-        button.setTitleColor(Colors.blue.withAlphaComponent(0.5), for: .highlighted)
+        button.setTitleColor(Colors.primary, for: .normal)
+        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
         button.addTarget(self, action: #selector(doneButtonDidTap), for: .touchUpInside)
         return button
     }()
@@ -92,8 +92,8 @@ final class EditUserProfileViewController: UIViewController {
     private let cancelButton: UIButton = {
         let button = UIButton()
         button.setTitle("Отмена", for: .normal)
-        button.setTitleColor(Colors.blue, for: .normal)
-        button.setTitleColor(Colors.blue.withAlphaComponent(0.5), for: .highlighted)
+        button.setTitleColor(Colors.primary, for: .normal)
+        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
         button.addTarget(self, action: #selector(cancelButtonDidTap), for: .touchUpInside)
         return button
     }()

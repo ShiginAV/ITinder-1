@@ -54,8 +54,8 @@ class SwipeViewController: UIViewController {
     private let resetButton: UIButton = {
         let button = UIButton()
         button.setTitle("reset", for: .normal)
-        button.setTitleColor(Colors.blue, for: .normal)
-        button.setTitleColor(Colors.blue.withAlphaComponent(0.5), for: .highlighted)
+        button.setTitleColor(Colors.primary, for: .normal)
+        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
         button.addTarget(self, action: #selector(resetButtonDidTap), for: .touchUpInside)
         button.isHidden = true
         return button
