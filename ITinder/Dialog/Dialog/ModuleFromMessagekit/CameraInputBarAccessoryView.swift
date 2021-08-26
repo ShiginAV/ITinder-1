@@ -18,7 +18,7 @@ protocol CameraInputBarAccessoryViewDelegate : InputBarAccessoryViewDelegate {
 extension CameraInputBarAccessoryViewDelegate {
     
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith attachments: [AttachmentManager.Attachment]) {
-        
+
     }
 }
 

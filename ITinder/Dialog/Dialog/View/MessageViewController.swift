@@ -28,6 +28,10 @@ class MessageViewController: MessagesViewController {
         model = DialogFromFirebase(conversationId: conversationId)
         model.delegate = self
         
+        configureViews()
+    }
+    
+    func configureViews() {
         showMessageTimestampOnSwipeLeft = true
         
         messagesCollectionView.messagesDataSource = self
@@ -71,8 +75,7 @@ extension MessageViewController: MessagesDataSource, MessagesLayoutDelegate, Mes
 extension MessageViewController: InputBarAccessoryViewDelegate {
 
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        ConversationService.createMessage(convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
-        messageInputBar.inputTextView.text = ""
+        sendTextMessage(text: text)
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
@@ -81,6 +84,11 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
         let senderId = sender.senderId
  
         avatarView.image = downloadedPhoto[senderId]
+    }
+    
+    func sendTextMessage(text: String) {
+        ConversationService.createMessage(convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
+        messageInputBar.inputTextView.text = ""
     }
 }
 
@@ -116,6 +124,10 @@ extension MessageViewController: MessageCellDelegate {
 extension MessageViewController: CameraInputBarAccessoryViewDelegate {
     
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith attachments: [AttachmentManager.Attachment]) {
+        
+        if inputBar.inputTextView.text != "" {
+            sendTextMessage(text: inputBar.inputTextView.text)
+        }
         
         for item in attachments {
             if case .image(let image) = item {
