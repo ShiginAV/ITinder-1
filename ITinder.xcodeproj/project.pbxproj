@@ -48,8 +48,9 @@
 		224F40D426CD14B500A95715 /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F40D126CD14B500A95715 /* MatchesTableViewController.swift */; };
 		224F40D526CD14B500A95715 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F40D226CD14B500A95715 /* CollectionViewCell.swift */; };
 		224F40D626CD14B500A95715 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F40D326CD14B500A95715 /* TableViewCell.swift */; };
-		224F40DA26CD150B00A95715 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F40D926CD150B00A95715 /* FirebaseService.swift */; };
+		224F40DA26CD150B00A95715 /* ConversationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F40D926CD150B00A95715 /* ConversationService.swift */; };
 		224FD0BA26BE938200D993B5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 224FD0B926BE938200D993B5 /* GoogleService-Info.plist */; };
+		22EEC32B26D7D37100CF2771 /* MediaForMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EEC32A26D7D37100CF2771 /* MediaForMessage.swift */; };
 		22F7E5C826D11EA3009EE3B2 /* CameraInputBarAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F7E5C726D11EA3009EE3B2 /* CameraInputBarAccessoryView.swift */; };
 		22F7E5CB26D11F13009EE3B2 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F7E5CA26D11F13009EE3B2 /* AlertService.swift */; };
 		462DEB6A15BDC2085F0B2760 /* Pods_ITinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33BC96C815BA2AB57F596464 /* Pods_ITinder.framework */; };
@@ -99,8 +100,9 @@
 		224F40D126CD14B500A95715 /* MatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
 		224F40D226CD14B500A95715 /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		224F40D326CD14B500A95715 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
-		224F40D926CD150B00A95715 /* FirebaseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
+		224F40D926CD150B00A95715 /* ConversationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationService.swift; sourceTree = "<group>"; };
 		224FD0B926BE938200D993B5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		22EEC32A26D7D37100CF2771 /* MediaForMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaForMessage.swift; sourceTree = "<group>"; };
 		22F7E5C726D11EA3009EE3B2 /* CameraInputBarAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraInputBarAccessoryView.swift; sourceTree = "<group>"; };
 		22F7E5CA26D11F13009EE3B2 /* AlertService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		33BC96C815BA2AB57F596464 /* Pods_ITinder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ITinder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -315,6 +317,7 @@
 			children = (
 				224F40C326CD149900A95715 /* DialogFromFirebase.swift */,
 				224F40C226CD149900A95715 /* MessageAndSenderModel.swift */,
+				22EEC32A26D7D37100CF2771 /* MediaForMessage.swift */,
 				224DDCCE26D4BA8900D5A3AF /* MessageStruct.swift */,
 			);
 			path = Model;
@@ -351,7 +354,7 @@
 		224F40D826CD14EC00A95715 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				224F40D926CD150B00A95715 /* FirebaseService.swift */,
+				224F40D926CD150B00A95715 /* ConversationService.swift */,
 				0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */,
 				1180252426C510BD0096A20F /* UserService.swift */,
 				22F7E5CA26D11F13009EE3B2 /* AlertService.swift */,
@@ -536,7 +539,7 @@
 				22F7E5C826D11EA3009EE3B2 /* CameraInputBarAccessoryView.swift in Sources */,
 				1180252926C5112D0096A20F /* User.swift in Sources */,
 				224F40C526CD149900A95715 /* DialogFromFirebase.swift in Sources */,
-				224F40DA26CD150B00A95715 /* FirebaseService.swift in Sources */,
+				224F40DA26CD150B00A95715 /* ConversationService.swift in Sources */,
 				1180253926C512FB0096A20F /* SwipeViewController.swift in Sources */,
 				224F40CA26CD14A100A95715 /* DialogViewController.swift in Sources */,
 				224F40CF26CD14AC00A95715 /* MatchesFromFirebase.swift in Sources */,
@@ -546,6 +549,7 @@
 				1180253D26C513310096A20F /* EditUserProfileViewController.swift in Sources */,
 				0EC7545F26CE624A008DA01A /* Utilities.swift in Sources */,
 				0EC7545A26CE6203008DA01A /* CreatingUserInfoViewController.swift in Sources */,
+				22EEC32B26D7D37100CF2771 /* MediaForMessage.swift in Sources */,
 				1180252B26C511690096A20F /* SwipeCardModel.swift in Sources */,
 				224F40D526CD14B500A95715 /* CollectionViewCell.swift in Sources */,
 				0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */,

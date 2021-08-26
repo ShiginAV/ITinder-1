@@ -22,38 +22,33 @@ class MatchesViewController: UIViewController {
         super.viewDidLoad()
         
         startGroup.enter()
-
-        guard let currentUserId = UserService.shared.currentUserId else { return }
-        UserService.shared.getUserBy(id: currentUserId) { (user) in
+        
+        UserService.getCurrentUser { (user) in
             self.currentUser = user
             self.startGroup.leave()
         }
         
-//        ConversationService.getCurrentUser { (user) in
-//            self.currentUser = user
-//            self.startGroup.leave()
-//        }
-
-//        startGroup.wait()
-        
         startGroup.notify(queue: .main) {
-            self.setAllHidden()
-            
             self.model = MatchesFromFirebase(user: self.currentUser)
-            self.model.delegate = self
             
-            self.navigationController?.navigationBar.isHidden = true
+            self.setAllHidden()
 
-            self.matchesTableView.delegate = self
-            self.matchesTableView.dataSource = self
-            
-            self.matchesCollectionView.delegate = self
-            self.matchesCollectionView.dataSource = self
+            self.configureDelegates()
             
             self.configureEmptyLines()
+            
             self.configureNotificationCenter()
         }
+    }
+    
+    private func configureDelegates() {
+        self.matchesTableView.delegate = self
+        self.matchesTableView.dataSource = self
         
+        self.matchesCollectionView.delegate = self
+        self.matchesCollectionView.dataSource = self
+        
+        self.model.delegate = self
     }
     
     private func setAllHidden() {
@@ -63,6 +58,7 @@ class MatchesViewController: UIViewController {
         matchesCollectionView.isHidden = status
         newMatchesLable.isHidden = status
         messagesLable.isHidden = status
+        navigationController?.navigationBar.isHidden = status
     }
     
     private func configureNotificationCenter() {

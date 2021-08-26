@@ -12,13 +12,6 @@ import FirebaseStorage
 
 class ConversationService {
     
-    static func getCurrentUser(completion: @escaping (User) -> Void ) {
-        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        getUserData(userId: currentUserId) { (user) in
-            completion(user)
-        }
-    }
-    
     static func getConversations(userId: String, completion: @escaping ([CompanionStruct]) -> Void) {
         Database.database().reference().child("users").child(userId).child("conversations").observe(.value) { (snapshot) in
             var conversations = [CompanionStruct]()
@@ -111,13 +104,13 @@ class ConversationService {
         }
     }
     
-    static func messagesFromConversations(conversationId: String, messagesComplition: @escaping () -> ([String: Message]), completion: @escaping ([String: Message]) -> Void) {
+    static func messagesFromConversations(conversationId: String, messagesCompletion: @escaping () -> ([String: Message]), completion: @escaping ([String: Message]) -> Void) {
         
         Database.database().reference().child("conversations").child(conversationId).child("messages").observe(.value) { (snapshot) in
             
             guard snapshot.exists() else { return }
             
-            var messagesFromFirebase = messagesComplition()
+            var messagesFromFirebase = messagesCompletion()
             
             let internetMessages = snapshot
             
@@ -163,10 +156,10 @@ class ConversationService {
                         sender: senders[senderId]!,
                         messageId: message.messageId,
                         sentDate: date,
-                        kind: .photo(MyMedia(image: UIImage(named: "birth_date_icon") ?? UIImage(), placeholderImage: UIImage(), size: CGSize(width: 150, height: 150))))
+                        kind: .photo(MediaForMessage(image: UIImage(named: "birth_date_icon") ?? UIImage(), placeholderImage: UIImage(), size: CGSize(width: 150, height: 150))))
                     
                     downloadPhoto(stringUrl: message.attachment) { (data) in
-                        let media = MyMedia(image: UIImage(data: data) ?? UIImage(), placeholderImage: UIImage(named: "birth_date_icon") ?? UIImage(), size: CGSize(width: 150, height: 150))
+                        let media = MediaForMessage(image: UIImage(data: data) ?? UIImage(), placeholderImage: UIImage(named: "birth_date_icon") ?? UIImage(), size: CGSize(width: 150, height: 150))
                         
                         currentMessage = Message(sender: senders[senderId]!,
                                                  messageId: message.messageId,
@@ -205,28 +198,31 @@ class ConversationService {
         
         let group = DispatchGroup()
         
-        var escape = false
+//        var escape = false
         
         group.enter()
         currentUserRef.getData { (error, snapshot) in
             if snapshot.exists() {
-                escape = true
+//                escape = true
             }
             group.leave()
         }
         
-        group.wait()
-        if escape {
-            return
+        group.notify(queue: .main) {
+//            group.wait()
+//            if escape {
+//                return
+//            }
+            
+            currentUserRef.child("conversationId").setValue(newConversationId)
+            currentUserRef.child("lastMessageWasRead").setValue(true)
+            
+            let companionUserRef = Database.database().reference().child("users").child(companionId).child("conversations").child(currentUserId)
+            
+            companionUserRef.child("conversationId").setValue(newConversationId)
+            companionUserRef.child("lastMessageWasRead").setValue(true)
         }
         
-        currentUserRef.child("conversationId").setValue(newConversationId)
-        currentUserRef.child("lastMessageWasRead").setValue(true)
-        
-        let companionUserRef = Database.database().reference().child("users").child(companionId).child("conversations").child(currentUserId)
-        
-        companionUserRef.child("conversationId").setValue(newConversationId)
-        companionUserRef.child("lastMessageWasRead").setValue(true)
     }
     
 }

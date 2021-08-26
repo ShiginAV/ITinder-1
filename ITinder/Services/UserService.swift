@@ -176,6 +176,8 @@ class UserService {
             currentUser.matches.append(likedUser.identifier)
             likedUser.matches.append(currentUser.identifier)
             
+            ConversationService.createMatchConversation(currentUserId: currentUser.identifier, companionId: likedUser.identifier)
+            
             usersDatabase.child(currentUser.identifier).updateChildValues([matchesKey: currentUser.matches]) { error, _ in
                 guard error == nil else { completion(nil); return }
                 

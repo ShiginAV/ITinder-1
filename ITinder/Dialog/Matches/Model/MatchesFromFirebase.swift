@@ -59,12 +59,10 @@ class MatchesFromFirebase {
     }
     
     init(user: User) {
-        let currentUserPhotoUrl = user.imageUrl
-        let currentUserId = user.identifier
         
-        downloadPhoto(photoUrl: currentUserPhotoUrl, userId: currentUserId)
+        downloadPhoto(photoUrl: user.imageUrl, userId: user.identifier)
         
-        ConversationService.getConversations(userId: currentUserId) { [weak self] (conversations) in
+        ConversationService.getConversations(userId: user.identifier) { [weak self] (conversations) in
             
             var conv = conversations
             
@@ -75,7 +73,11 @@ class MatchesFromFirebase {
             }
             
             for index in 0..<conv.count {
-                self?.startGroup.enter()
+                
+                if !(self?.startNotificationFlag ?? true) {
+                    self?.startGroup.enter()
+                    print("enter")
+                }
                 
                 self?.getUserData(conv: conv, index: index) { (user) in
                     conv[index].userName = user.name
@@ -85,6 +87,7 @@ class MatchesFromFirebase {
                     self?.getLastMessage(companionData: conv[index], complition: {
                         if !(self?.startNotificationFlag ?? true) {
                             self?.startGroup.leave()
+                            print("leave")
                         }
                     })
                 }
@@ -112,8 +115,11 @@ class MatchesFromFirebase {
     }
     
     private func getUserData(conv: [CompanionStruct], index: Int, completion: @escaping (User) -> Void) {
-//        UserService.shared.getUserBy(id: conv[index].userId) { [weak self] (user) in
+        
+//        UserService.getUserBy(id: conv[index].userId) { [weak self] (user) in
 //            print("get data")
+//
+//            guard let user = user else { return }
 //
 //            let userId = conv[index].userId
 //
@@ -121,7 +127,7 @@ class MatchesFromFirebase {
 //
 //            completion(user)
 //        }
-        
+//
         ConversationService.getUserData(userId: conv[index].userId) { [weak self] (user) in
 
             let userId = conv[index].userId
@@ -133,7 +139,7 @@ class MatchesFromFirebase {
     }
     
     private func downloadPhoto(photoUrl: String?, userId: String) {
-        guard let photo = photoUrl else { return }
+        guard let photo = photoUrl, photoUrl != "" else { return }
         ConversationService.downloadPhoto(stringUrl: photo) { (data) in
             self.downloadedPhoto[userId] = UIImage(data: data)
         }

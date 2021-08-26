@@ -106,7 +106,7 @@ extension MessageViewController: MessageCellDelegate {
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         if message.sender.senderId == selfSender.senderId {
-            return Colors.blue
+            return Colors.primary
         } else {
             return .systemGray5
         }
