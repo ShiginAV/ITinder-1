@@ -21,5 +21,4 @@ struct User {
     var employment: String?
     var likes: [String]
     var matches: [String]
-    var filterId: String // needed for filtering and pagination from firebase
 }

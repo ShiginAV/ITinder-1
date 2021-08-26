@@ -196,7 +196,6 @@ final class UserProfileViewController: UIViewController {
     }
     
     private func fill() {
-        let currentUserId = UserService.shared.currentUserId
         guard let user = user else {
             isLoading = true
             return
@@ -207,7 +206,7 @@ final class UserProfileViewController: UIViewController {
         nameLabel.text = user.name
         descriptionView.text = user.description
         fillCharacteristics()
-        isOwner = user.identifier == currentUserId
+        isOwner = user.identifier == UserService.currentUserId
         view.layoutIfNeeded()
     }
     
