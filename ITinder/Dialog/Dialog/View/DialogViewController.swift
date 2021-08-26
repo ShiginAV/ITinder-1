@@ -41,6 +41,8 @@ class DialogViewController: UIViewController {
         avatarImage.image = companionPhoto
         
         gestureRecognizerForImage()
+        
+        allowNotificationOnScreen(false)
     }
     
     override func viewDidLayoutSubviews() {
@@ -75,8 +77,15 @@ class DialogViewController: UIViewController {
     }
     
     @IBAction func backButton(_ sender: Any) {
+        allowNotificationOnScreen(true)
         navigationController?.popToRootViewController(animated: true)
     }
+    
+    func allowNotificationOnScreen(_ allow: Bool) {
+        let rootViewController = navigationController?.viewControllers.first as? MatchesViewController
+        rootViewController?.model.allowMessageNotificationOnScreen = allow
+    }
+    
 }
 
 extension DialogViewController: UIGestureRecognizerDelegate {

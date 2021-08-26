@@ -31,7 +31,7 @@ class ConversationService {
         }
     }
     
-    static func downloadPhoto(stringUrl: String, userId: String, completion: @escaping (Data) -> Void) {
+    static func downloadPhoto(stringUrl: String, completion: @escaping (Data) -> Void) {
         let reference = Storage.storage().reference(forURL: stringUrl)
         let megaBytes = Int64(1024 * 1024 * 10)
         reference.getData(maxSize: megaBytes) { (data, error) in
@@ -44,7 +44,7 @@ class ConversationService {
         Database.database().reference().getData { (error, snapshot) in
             if error != nil { return }
             let userDataSnap = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: userId)
-
+            
             guard let userData = userDataSnap.value as? [String: Any] else { return }
             let user = User(dictionary: userData)
             completion(user)
@@ -68,7 +68,7 @@ class ConversationService {
     static func createMessage(convId: String, text: String, selfSender: Sender, companionId: String) {
         let messageId = UUID()
         let referenceConversation = Database.database().reference().child("conversations")
-
+        
         let date = convertStringFromDate()
         
         referenceConversation.child(convId).child("messages").child(messageId.uuidString).updateChildValues(["date": date,
@@ -81,32 +81,32 @@ class ConversationService {
     }
     
     static func createMessage(convId: String, image: UIImage, selfSender: Sender, companionId: String) {
-            
-            let messageId = UUID()
-            let referenceConversation = Database.database().reference().child("conversations")
-
-            let date = convertStringFromDate()
-            
+        
+        let messageId = UUID()
+        let referenceConversation = Database.database().reference().child("conversations")
+        
+        let date = convertStringFromDate()
+        
         guard let image = image.jpegData(compressionQuality: 0.5) else { return }
-            
-            let metadata1 = StorageMetadata()
-            metadata1.contentType = "image/jpeg"
-            
-            let ref = Storage.storage().reference().child(convId).child(messageId.uuidString).child("Attachment")
-            
-            ref.putData(image, metadata: metadata1) { (metadata, _) in
-                ref.downloadURL { (url, _) in
-                    referenceConversation.child(convId).child("messages").child(messageId.uuidString).updateChildValues(["date": date,
-                                                                                                                         "messageId": messageId.uuidString,
-                                                                                                                         "sender": selfSender.senderId,
-                                                                                                                        "messageType": "photo",
-                                                                                                                         "attachment": url?.absoluteString ?? "",
-                                                                                                                         "text": "Вложение"])
-                    
-                    referenceConversation.child(convId).child("lastMessage").setValue(messageId.uuidString)
-                    Database.database().reference().child("users").child(companionId).child("conversations").child(selfSender.senderId).child("lastMessageWasRead").setValue(false)
-                }
+        
+        let metadata1 = StorageMetadata()
+        metadata1.contentType = "image/jpeg"
+        
+        let ref = Storage.storage().reference().child(convId).child(messageId.uuidString).child("Attachment")
+        
+        ref.putData(image, metadata: metadata1) { (metadata, _) in
+            ref.downloadURL { (url, _) in
+                referenceConversation.child(convId).child("messages").child(messageId.uuidString).updateChildValues(["date": date,
+                                                                                                                     "messageId": messageId.uuidString,
+                                                                                                                     "sender": selfSender.senderId,
+                                                                                                                     "messageType": "photo",
+                                                                                                                     "attachment": url?.absoluteString ?? "",
+                                                                                                                     "text": "Вложение"])
+                
+                referenceConversation.child(convId).child("lastMessage").setValue(messageId.uuidString)
+                Database.database().reference().child("users").child(companionId).child("conversations").child(selfSender.senderId).child("lastMessageWasRead").setValue(false)
             }
+        }
     }
     
     static func messagesFromConversations(conversationId: String, messagesComplition: @escaping () -> ([String: Message]), completion: @escaping ([String: Message]) -> Void) {
@@ -118,59 +118,59 @@ class ConversationService {
             var messagesFromFirebase = messagesComplition()
             
             let internetMessages = snapshot
-
+            
             var senders = [String: Sender]()
             let group = DispatchGroup()
             
             guard let messages = internetMessages.children.allObjects as? [DataSnapshot] else { return }
             
-            for message in messages {
+            for oneMessage in messages {
                 
-                guard let messageId = message.childSnapshot(forPath: "messageId").value as? String else { return }
-                guard let stringDate = message.childSnapshot(forPath: "date").value as? String else { return }
-                guard let type = message.childSnapshot(forPath: "messageType").value as? String else { return }
+                guard let oneMessage = oneMessage.value as? [String: Any] else { return }
+                let message = MessageStruct(dictionary: oneMessage)
                 
-                guard let date = convertStringToDate(stringDate: stringDate) else { return }
+                guard let date = convertStringToDate(stringDate: message.date) else { return }
                 
-                if messagesFromFirebase[messageId] != nil { continue }
+                if messagesFromFirebase[message.messageId] != nil { continue }
                 
-                let senderId = message.childSnapshot(forPath: "sender").value as? String ?? ""
+                let senderId = message.sender
                 
                 if senders[senderId] == nil {
                     group.enter()
-                    getUserData(userId: message.childSnapshot(forPath: "sender").value as? String ?? "") { (user) in
-                        let senderName = user.name
-                        let senderPhotoUrl = user.imageUrl
-                        let senderId = user.identifier
+                    getUserData(userId: senderId) { (user) in
                         
-                        senders[senderId] = Sender(photoUrl: senderPhotoUrl, senderId: senderId, displayName: senderName)
+                        senders[senderId] = Sender(photoUrl: user.imageUrl, senderId: user.identifier, displayName: user.name)
                         group.leave()
                     }
                 }
                 group.wait()
                 
                 var currentMessage: Message!
-                if type == "text" {
+                if message.messageType == "text" {
                     
-                    guard let text = message.childSnapshot(forPath: "text").value as? String else { return }
-                    currentMessage = Message(sender: senders[senderId]!, messageId: messageId, sentDate: date, kind: .text(text))
+                    currentMessage = Message(sender: senders[senderId]!,
+                                             messageId: message.messageId,
+                                             sentDate: date,
+                                             kind: .text(message.text))
                     messagesFromFirebase[currentMessage.messageId] = currentMessage
                     completion(messagesFromFirebase)
                     
-                } else if type == "photo" {
+                } else if message.messageType == "photo" {
                     
-                    messagesFromFirebase[messageId] = Message(
+                    messagesFromFirebase[message.messageId] = Message(
                         sender: senders[senderId]!,
-                        messageId: messageId,
+                        messageId: message.messageId,
                         sentDate: date,
                         kind: .photo(MyMedia(image: UIImage(named: "birth_date_icon") ?? UIImage(), placeholderImage: UIImage(), size: CGSize(width: 150, height: 150))))
                     
-                    guard let attachmentUrl = message.childSnapshot(forPath: "attachment").value as? String else { return }
-                    downloadPhoto(stringUrl: attachmentUrl, userId: "") { (data) in
+                    downloadPhoto(stringUrl: message.attachment) { (data) in
                         let media = MyMedia(image: UIImage(data: data) ?? UIImage(), placeholderImage: UIImage(named: "birth_date_icon") ?? UIImage(), size: CGSize(width: 150, height: 150))
                         
-                        currentMessage = Message(sender: senders[senderId]!, messageId: messageId, sentDate: date, kind: .photo(media))
-                        messagesFromFirebase[messageId] = currentMessage
+                        currentMessage = Message(sender: senders[senderId]!,
+                                                 messageId: message.messageId,
+                                                 sentDate: date,
+                                                 kind: .photo(media))
+                        messagesFromFirebase[message.messageId] = currentMessage
                         completion(messagesFromFirebase)
                     }
                 }

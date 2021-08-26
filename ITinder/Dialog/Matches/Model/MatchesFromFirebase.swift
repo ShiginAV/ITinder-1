@@ -45,7 +45,9 @@ class MatchesFromFirebase {
         }
     }
     
-    var notificationFlag = false
+    var startNotificationFlag = false
+    var allowMessageNotificationOnScreen = true
+    
     let startGroup = DispatchGroup()
     
     var downloadedPhoto = [String: UIImage]() {
@@ -66,7 +68,7 @@ class MatchesFromFirebase {
             
             var conv = conversations
             
-            if let notifyFlag = self?.notificationFlag {
+            if let notifyFlag = self?.startNotificationFlag {
                 if conv.count > self?.companions.count ?? 0 && notifyFlag {
                     self?.sendNotification(companionName: "Пара!", message: "У вас есть новая пара!")
                 }
@@ -75,39 +77,52 @@ class MatchesFromFirebase {
             for index in 0..<conv.count {
                 self?.startGroup.enter()
                 
-                self?.getLastMessage(conv: conv, index: index)
-                
                 self?.getUserData(conv: conv, index: index) { (user) in
                     conv[index].userName = user.name
                     conv[index].imageUrl = user.imageUrl
                     self?.companions = conv
-                    self?.startGroup.leave()
+                    
+                    self?.getLastMessage(companionData: conv[index], complition: {
+                        if !(self?.startNotificationFlag ?? true) {
+                            self?.startGroup.leave()
+                        }
+                    })
                 }
             }
             
             self?.startGroup.notify(queue: .main) {
-                self?.notificationFlag = true
+                self?.startNotificationFlag = true
                 self?.delegate?.setAllVisible()
             }
         }
     }
     // MARK: - Firebase data
     
-    private func getLastMessage(conv: [CompanionStruct], index: Int) {
-        ConversationService.getLastMessage(conversationId: conv[index].conversationId, completion: { [weak self] (lastMessage) in
-            self?.lastMessages[conv[index].conversationId] = lastMessage
+    private func getLastMessage(companionData: CompanionStruct, complition: @escaping () -> Void) {
+        ConversationService.getLastMessage(conversationId: companionData.conversationId, completion: { [weak self] (lastMessageText) in
+            self?.lastMessages[companionData.conversationId] = lastMessageText
+            
+            guard let startNotifyFlag = self?.startNotificationFlag else { return }
+            guard let screenNotifyFlag = self?.allowMessageNotificationOnScreen else { return }
+            if !companionData.lastMessageWasRead && startNotifyFlag && screenNotifyFlag {
+                self?.sendNotification(companionName: companionData.userName ?? "", message: lastMessageText ?? "")
+            }
+            complition()
         })
     }
     
     private func getUserData(conv: [CompanionStruct], index: Int, completion: @escaping (User) -> Void) {
+//        UserService.shared.getUserBy(id: conv[index].userId) { [weak self] (user) in
+//            print("get data")
+//
+//            let userId = conv[index].userId
+//
+//            self?.downloadPhoto(photoUrl: user.imageUrl, userId: userId)
+//
+//            completion(user)
+//        }
         
         ConversationService.getUserData(userId: conv[index].userId) { [weak self] (user) in
-            
-            if let notifyFlag = self?.notificationFlag {
-                if !conv[index].lastMessageWasRead && notifyFlag {
-                    self?.sendNotification(companionName: user.name, message: "У вас новое сообщение от \(user.name)")
-                }
-            }
 
             let userId = conv[index].userId
 
@@ -119,7 +134,7 @@ class MatchesFromFirebase {
     
     private func downloadPhoto(photoUrl: String?, userId: String) {
         guard let photo = photoUrl else { return }
-        ConversationService.downloadPhoto(stringUrl: photo, userId: userId) { (data) in
+        ConversationService.downloadPhoto(stringUrl: photo) { (data) in
             self.downloadedPhoto[userId] = UIImage(data: data)
         }
     }

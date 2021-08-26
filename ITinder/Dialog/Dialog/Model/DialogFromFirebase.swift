@@ -50,7 +50,7 @@ class DialogFromFirebase {
             //                messagesArray.append(message)
             //            }
             //            self?.messages = messagesArray
-                        self?.messagesDict = internetMessages
+            self?.messagesDict = internetMessages
         }
     }
 }

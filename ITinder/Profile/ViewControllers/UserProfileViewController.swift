@@ -16,7 +16,6 @@ final class UserProfileViewController: UIViewController {
     init(user: User?) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
-        
         title = "Profile"
         tabBarItem.image = UIImage(systemName: "person.crop.circle")
     }
@@ -27,6 +26,7 @@ final class UserProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         configure()
         fill()
     }

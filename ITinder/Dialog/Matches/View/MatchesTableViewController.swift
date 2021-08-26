@@ -21,31 +21,39 @@ class MatchesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ConversationService.createMatchConversation(currentUserId: "userTestId1", companionId: "userTestId2")
-        
         startGroup.enter()
-        ConversationService.getCurrentUser { (user) in
+
+        guard let currentUserId = UserService.shared.currentUserId else { return }
+        UserService.shared.getUserBy(id: currentUserId) { (user) in
             self.currentUser = user
             self.startGroup.leave()
         }
         
-        startGroup.wait()
-        
-        setAllHidden()
-        
-        model = MatchesFromFirebase(user: currentUser)
-        model.delegate = self
-        
-        navigationController?.navigationBar.isHidden = true
+//        ConversationService.getCurrentUser { (user) in
+//            self.currentUser = user
+//            self.startGroup.leave()
+//        }
 
-        matchesTableView.delegate = self
-        matchesTableView.dataSource = self
+//        startGroup.wait()
         
-        matchesCollectionView.delegate = self
-        matchesCollectionView.dataSource = self
+        startGroup.notify(queue: .main) {
+            self.setAllHidden()
+            
+            self.model = MatchesFromFirebase(user: self.currentUser)
+            self.model.delegate = self
+            
+            self.navigationController?.navigationBar.isHidden = true
+
+            self.matchesTableView.delegate = self
+            self.matchesTableView.dataSource = self
+            
+            self.matchesCollectionView.delegate = self
+            self.matchesCollectionView.dataSource = self
+            
+            self.configureEmptyLines()
+            self.configureNotificationCenter()
+        }
         
-        configureEmptyLines()
-        configureNotificationCenter()
     }
     
     private func setAllHidden() {
@@ -234,4 +242,5 @@ extension MatchesViewController: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         print(#function)
     }
+    
 }

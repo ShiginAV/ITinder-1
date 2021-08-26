@@ -13,9 +13,7 @@ struct MessageStruct {
     let messageType: String
     let sender: String
     let text: String
-    
-    let attachmentCount: Int?
-    var attachment: [String]?
+    var attachment: String
 }
 
 extension MessageStruct {
@@ -25,12 +23,6 @@ extension MessageStruct {
         messageType = dictionary["messageType"] as? String ?? ""
         sender = dictionary["sender"] as? String ?? ""
         text = dictionary["text"] as? String ?? ""
-        
-        attachmentCount = dictionary["attachmentCount"] as? Int ?? 0
-        guard let count = attachmentCount else { return }
-        attachment = [String]()
-        for number in 0..<count {
-            attachment?.append(dictionary["attachment\(number)"] as? String ?? "")
-        }
+        attachment = dictionary["attachment"] as? String ?? ""
     }
 }
