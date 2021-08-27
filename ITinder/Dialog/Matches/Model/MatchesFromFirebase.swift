@@ -127,11 +127,12 @@ class MatchesFromFirebase {
             
             self?.lastMessages[companionData.conversationId] = lastMessageText
             
+            guard let lastMessageText = lastMessageText else { return }
+            
             guard let startNotifyFlag = self?.startNotificationFlag else { return }
             guard let screenNotifyFlag = self?.allowMessageNotificationOnScreen else { return }
-            let lastMessageWasRead = true//!(self?.lastMessageWasRead[companionData.conversationId] ?? false)
-            if lastMessageWasRead && startNotifyFlag && screenNotifyFlag {
-                self?.sendNotification(companionName: companionData.userName ?? "", message: lastMessageText ?? "")
+            if startNotifyFlag && screenNotifyFlag {
+                self?.sendNotification(companionName: companionData.userName ?? "", message: lastMessageText)
             }
             completion()
         })
