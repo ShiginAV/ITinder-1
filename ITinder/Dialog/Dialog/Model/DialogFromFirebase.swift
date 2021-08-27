@@ -12,6 +12,7 @@ import MessageKit
 protocol DialogDelegate: AnyObject {
     func reloadMessages()
     func getCompanionsId() -> [String: String]
+    func resetMessageInputBarText()
 }
 
 class DialogFromFirebase {
@@ -42,16 +43,54 @@ class DialogFromFirebase {
     }
     
     init(conversationId: String) {
-        ConversationService.messagesFromConversations(conversationId: conversationId) { [weak self] () -> ([String : Message]) in
+        
+        ConversationService.messagesFromConversationsObserver(conversationId: conversationId) {  [weak self]  () -> ([String : Message]) in
             return (self?.messagesDict ?? [String: Message]())
         } completion: { [weak self] (internetMessages) in
-//            var messagesArray = [Message]()
-            //            internetMessages.values.forEach { (message) in
-            //                messagesArray.append(message)
-            //            }
-            //            self?.messages = messagesArray
             self?.messagesDict = internetMessages
         }
+    }
+    
+    deinit {
+        ConversationService.removeMessagesFromConversationsObserver()
+    }
+    
+    func sendTextMessage(conversationId: String, text: String, selfSender: Sender, companionId: String) {
+        let messageId = UUID().uuidString
+        let date = Date()
+        let stringDate = convertStringFromDate(date: date)
+        
+        let message = Message(sender: selfSender,
+                              messageId: messageId,
+                              sentDate: date,
+                              kind: .text(text))
+        messagesDict[messageId] = message
+        
+        ConversationService.createMessage(messageId: messageId, date: stringDate, convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
+        delegate?.resetMessageInputBarText()
+    }
+    
+    func sendImageMessage(conversationId: String, selfSender: Sender, photo: UIImage, companionId: String) {
+        let messageId = UUID().uuidString
+        let date = Date()
+        let stringDate = convertStringFromDate(date: date)
+        
+        let message = Message(sender: selfSender,
+                              messageId: messageId,
+                              sentDate: date,
+                              kind: .photo(MediaForMessage(image: photo,
+                                                           placeholderImage: UIImage(),
+                                                           size: CGSize(width: 150, height: 150))))
+        messagesDict[messageId] = message
+        
+        ConversationService.createMessage(messageId: messageId, date: stringDate, convId: conversationId, image: photo, selfSender: selfSender, companionId: companionId)
+        delegate?.resetMessageInputBarText()
+    }
+    
+    private func convertStringFromDate(date: Date) -> String {
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "yy-MM-dd H:m:ss.SSSS Z"
+        return dateFormater.string(from: date)
     }
 }
 

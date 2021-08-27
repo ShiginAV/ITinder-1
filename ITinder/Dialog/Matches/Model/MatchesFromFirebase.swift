@@ -23,11 +23,37 @@ class MatchesFromFirebase {
     
     var companions = [CompanionStruct]() {
         didSet {
-            lock.lock()
+//            lock.lock()
+            print("lock")
+            
+            if oldValue.count != companions.count {
+                startNotificationFlag = false
+                ConversationService.removeConversationsObserver()
+                let group = DispatchGroup()
+                companions.forEach { (companion) in
+                    
+                    if !startNotificationFlag {
+                        group.enter()
+                    }
+                    createLastMessageObserver(companionData: companion, completion: {
+                        if !self.startNotificationFlag {
+//                            self.startGroup.leave()
+//                            print("leave")
+                            group.leave()
+                        }
+                    })
+                }
+                group.notify(queue: .main) {
+                    self.startNotificationFlag = true
+                }
+                
+            }
+            
             allCompanionsUpdate()
             DispatchQueue.main.async {
                 self.delegate?.reloadTable()
-                self.lock.unlock()
+//                self.lock.unlock()
+                print("unlock")
             }
         }
     }
@@ -74,43 +100,40 @@ class MatchesFromFirebase {
             
             for index in 0..<conv.count {
                 
-                if !(self?.startNotificationFlag ?? true) {
-                    self?.startGroup.enter()
-                    print("enter")
-                }
+                self?.startGroup.enter()
+//                print("enter")
                 
                 self?.getUserData(conv: conv, index: index) { (user) in
                     conv[index].userName = user.name
                     conv[index].imageUrl = user.imageUrl
-                    self?.companions = conv
                     
-                    self?.getLastMessage(companionData: conv[index], complition: {
-                        if !(self?.startNotificationFlag ?? true) {
-                            self?.startGroup.leave()
-                            print("leave")
-                        }
-                    })
+//                    if self?.startNotificationFlag ?? true {
+                    self?.startGroup.leave()
+//                    print("leave")
+//                    }
                 }
             }
             
             self?.startGroup.notify(queue: .main) {
-                self?.startNotificationFlag = true
+                self?.companions = conv
                 self?.delegate?.setAllVisible()
             }
         }
     }
     // MARK: - Firebase data
     
-    private func getLastMessage(companionData: CompanionStruct, complition: @escaping () -> Void) {
-        ConversationService.getLastMessage(conversationId: companionData.conversationId, completion: { [weak self] (lastMessageText) in
+    private func createLastMessageObserver(companionData: CompanionStruct, completion: @escaping () -> Void) {
+        ConversationService.createLastMessageObserver(conversationId: companionData.conversationId, completion: { [weak self] (lastMessageText) in
+            
             self?.lastMessages[companionData.conversationId] = lastMessageText
             
             guard let startNotifyFlag = self?.startNotificationFlag else { return }
             guard let screenNotifyFlag = self?.allowMessageNotificationOnScreen else { return }
-            if !companionData.lastMessageWasRead && startNotifyFlag && screenNotifyFlag {
+            let lastMessageWasRead = true//!(self?.lastMessageWasRead[companionData.conversationId] ?? false)
+            if lastMessageWasRead && startNotifyFlag && screenNotifyFlag {
                 self?.sendNotification(companionName: companionData.userName ?? "", message: lastMessageText ?? "")
             }
-            complition()
+            completion()
         })
     }
     

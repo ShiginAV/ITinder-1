@@ -31,6 +31,10 @@ class MessageViewController: MessagesViewController {
         configureViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+    }
+    
     func configureViews() {
         showMessageTimestampOnSwipeLeft = true
         
@@ -41,7 +45,8 @@ class MessageViewController: MessagesViewController {
         
         messageInputBar = CameraInputBarAccessoryView()
         messageInputBar.delegate = self
-        messageInputBar.inputTextView.isUserInteractionEnabled = true
+        
+        scrollsToLastItemOnKeyboardBeginsEditing = true
     }
 }
 
@@ -75,7 +80,7 @@ extension MessageViewController: MessagesDataSource, MessagesLayoutDelegate, Mes
 extension MessageViewController: InputBarAccessoryViewDelegate {
 
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        sendTextMessage(text: text)
+        model.sendTextMessage(conversationId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
@@ -85,14 +90,13 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
  
         avatarView.image = downloadedPhoto[senderId]
     }
-    
-    func sendTextMessage(text: String) {
-        ConversationService.createMessage(convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
-        messageInputBar.inputTextView.text = ""
-    }
 }
 
 extension MessageViewController: DialogDelegate {
+    func resetMessageInputBarText() {
+        messageInputBar.inputTextView.text = ""
+    }
+    
     func getCompanionsId() -> [String : String] {
         return ["currentUserId": currentUser.identifier,
                 "companionId": companionId]
@@ -126,22 +130,16 @@ extension MessageViewController: CameraInputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith attachments: [AttachmentManager.Attachment]) {
         
         if inputBar.inputTextView.text != "" {
-            sendTextMessage(text: inputBar.inputTextView.text)
+            model.sendTextMessage(conversationId: conversationId, text: inputBar.inputTextView.text, selfSender: selfSender, companionId: companionId)
         }
         
         for item in attachments {
             if case .image(let image) = item {
-                self.sendImageMessage(photo: image)
+                model.sendImageMessage(conversationId: conversationId, selfSender: selfSender, photo: image, companionId: companionId)
             }
         }
         
         inputBar.invalidatePlugins()
-    }
-    
-    func sendImageMessage(photo: UIImage) {
-        
-        ConversationService.createMessage(convId: conversationId, image: photo, selfSender: selfSender, companionId: companionId)
-        messageInputBar.inputTextView.text = ""
     }
 }
 

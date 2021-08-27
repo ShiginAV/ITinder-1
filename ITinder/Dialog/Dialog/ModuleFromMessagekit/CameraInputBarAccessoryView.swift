@@ -15,14 +15,7 @@ protocol CameraInputBarAccessoryViewDelegate : InputBarAccessoryViewDelegate {
     func getSelf() -> UIViewController
 }
 
-extension CameraInputBarAccessoryViewDelegate {
-    
-    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith attachments: [AttachmentManager.Attachment]) {
-
-    }
-}
-
- class CameraInputBarAccessoryView: InputBarAccessoryView {
+class CameraInputBarAccessoryView: InputBarAccessoryView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,7 +26,7 @@ extension CameraInputBarAccessoryViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-   lazy var attachmentManager: AttachmentManager = { [unowned self] in
+    lazy var attachmentManager: AttachmentManager = { [unowned self] in
         let manager = AttachmentManager()
         manager.delegate = self
         return manager
@@ -64,7 +57,7 @@ extension CameraInputBarAccessoryViewDelegate {
         return InputBarButtonItem()
             .configure {
                 $0.spacing = .fixed(10)
-                   
+                
                 if #available(iOS 13.0, *) {
                     $0.image = UIImage(systemName: "camera.fill")?.withRenderingMode(.alwaysTemplate)
                 } else {
@@ -78,7 +71,7 @@ extension CameraInputBarAccessoryViewDelegate {
                 $0.tintColor = UIColor.lightGray
             }.onTouchUpInside { _ in
                 print("Item Tapped")
-        }
+            }
     }
     
 }
@@ -93,6 +86,7 @@ extension CameraInputBarAccessoryView : UIImagePickerControllerDelegate, UINavig
         
         let cameraAction = UIAlertAction(title: "Take From Camera", style: .default) { (action) in
             self.showImagePickerController(sourceType: .camera)
+            
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
@@ -104,21 +98,21 @@ extension CameraInputBarAccessoryView : UIImagePickerControllerDelegate, UINavig
     func showImagePickerController(sourceType: UIImagePickerController.SourceType) {
         
         let imgPicker = UIImagePickerController()
-         imgPicker.delegate = self
-         imgPicker.allowsEditing = true
-         imgPicker.sourceType = sourceType
-         inputAccessoryView?.isHidden = true
-         getRootViewController()?.present(imgPicker, animated: true, completion: nil)
-      
+        imgPicker.delegate = self
+        imgPicker.allowsEditing = true
+        imgPicker.sourceType = sourceType
+        inputAccessoryView?.isHidden = true
+        getRootViewController()?.present(imgPicker, animated: true, completion: nil)
+        
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if let editedImage = info[  UIImagePickerController.InfoKey.editedImage] as? UIImage {
             self.inputPlugins.forEach { _ = $0.handleInput(of: editedImage)}
-
+            
         } else if let originImage = info[  UIImagePickerController.InfoKey.originalImage] as? UIImage {
- 
+            
             self.inputPlugins.forEach { _ = $0.handleInput(of: originImage)}
         }
         getRootViewController()?.dismiss(animated: true, completion: nil)

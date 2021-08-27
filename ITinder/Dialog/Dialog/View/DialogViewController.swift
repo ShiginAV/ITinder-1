@@ -27,8 +27,12 @@ class DialogViewController: UIViewController {
     var companion: CompanionStruct!
     var companionPhoto: UIImage!
     
+    var rootViewController: UIViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        rootViewController = navigationController?.viewControllers.first
         
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         addChild(messageViewController)
@@ -77,13 +81,16 @@ class DialogViewController: UIViewController {
     }
     
     @IBAction func backButton(_ sender: Any) {
-        allowNotificationOnScreen(true)
         navigationController?.popToRootViewController(animated: true)
     }
     
     func allowNotificationOnScreen(_ allow: Bool) {
-        let rootViewController = navigationController?.viewControllers.first as? MatchesViewController
-        rootViewController?.model.allowMessageNotificationOnScreen = allow
+        let rootVC = rootViewController as? MatchesViewController
+        rootVC?.model.allowMessageNotificationOnScreen = allow
+    }
+    
+    deinit {
+        allowNotificationOnScreen(true)
     }
     
 }
