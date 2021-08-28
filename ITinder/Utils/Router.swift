@@ -18,4 +18,11 @@ final class Router {
         editProfileVC.modalPresentationStyle = .fullScreen
         parent.present(editProfileVC, animated: true, completion: nil)
     }
+    
+    static func showMatch(user: User, parent: UIViewController) {
+        let matchVC = MatchViewController(user: user)
+        matchVC.modalPresentationStyle = .fullScreen
+        matchVC.modalTransitionStyle = .flipHorizontal
+        parent.present(matchVC, animated: true, completion: nil)
+    }
 }

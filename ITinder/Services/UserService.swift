@@ -213,6 +213,27 @@ class UserService {
                 }
             }
     }
+    
+    static func observeMatches(completion: @escaping (User?) -> Void) {
+        guard let currentUserId = currentUserId else {
+            assertionFailure()
+            completion(nil)
+            return
+        }
+        
+        usersDatabase.child(currentUserId).observe(.value) { snapshot in
+            guard let value = snapshot.value as? [String: Any] else {
+                completion(nil)
+                return
+            }
+            guard let matches = value[matchesKey] as? [String],
+                  let lastMatchUserId = matches.last else {
+                completion(nil)
+                return
+            }
+            getUserBy(id: lastMatchUserId) { completion($0) }
+        }
+    }
 }
 
 extension User {

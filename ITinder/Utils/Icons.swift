@@ -18,6 +18,7 @@ enum SwipeCardIcons: String, Imageable {
     case dislikeButtonActive = "dislike_button_active"
     case infoButton = "info_button"
     case emptyShimmer = "empty_shimmer"
+    case closeButton = "close_icon"
 }
 
 enum UserProfileIcons: String, Imageable {

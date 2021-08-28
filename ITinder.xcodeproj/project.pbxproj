@@ -20,6 +20,7 @@
 		0EE0184A26B96AEA00AEB059 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184826B96AEA00AEB059 /* Main.storyboard */; };
 		0EE0184C26B96AEF00AEB059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184B26B96AEF00AEB059 /* Assets.xcassets */; };
 		0EE0184F26B96AEF00AEB059 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184D26B96AEF00AEB059 /* LaunchScreen.storyboard */; };
+		112CA3E726D93D5C000F37B3 /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112CA3E626D93D5C000F37B3 /* MatchViewController.swift */; };
 		11647D0226CD0BAC002787FF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11647D0126CD0BAC002787FF /* Constants.swift */; };
 		117CEB0726C7E1F70018A753 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117CEB0626C7E1F70018A753 /* CustomImageView.swift */; };
 		117CEB0926C825790018A753 /* ProfileCharacteristicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117CEB0826C825790018A753 /* ProfileCharacteristicView.swift */; };
@@ -68,6 +69,7 @@
 		0EE0184B26B96AEF00AEB059 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0EE0184E26B96AEF00AEB059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0EE0185026B96AEF00AEB059 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		112CA3E626D93D5C000F37B3 /* MatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
 		11647D0126CD0BAC002787FF /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		117CEB0626C7E1F70018A753 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		117CEB0826C825790018A753 /* ProfileCharacteristicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCharacteristicView.swift; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 			isa = PBXGroup;
 			children = (
 				1180253826C512FB0096A20F /* SwipeViewController.swift */,
+				112CA3E626D93D5C000F37B3 /* MatchViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -528,6 +531,7 @@
 				0EC7545F26CE624A008DA01A /* Utilities.swift in Sources */,
 				0EC7545A26CE6203008DA01A /* CreatingUserInfoViewController.swift in Sources */,
 				1180252B26C511690096A20F /* SwipeCardModel.swift in Sources */,
+				112CA3E726D93D5C000F37B3 /* MatchViewController.swift in Sources */,
 				224F40D526CD14B500A95715 /* CollectionViewCell.swift in Sources */,
 				0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */,
 				0EA8271D26CE803A00A69C32 /* Transitor.swift in Sources */,
