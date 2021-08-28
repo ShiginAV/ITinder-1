@@ -18,10 +18,6 @@ class DialogViewController: UIViewController {
     
     @IBOutlet weak var companionName: UILabel!
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
     let messageViewController = MessageViewController()
     
     var companion: CompanionStruct!

@@ -23,27 +23,26 @@ class MatchesFromFirebase {
     
     var companions = [CompanionStruct]() {
         didSet {
-//            lock.lock()
-            print("lock")
             
             if oldValue.count != companions.count {
-                startNotificationFlag = false
                 ConversationService.removeConversationsObserver()
+                startNotificationFlag = false
                 let group = DispatchGroup()
                 companions.forEach { (companion) in
                     
                     if !startNotificationFlag {
                         group.enter()
+                        print("enter")
                     }
                     createLastMessageObserver(companionData: companion, completion: {
                         if !self.startNotificationFlag {
-//                            self.startGroup.leave()
-//                            print("leave")
                             group.leave()
+                            print("leave")
                         }
                     })
                 }
                 group.notify(queue: .main) {
+                    print("notify")
                     self.startNotificationFlag = true
                 }
                 
@@ -52,8 +51,6 @@ class MatchesFromFirebase {
             allCompanionsUpdate()
             DispatchQueue.main.async {
                 self.delegate?.reloadTable()
-//                self.lock.unlock()
-                print("unlock")
             }
         }
     }
@@ -101,16 +98,12 @@ class MatchesFromFirebase {
             for index in 0..<conv.count {
                 
                 self?.startGroup.enter()
-//                print("enter")
                 
                 self?.getUserData(conv: conv, index: index) { (user) in
                     conv[index].userName = user.name
                     conv[index].imageUrl = user.imageUrl
                     
-//                    if self?.startNotificationFlag ?? true {
                     self?.startGroup.leave()
-//                    print("leave")
-//                    }
                 }
             }
             
@@ -127,7 +120,9 @@ class MatchesFromFirebase {
             
             self?.lastMessages[companionData.conversationId] = lastMessageText
             
-            guard let lastMessageText = lastMessageText else { return }
+            guard let lastMessageText = lastMessageText else {
+                completion()
+                return }
             
             guard let startNotifyFlag = self?.startNotificationFlag else { return }
             guard let screenNotifyFlag = self?.allowMessageNotificationOnScreen else { return }

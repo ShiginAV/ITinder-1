@@ -21,6 +21,8 @@ class MatchesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setAllHidden()
+        
         startGroup.enter()
         
         UserService.getCurrentUser { (user) in
@@ -30,8 +32,6 @@ class MatchesViewController: UIViewController {
         
         startGroup.notify(queue: .main) {
             self.model = MatchesFromFirebase(user: self.currentUser)
-            
-            self.setAllHidden()
 
             self.configureDelegates()
             
