@@ -38,4 +38,8 @@ final class Router {
         
         navigationController?.pushViewController(dialogViewController, animated: true)
     }
+    
+    static func showSettings() {
+        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+    }
 }

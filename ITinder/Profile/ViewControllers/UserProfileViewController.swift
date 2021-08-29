@@ -241,7 +241,7 @@ final class UserProfileViewController: UIViewController {
     }
     
     @objc private func settingsButtonDidTap() {
-        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+        Router.showSettings()
     }
     
     @objc private func editButtonDidTap() {
