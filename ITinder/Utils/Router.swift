@@ -18,4 +18,24 @@ final class Router {
         editProfileVC.modalPresentationStyle = .fullScreen
         parent.present(editProfileVC, animated: true, completion: nil)
     }
+    
+    static func showDialogViewController(storyboard: UIStoryboard?, navigationController: UINavigationController?, currentUser: User, companion: CompanionStruct, avatars: [String: UIImage]) {
+        guard let dialogViewController = storyboard?.instantiateViewController(withIdentifier: "Dialog") as? DialogViewController else { return }
+        
+        let companionId = companion.userId
+        let convId = companion.conversationId
+        
+        dialogViewController.companion = companion
+        dialogViewController.companionPhoto = avatars[companionId]
+        
+        dialogViewController.messageViewController.currentUser = currentUser
+        dialogViewController.messageViewController.conversationId = convId
+        
+        dialogViewController.messageViewController.downloadedPhoto[currentUser.identifier] = avatars[currentUser.identifier]
+        dialogViewController.messageViewController.downloadedPhoto[companionId] = avatars[companionId]
+        
+        dialogViewController.messageViewController.companionId = companionId
+        
+        navigationController?.pushViewController(dialogViewController, animated: true)
+    }
 }

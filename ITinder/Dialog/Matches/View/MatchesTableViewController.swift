@@ -136,23 +136,7 @@ extension MatchesViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func createDialog (companion: CompanionStruct) {
-        guard let dialogViewController = self.storyboard?.instantiateViewController(withIdentifier: "Dialog") as? DialogViewController else { return }
-        
-        let companionId = companion.userId
-        let convId = companion.conversationId
-        
-        dialogViewController.companion = companion
-        dialogViewController.companionPhoto = model.downloadedPhoto[companionId]
-        
-        dialogViewController.messageViewController.currentUser = currentUser
-        dialogViewController.messageViewController.conversationId = convId
-        
-        dialogViewController.messageViewController.downloadedPhoto[currentUser.identifier] = model.downloadedPhoto[currentUser.identifier]
-        dialogViewController.messageViewController.downloadedPhoto[companionId] = model.downloadedPhoto[companionId]
-        
-        dialogViewController.messageViewController.companionId = companionId
-        
-        self.navigationController?.pushViewController(dialogViewController, animated: true)
+        Router.showDialogViewController(storyboard: self.storyboard, navigationController: self.navigationController, currentUser: currentUser, companion: companion, avatars: model.downloadedPhoto)
     }
 }
 
