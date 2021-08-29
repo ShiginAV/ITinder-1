@@ -90,7 +90,7 @@ class UserService {
     private static func filtered(_ users: [User]) -> [User] {
         users.filter {
             guard let currentUserId = currentUserId else { return false }
-            return $0.identifier != currentUserId && !$0.likes.contains(currentUserId)
+            return $0.identifier != currentUserId && $0.statusList[currentUserId] == nil
         }
     }
     
@@ -139,50 +139,53 @@ class UserService {
         }
     }
     
-    static func set(like: String, forUserId: String, completion: @escaping ((User?) -> Void)) {
-        guard let currentUserId = currentUserId else {
-            assertionFailure()
-            completion(nil)
-            return
-        }
-        
-        getUserBy(id: forUserId) { user in
-            guard var user = user else {
+    static func set(status: User.Status, forUserId: String, completion: @escaping ((User?) -> Void)) {
+        getCurrentUser {
+            guard let currentUser = $0 else {
                 assertionFailure()
                 completion(nil)
                 return
             }
-            user.likes.append(currentUserId)
-            
-            usersDatabase.child(forUserId).updateChildValues([likesKey: user.likes]) { error, _ in
-                guard error == nil else { completion(nil); return }
-                completion(user)
+            getUserBy(id: forUserId) {
+                guard let user = $0 else {
+                    assertionFailure()
+                    completion(nil)
+                    return
+                }
+                
+                if status == .like && currentUser.statusList[user.identifier] == User.Status.like.rawValue {
+                    setMatchStatusFor(currentUser: currentUser, with: user) { completion($0) }
+                } else {
+                    set(status, for: user) { _ in completion(nil) }
+                }
             }
         }
     }
     
-    static func setMatchIfNeededWith(likedUser: User?, completion: @escaping ((User?) -> Void)) {
-        guard var likedUser = likedUser else { completion(nil); return }
+    private static func set(_ status: User.Status, for user: User, completion: @escaping ((User?) -> Void)) {
+        guard let currentUserId = currentUserId else { completion(nil); return }
+        var statusList = user.statusList
+        statusList[currentUserId] = status.rawValue
         
-        getCurrentUser { user in
-            guard var currentUser = user else {
-                assertionFailure()
-                completion(nil)
-                return
-            }
+        usersDatabase.child(user.identifier).updateChildValues([statusListKey: statusList]) { error, _ in
+            guard error == nil else { completion(nil); return }
+            completion(user)
+        }
+    }
+    
+    private static func setMatchStatusFor(currentUser: User, with likedUser: User, completion: @escaping ((User?) -> Void)) {
+        var currentUserStatusList = currentUser.statusList
+        currentUserStatusList[likedUser.identifier] = User.Status.match.rawValue
+        
+        usersDatabase.child(currentUser.identifier).updateChildValues([statusListKey: currentUserStatusList]) { error, _ in
+            guard error == nil else { completion(nil); return }
             
-            guard currentUser.likes.contains(likedUser.identifier) else { completion(nil); return }
+            var likedUserStatusList = likedUser.statusList
+            likedUserStatusList[currentUser.identifier] = User.Status.match.rawValue
             
-            currentUser.matches.append(likedUser.identifier)
-            likedUser.matches.append(currentUser.identifier)
-            
-            usersDatabase.child(currentUser.identifier).updateChildValues([matchesKey: currentUser.matches]) { error, _ in
+            usersDatabase.child(likedUser.identifier).updateChildValues([statusListKey: likedUserStatusList]) { error, _ in
                 guard error == nil else { completion(nil); return }
-                
-                usersDatabase.child(likedUser.identifier).updateChildValues([matchesKey: likedUser.matches]) { error, _ in
-                    guard error == nil else { completion(nil); return }
-                    completion(likedUser)
-                }
+                completion(likedUser)
             }
         }
     }
@@ -202,8 +205,7 @@ class UserService {
                 children.forEach {
                     if let value = $0.value as? [String: Any] {
                         if let userId = value[identifierKey] as? String {
-                            updates[userId + "/" + likesKey] = []
-                            updates[userId + "/" + matchesKey] = []
+                            updates[userId + "/" + statusListKey] = [:]
                         }
                     }
                 }
@@ -228,8 +230,7 @@ extension User {
         education = dictionary[educationKey] as? String
         company = dictionary[companyKey] as? String
         employment = dictionary[employmentKey] as? String
-        likes = dictionary[likesKey] as? [String] ?? []
-        matches = dictionary[matchesKey] as? [String] ?? []
+        statusList = dictionary[statusListKey] as? [String: String] ?? [:]
     }
     
     var userDictionary: [String: Any] {
@@ -244,7 +245,6 @@ extension User {
          educationKey: education ?? "",
          companyKey: company ?? "",
          employmentKey: employment ?? "",
-         likesKey: likes,
-         matchesKey: matches]
+         statusListKey: statusList]
     }
 }

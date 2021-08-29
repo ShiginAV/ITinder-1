@@ -8,6 +8,12 @@
 import Foundation
 
 struct User {
+    enum Status: String {
+        case like
+        case dislike
+        case match
+    }
+    
     let identifier: String
     let email: String
     var imageUrl: String
@@ -19,6 +25,5 @@ struct User {
     var education: String?
     var company: String?
     var employment: String?
-    var likes: [String]
-    var matches: [String]
+    var statusList: [String: String]
 }
