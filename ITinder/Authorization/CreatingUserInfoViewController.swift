@@ -21,7 +21,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var userInfoLabel: UILabel!
     @IBOutlet weak var signUpButton: UIButton!
     var userID = "default"
-    
+    var photoSelectedFlag = false
     let userEmail = Auth.auth().currentUser?.email
     private var imagePicker: UIImagePickerController!
     
@@ -31,20 +31,19 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         self.hideKeyboardWhenTappedAround()
         userInfoTextView.delegate = self
         
-        let errorMessage = validateFields()
-        if errorMessage != nil {
-            showAlert(title: "Ошибка регистрации", message: errorMessage)
-        }
-        
         profileImageTapped()
     }
     
-    private func validateFields() -> String! {
+    private func validateFields() -> String? {
         if nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
                 surnameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
                 dateOfBirthTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-                positionTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                positionTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
+                userInfoTextView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
             return "Пожалуйста, заполните все поля регистрации"
+        }
+        if photoSelectedFlag == false {
+            return "Пожалуйста, выберите фото профиля"
         }
         return nil
     }
@@ -66,7 +65,12 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func signUpButtonTapped(_ sender: Any) {
-        createUserData()
+        let errorMessage = validateFields()
+        if errorMessage != nil {
+            showAlert(title: "Ошибка регистрации", message: errorMessage)
+        } else {
+            createUserData()
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -87,7 +91,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         let cleanedSurname = surnameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let cleanedBirthday = dateOfBirthTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let cleanedPosition = positionTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanedUserInfo = (userInfoTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "") as NSString
+        let cleanedUserInfo = userInfoTextView.text!.trimmingCharacters(in: .whitespacesAndNewlines) as NSString
 
         self.upload( photo: profileImageView.image!) { url in
             ref.child("users/" + self.userID + "/name").setValue(cleanedName + " " + cleanedSurname)
@@ -97,30 +101,33 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
             ref.child("users/" + self.userID + "/imageUrl").setValue(url?.absoluteString ?? "defaultURL")
         }
         
-        Transitor.transitionToMainTabBar(view: view, storyboard: storyboard)
+        Transitor.transitionToMainTabBar(view: view, storyboard: storyboard) // в комплешн
+        // тут дергать сервис узерсервис, в комплишне транзитор
     }
     
     func upload(photo: UIImage, completion: @escaping ((_ url:URL?) -> Void)) {
-        let ref = Storage.storage().reference().child("Avatars").child(userID)
-        
-        guard let imageData = profileImageView.image?.jpegData(compressionQuality: 0.5) else { return }
-        let metadata1 = StorageMetadata()
-        metadata1.contentType = "image/jpeg"
-        
-        ref.putData(imageData, metadata: metadata1) { metadata, _ in
-            guard metadata != nil else {
-                completion(nil)
-                return
-            }
-            ref.downloadURL { url, _ in
-                guard let url = url else {
+        if photoSelectedFlag == true {
+            let ref = Storage.storage().reference().child("Avatars").child(userID)
+            
+            guard let imageData = profileImageView.image?.jpegData(compressionQuality: 0.5) else { return }
+            let metadata1 = StorageMetadata()
+            metadata1.contentType = "image/jpeg"
+            
+            ref.putData(imageData, metadata: metadata1) { metadata, _ in
+                guard metadata != nil else {
                     completion(nil)
                     return
                 }
-                completion(url)
+                ref.downloadURL { url, _ in
+                    guard let url = url else {
+                        completion(nil)
+                        return
+                    }
+                    completion(url)
+                }
             }
         }
-        
+        completion(nil)
     }
     
     func textViewDidChange(_ textView: UITextView) {
@@ -137,6 +144,7 @@ extension CreatingUserInfoViewController: UIImagePickerControllerDelegate, UINav
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             self.profileImageView.image = pickedImage
+            photoSelectedFlag = true
         }
         
         picker.dismiss(animated: true, completion: nil)
