@@ -14,6 +14,7 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var repeatedPasswordTextField: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var toLoginLabel: UILabel!
+    @IBOutlet weak var helperLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +40,8 @@ class SignUpViewController: UIViewController {
         Utilities.stylePrimaryTextField(passwordTextField)
         Utilities.stylePrimaryTextField(repeatedPasswordTextField)
         Utilities.styleCaptionLabel(toLoginLabel)
+        Utilities.styleCaptionLabel(helperLabel)
+        helperLabel.text = "Пароль должен содержать не менее 6 символов, буквы или цифры"
     }
 
     @IBAction func signUpButtonTapped(_ sender: Any) {
@@ -63,7 +66,7 @@ class SignUpViewController: UIViewController {
         
         let cleanedPassword = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         if Utilities.isPasswordValid(cleanedPassword) == false {
-            return "Пожалуйста, убедитесь, что пароль содержит не менее 5 символов"
+            return "Пожалуйста, убедитесь, что пароль содержит не менее 6 символов, буквы или цифры"
         }
         
         let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)

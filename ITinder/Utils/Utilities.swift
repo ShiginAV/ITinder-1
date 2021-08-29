@@ -54,7 +54,7 @@ struct Utilities {
     }
     
     static func isPasswordValid(_ password: String) -> Bool {
-        let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*?[a-z0-9]).{5,}$")
+        let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*?[а-яА-Яa-zA-Z0-9]).{5,}$")
         return passwordTest.evaluate(with: password)
     }
 }
