@@ -101,7 +101,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
             ref.child("users/" + self.userID + "/imageUrl").setValue(url?.absoluteString ?? "defaultURL")
         }
         
-        Transitor.transitionToMainTabBar(view: view, storyboard: storyboard) // в комплешн
+        Router.transitionToMainTabBar(view: view, storyboard: storyboard) // в комплешн
         // тут дергать сервис узерсервис, в комплишне транзитор
     }
     

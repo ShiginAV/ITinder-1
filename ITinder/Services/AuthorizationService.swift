@@ -23,7 +23,7 @@ class AuthorizationService {
                     ref.child("users/" + uid + "/email").setValue(email)
                     ref.child("users/" + uid + "/identifier").setValue(uid)
                     
-                    Transitor.transitionToCreatingUserInfoVC(view: vc.view, storyboard: vc.storyboard, uid: uid)
+                    Router.transitionToCreatingUserInfoVC(view: vc.view, storyboard: vc.storyboard, uid: uid)
                 } else {
                     vc.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
                 }
@@ -36,7 +36,7 @@ class AuthorizationService {
             if error != nil {
                 vc.showAlert(title: "Ошибка входа", message: error?.localizedDescription)
             } else {
-                Transitor.transitionToMainTabBar(view: vc.view, storyboard: vc.storyboard)
+                Router.transitionToMainTabBar(view: vc.view, storyboard: vc.storyboard)
             }
         }
     }

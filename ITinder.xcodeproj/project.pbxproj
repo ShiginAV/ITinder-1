@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */; };
-		0EA8271D26CE803A00A69C32 /* Transitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8271C26CE803A00A69C32 /* Transitor.swift */; };
 		0EC7545826CE6203008DA01A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545426CE6203008DA01A /* LoginViewController.swift */; };
 		0EC7545926CE6203008DA01A /* AuthMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545526CE6203008DA01A /* AuthMethodsViewController.swift */; };
 		0EC7545A26CE6203008DA01A /* CreatingUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545626CE6203008DA01A /* CreatingUserInfoViewController.swift */; };
@@ -53,7 +52,6 @@
 
 /* Begin PBXFileReference section */
 		0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
-		0EA8271C26CE803A00A69C32 /* Transitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transitor.swift; sourceTree = "<group>"; };
 		0EC7545426CE6203008DA01A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0EC7545526CE6203008DA01A /* AuthMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthMethodsViewController.swift; sourceTree = "<group>"; };
 		0EC7545626CE6203008DA01A /* CreatingUserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreatingUserInfoViewController.swift; sourceTree = "<group>"; };
@@ -215,7 +213,6 @@
 				1180252026C510840096A20F /* Router.swift */,
 				1180252226C5109C0096A20F /* Colors.swift */,
 				1180252426C510BD0096A20F /* UserService.swift */,
-				0EA8271C26CE803A00A69C32 /* Transitor.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -526,7 +523,6 @@
 				1180252B26C511690096A20F /* SwipeCardModel.swift in Sources */,
 				224F40D526CD14B500A95715 /* CollectionViewCell.swift in Sources */,
 				0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */,
-				0EA8271D26CE803A00A69C32 /* Transitor.swift in Sources */,
 				1180253F26C513670096A20F /* TabBarController.swift in Sources */,
 				224F40C926CD14A100A95715 /* MessageViewController.swift in Sources */,
 				224F40CE26CD14AC00A95715 /* CompanionModel.swift in Sources */,
