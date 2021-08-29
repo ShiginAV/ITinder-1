@@ -13,7 +13,6 @@ class SwipeViewController: UIViewController {
         super.viewDidLoad()
         configure()
         addCards()
-        addMatchesObserver()
     }
     
     private let cardsLimit = 3
@@ -147,24 +146,16 @@ extension SwipeViewController: SwipeCardDelegate {
     }
     
     private func setLikeAndMatchIfNeeded(type: SwipeCardType) {
-        if type == .like {
-            guard let currentUserId = UserService.currentUserId else { return }
-            guard let shownUserId = shownUserId else { return }
-            
-            UserService.set(like: currentUserId, forUserId: shownUserId) { user in
-                UserService.setMatchIfNeededWith(likedUser: user) { user in
-                    guard let user = user else { return }
-                    Router.showMatch(user: user, parent: self)
-                }
-            }
+        guard let shownUserId = shownUserId else { return }
+        
+        let status: User.Status
+        switch type {
+        case .like: status = .like
+        case .dislike, .neutral: status = .dislike
         }
-    }
-    
-    private func addMatchesObserver() {
-        UserService.observeMatches { user in
-            guard let user = user else { return }
-            //Router.showMatch(user: user, parent: self)
-            print("show top notification banner for - \(user.identifier)")
+        UserService.set(status: status, forUserId: shownUserId) { user in
+            guard type == .like, let user = user else { return }
+            Router.showMatch(user: user, parent: self)
         }
     }
 }
