@@ -32,17 +32,14 @@ class MatchesFromFirebase {
                     
                     if !startNotificationFlag {
                         group.enter()
-                        print("enter")
                     }
                     createLastMessageObserver(companionData: companion, completion: {
                         if !self.startNotificationFlag {
                             group.leave()
-                            print("leave")
                         }
                     })
                 }
                 group.notify(queue: .main) {
-                    print("notify")
                     self.startNotificationFlag = true
                 }
                 
@@ -82,7 +79,6 @@ class MatchesFromFirebase {
     }
     
     init(user: User) {
-        
         downloadPhoto(photoUrl: user.imageUrl, userId: user.identifier)
         
         ConversationService.getConversations(userId: user.identifier) { [weak self] (conversations) in
@@ -112,6 +108,7 @@ class MatchesFromFirebase {
                 self?.delegate?.setAllVisible()
             }
         }
+
     }
     // MARK: - Firebase data
     
@@ -135,24 +132,10 @@ class MatchesFromFirebase {
     
     private func getUserData(conv: [CompanionStruct], index: Int, completion: @escaping (User) -> Void) {
         
-//        UserService.getUserBy(id: conv[index].userId) { [weak self] (user) in
-//            print("get data")
-//
-//            guard let user = user else { return }
-//
-//            let userId = conv[index].userId
-//
-//            self?.downloadPhoto(photoUrl: user.imageUrl, userId: userId)
-//
-//            completion(user)
-//        }
-//
-        ConversationService.getUserData(userId: conv[index].userId) { [weak self] (user) in
-
+        UserService.getUserBy(id: conv[index].userId) { [weak self] (user) in
+            guard let user = user else { return }
             let userId = conv[index].userId
-
             self?.downloadPhoto(photoUrl: user.imageUrl, userId: userId)
-
             completion(user)
         }
     }
@@ -184,7 +167,8 @@ class MatchesFromFirebase {
         oldCompanions = forOldCompanions
     }
     
-    private func sendNotification(companionName: String, message: String) {
+    func sendNotification(companionName: String, message: String) {
+        
         let content = UNMutableNotificationContent()
         
         content.title = companionName

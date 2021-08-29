@@ -66,7 +66,7 @@ class DialogFromFirebase {
                               kind: .text(text))
         messagesDict[messageId] = message
         
-        ConversationService.createMessage(messageId: messageId, date: stringDate, convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
+        ConversationService.createMessage(message: message, date: stringDate, convId: conversationId, text: text, companionId: companionId)
         delegate?.resetMessageInputBarText()
     }
     
@@ -83,7 +83,7 @@ class DialogFromFirebase {
                                                            size: CGSize(width: 150, height: 150))))
         messagesDict[messageId] = message
         
-        ConversationService.createMessage(messageId: messageId, date: stringDate, convId: conversationId, image: photo, selfSender: selfSender, companionId: companionId)
+        ConversationService.createMessage(message: message, date: stringDate, convId: conversationId, image: photo, companionId: companionId)
         delegate?.resetMessageInputBarText()
     }
     

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="meM-Gf-y4a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="TrK-pF-ZNz">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
@@ -98,7 +98,6 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="3Bs-Gy-gz6" firstAttribute="trailing" secondItem="Gf8-en-wbc" secondAttribute="trailingMargin" id="2vp-of-kot"/>
-                                                <constraint firstItem="3Bs-Gy-gz6" firstAttribute="centerX" secondItem="Gf8-en-wbc" secondAttribute="centerX" id="3uX-id-HCp"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="3Bs-Gy-gz6" secondAttribute="bottom" id="70Q-pl-F1B"/>
                                                 <constraint firstItem="3Bs-Gy-gz6" firstAttribute="top" secondItem="Gf8-en-wbc" secondAttribute="topMargin" id="cD8-Ui-3Mr"/>
                                                 <constraint firstItem="3Bs-Gy-gz6" firstAttribute="centerY" secondItem="Gf8-en-wbc" secondAttribute="centerY" id="e0M-iG-pAq"/>
@@ -178,7 +177,6 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="kRI-4r-0Ck" firstAttribute="centerX" secondItem="gwY-xh-XPu" secondAttribute="centerX" id="KNG-Kh-d4d"/>
                                                 <constraint firstAttribute="trailing" secondItem="kRI-4r-0Ck" secondAttribute="trailing" id="Q1p-iY-FZF"/>
                                                 <constraint firstItem="kRI-4r-0Ck" firstAttribute="leading" secondItem="gwY-xh-XPu" secondAttribute="leading" id="cgw-S2-4Nr"/>
                                                 <constraint firstItem="kRI-4r-0Ck" firstAttribute="centerY" secondItem="gwY-xh-XPu" secondAttribute="centerY" id="fVQ-d1-6qu"/>

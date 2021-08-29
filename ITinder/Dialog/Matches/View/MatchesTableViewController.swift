@@ -20,7 +20,7 @@ class MatchesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setAllHidden()
         
         startGroup.enter()
@@ -236,7 +236,7 @@ extension MatchesViewController: UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print(#function)
+        tabBarController?.selectedIndex = 1
     }
     
 }
