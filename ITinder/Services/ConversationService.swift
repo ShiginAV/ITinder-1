@@ -52,13 +52,11 @@ class ConversationService {
     static func deleteMatch(currentUserId: String, companionId: String, conversationId: String) {
         let selfUserReference = Database.database().reference().child("users").child(currentUserId)
         selfUserReference.child("conversations").child(companionId).setValue(nil)
-        selfUserReference.child("likes").child(companionId).setValue(nil)
-        selfUserReference.child("matches").child(companionId).setValue(nil)
+        selfUserReference.child("statusList").child(companionId).setValue(nil)
         
         let companionUserReference = Database.database().reference().child("users").child(companionId)
         companionUserReference.child("conversations").child(currentUserId).setValue(nil)
-        companionUserReference.child("likes").child(currentUserId).setValue(nil)
-        companionUserReference.child("matches").child(currentUserId).setValue(nil)
+        companionUserReference.child("statusList").child(currentUserId).setValue(nil)
         
         Database.database().reference().child("conversations").child(conversationId).setValue(nil)
     }
