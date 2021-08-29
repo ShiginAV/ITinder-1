@@ -63,7 +63,7 @@ final class SwipeCardInfoView: UIView {
     private func configure() {
         backgroundColor = .clear
         
-        [infoButton, nameLabel, positionLabel, descriptionView].forEach { subview in
+        [nameLabel, positionLabel, descriptionView, infoButton].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             addSubview(subview)
         }
