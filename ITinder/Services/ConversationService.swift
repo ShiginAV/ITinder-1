@@ -16,13 +16,13 @@ class ConversationService {
     static private var conversationsReference = [DatabaseReference]()
     
     static func getConversations(userId: String, completion: @escaping ([CompanionStruct]) -> Void) {
-        Database.database().reference().child("users").child(userId).child("conversations").observe(.value) { (snapshot) in
+        Database.database().reference().child(usersRefKey).child(userId).child(conversationsKey).observe(.value) { (snapshot) in
             var conversations = [CompanionStruct]()
             guard let dialogs = snapshot.children.allObjects as? [DataSnapshot] else { return }
             for conversation in dialogs {
                 let userId = conversation.key
-                guard let convId = conversation.childSnapshot(forPath: "conversationId").value as? String else { return }
-                guard let lastMessageWasRead = conversation.childSnapshot(forPath: "lastMessageWasRead").value as? Bool else { return }
+                guard let convId = conversation.childSnapshot(forPath: conversationIdKey).value as? String else { return }
+                guard let lastMessageWasRead = conversation.childSnapshot(forPath: lastMessageWasReadKey).value as? Bool else { return }
                 conversations.append(CompanionStruct(userId: userId, conversationId: convId, lastMessageWasRead: lastMessageWasRead))
             }
             completion(conversations)
@@ -39,69 +39,69 @@ class ConversationService {
     }
     
     static func createLastMessageObserver(conversationId: String, completion: @escaping (String?) -> Void) {
-        let reference = Database.database().reference().child("conversations").child(conversationId)
+        let reference = Database.database().reference().child(conversationsKey).child(conversationId)
         conversationsReference.append(reference)
         
         reference.observe(.value) { (snapshot) in
-            let lastMessageId = snapshot.childSnapshot(forPath: "lastMessage").value as? String
-            let lastMessageText = snapshot.childSnapshot(forPath: "messages").childSnapshot(forPath: lastMessageId ?? "1").childSnapshot(forPath: "text").value as? String
+            let lastMessageId = snapshot.childSnapshot(forPath: lastMessageKey).value as? String
+            let lastMessageText = snapshot.childSnapshot(forPath: messagesKey).childSnapshot(forPath: lastMessageId ?? "1").childSnapshot(forPath: textKey).value as? String
             completion(lastMessageText)
         }
     }
     
     static func deleteMatch(currentUserId: String, companionId: String, conversationId: String) {
-        let selfUserReference = Database.database().reference().child("users").child(currentUserId)
-        selfUserReference.child("conversations").child(companionId).setValue(nil)
-        selfUserReference.child("statusList").child(companionId).setValue(nil)
+        let selfUserReference = Database.database().reference().child(usersRefKey).child(currentUserId)
+        selfUserReference.child(conversationsKey).child(companionId).setValue(nil)
+        selfUserReference.child(statusListKey).child(companionId).setValue(nil)
         
-        let companionUserReference = Database.database().reference().child("users").child(companionId)
-        companionUserReference.child("conversations").child(currentUserId).setValue(nil)
-        companionUserReference.child("statusList").child(currentUserId).setValue(nil)
+        let companionUserReference = Database.database().reference().child(usersRefKey).child(companionId)
+        companionUserReference.child(conversationsKey).child(currentUserId).setValue(nil)
+        companionUserReference.child(statusListKey).child(currentUserId).setValue(nil)
         
-        Database.database().reference().child("conversations").child(conversationId).setValue(nil)
+        Database.database().reference().child(conversationsKey).child(conversationId).setValue(nil)
     }
     
     static func createMessage(message: Message, date: String, convId: String, text: String, companionId: String) {
-        let referenceConversation = Database.database().reference().child("conversations")
+        let referenceConversation = Database.database().reference().child(conversationsKey)
         
-        referenceConversation.child(convId).child("messages").child(message.messageId).updateChildValues([
-                                                                                                    "date": date,
-                                                                                                    "messageId": message.messageId,
-                                                                                                    "sender": message.sender.senderId,
-                                                                                                    "messageType": "text",
-                                                                                                    "text": text])
-        referenceConversation.child(convId).child("lastMessage").setValue(message.messageId)
-        Database.database().reference().child("users").child(companionId).child("conversations").child(message.sender.senderId).child("lastMessageWasRead").setValue(false)
+        referenceConversation.child(convId).child(messagesKey).child(message.messageId).updateChildValues([
+                                                                                                    dateKey: date,
+                                                                                                    messageIdKey: message.messageId,
+                                                                                                    senderKey: message.sender.senderId,
+                                                                                                    messageTypeKey: "text",
+                                                                                                    textKey: text])
+        referenceConversation.child(convId).child(lastMessageKey).setValue(message.messageId)
+        Database.database().reference().child(usersRefKey).child(companionId).child(conversationsKey).child(message.sender.senderId).child(lastMessageWasReadKey).setValue(false)
     }
     
     static func createMessage(message: Message, date: String, convId: String, image: UIImage, companionId: String) {
-        let referenceConversation = Database.database().reference().child("conversations")
+        let referenceConversation = Database.database().reference().child(conversationsKey)
         
         guard let image = image.jpegData(compressionQuality: 0.5) else { return }
         
         let metadata1 = StorageMetadata()
         metadata1.contentType = "image/jpeg"
         
-        let ref = Storage.storage().reference().child(convId).child(message.messageId).child("Attachment")
+        let ref = Storage.storage().reference().child(convId).child(message.messageId)
         
         ref.putData(image, metadata: metadata1) { (metadata, _) in
             ref.downloadURL { (url, _) in
-                referenceConversation.child(convId).child("messages").child(message.messageId).updateChildValues(["date": date,
-                                                                                                          "messageId": message.messageId,
-                                                                                                          "sender": message.sender.senderId,
-                                                                                                          "messageType": "photo",
-                                                                                                          "attachment": url?.absoluteString ?? "",
-                                                                                                          "text": "Вложение"])
+                referenceConversation.child(convId).child(messagesKey).child(message.messageId).updateChildValues([dateKey: date,
+                                                                                                          messageIdKey: message.messageId,
+                                                                                                          senderKey: message.sender.senderId,
+                                                                                                          messageTypeKey: "photo",
+                                                                                                          attachmentKey: url?.absoluteString ?? "",
+                                                                                                          textKey: "Вложение"])
                 
-                referenceConversation.child(convId).child("lastMessage").setValue(message.messageId)
-                Database.database().reference().child("users").child(companionId).child("conversations").child(message.sender.senderId).child("lastMessageWasRead").setValue(false)
+                referenceConversation.child(convId).child(lastMessageKey).setValue(message.messageId)
+                Database.database().reference().child(usersRefKey).child(companionId).child(conversationsKey).child(message.sender.senderId).child(lastMessageWasReadKey).setValue(false)
             }
         }
     }
     
     static func messagesFromConversationsObserver(conversationId: String, messagesCompletion: @escaping () -> ([String: Message]), completion: @escaping ([String: Message]) -> Void) {
         
-        messagesReference = Database.database().reference().child("conversations").child(conversationId).child("messages")
+        messagesReference = Database.database().reference().child(conversationsKey).child(conversationId).child(messagesKey)
         messagesReference.observe(.value) { (snapshot) in
             
             guard snapshot.exists() else { return }
@@ -186,7 +186,7 @@ class ConversationService {
     }
     
     static func setLastMessageWasRead(currentUserId: String, companionId: String) {
-        Database.database().reference().child("users").child(currentUserId).child("conversations").child(companionId).child("lastMessageWasRead").setValue(true)
+        Database.database().reference().child(usersRefKey).child(currentUserId).child(conversationsKey).child(companionId).child(lastMessageWasReadKey).setValue(true)
     }
     
     static private func convertStringToDate(stringDate: String) -> Date? {
@@ -199,7 +199,7 @@ class ConversationService {
     
     static func createMatchConversation(currentUserId: String, companionId: String) {
         let newConversationId = UUID().uuidString
-        let currentUserRef = Database.database().reference().child("users").child(currentUserId).child("conversations").child(companionId)
+        let currentUserRef = Database.database().reference().child(usersRefKey).child(currentUserId).child(conversationsKey).child(companionId)
         
         let group = DispatchGroup()
         
@@ -211,13 +211,13 @@ class ConversationService {
         
         group.notify(queue: .main) {
             
-            currentUserRef.child("conversationId").setValue(newConversationId)
-            currentUserRef.child("lastMessageWasRead").setValue(true)
+            currentUserRef.child(conversationIdKey).setValue(newConversationId)
+            currentUserRef.child(lastMessageWasReadKey).setValue(true)
             
-            let companionUserRef = Database.database().reference().child("users").child(companionId).child("conversations").child(currentUserId)
+            let companionUserRef = Database.database().reference().child(usersRefKey).child(companionId).child(conversationsKey).child(currentUserId)
             
-            companionUserRef.child("conversationId").setValue(newConversationId)
-            companionUserRef.child("lastMessageWasRead").setValue(true)
+            companionUserRef.child(conversationIdKey).setValue(newConversationId)
+            companionUserRef.child(lastMessageWasReadKey).setValue(true)
         }
     }
     

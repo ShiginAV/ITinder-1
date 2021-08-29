@@ -23,3 +23,18 @@ let companyKey = "company"
 let employmentKey = "employment"
 let likesKey = "likes"
 let matchesKey = "matches"
+let statusListKey = "statusList"
+
+let conversationsKey = "conversations"
+let conversationIdKey = "conversationId"
+let lastMessageWasReadKey = "lastMessageWasRead"
+
+let lastMessageKey = "lastMessage"
+let messagesKey = "messages"
+
+let dateKey = "date"
+let messageIdKey = "messageId"
+let senderKey = "sender"
+let messageTypeKey = "messageType"
+let attachmentKey = "attachment"
+let textKey = "text"
