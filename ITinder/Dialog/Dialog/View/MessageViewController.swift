@@ -24,7 +24,7 @@ class MessageViewController: MessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         model = DialogFromFirebase(conversationId: conversationId)
         model.delegate = self
         
@@ -93,6 +93,7 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
 }
 
 extension MessageViewController: DialogDelegate {
+    
     func resetMessageInputBarText() {
         messageInputBar.inputTextView.text = ""
     }

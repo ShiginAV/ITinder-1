@@ -99,15 +99,17 @@ class ConversationService {
         }
     }
     
-    static func messagesFromConversationsObserver(conversationId: String, messagesCompletion: @escaping () -> ([String: Message]), completion: @escaping ([String: Message]) -> Void) {
+    static func messagesFromConversationsObserver(conversationId: String, messagesCompletion: @escaping () -> ([String: Message]), completion: @escaping ([String: Message]?) -> Void) {
         
         messagesReference = Database.database().reference().child(conversationsKey).child(conversationId).child(messagesKey)
         messagesReference.observe(.value) { (snapshot) in
             
-            guard snapshot.exists() else { return }
-            
             let cashedMessages = messagesCompletion()
             var messagesFromFirebase = [String : Message]()
+            
+            guard snapshot.exists() else {
+                completion(messagesFromFirebase)
+                return }
             
             let internetMessages = snapshot
             
@@ -201,15 +203,15 @@ class ConversationService {
         let newConversationId = UUID().uuidString
         let currentUserRef = Database.database().reference().child(usersRefKey).child(currentUserId).child(conversationsKey).child(companionId)
         
-        let group = DispatchGroup()
-        
-        group.enter()
-        currentUserRef.getData { (error, snapshot) in
-            
-            group.leave()
-        }
-        
-        group.notify(queue: .main) {
+//        let group = DispatchGroup()
+//
+//        group.enter()
+//        currentUserRef.getData { (error, snapshot) in
+//
+//            group.leave()
+//        }
+//
+//        group.notify(queue: .main) {
             
             currentUserRef.child(conversationIdKey).setValue(newConversationId)
             currentUserRef.child(lastMessageWasReadKey).setValue(true)
@@ -218,7 +220,7 @@ class ConversationService {
             
             companionUserRef.child(conversationIdKey).setValue(newConversationId)
             companionUserRef.child(lastMessageWasReadKey).setValue(true)
-        }
+//        }
     }
     
     static private func createTextMessage(sender: Sender, messageId: String, sentDate: Date, text: String) -> Message {

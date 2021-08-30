@@ -18,7 +18,6 @@ class MatchesFromFirebase {
     
     weak var delegate: MatchesDelegate?
     
-    let lock = NSLock()
     let group = DispatchGroup()
     
     var companions = [CompanionStruct]() {
@@ -40,7 +39,7 @@ class MatchesFromFirebase {
                     })
                 }
                 group.notify(queue: .main) {
-                    self.startNotificationFlag = true
+//                    self.startNotificationFlag = true
                 }
                 
             }
@@ -48,6 +47,8 @@ class MatchesFromFirebase {
             allCompanionsUpdate()
             DispatchQueue.main.async {
                 self.delegate?.reloadTable()
+                self.startMatchNotifyFlag = true
+                self.startNotificationFlag = true
             }
         }
     }
@@ -66,6 +67,7 @@ class MatchesFromFirebase {
     }
     
     var startNotificationFlag = false
+    var startMatchNotifyFlag = false
     var allowMessageNotificationOnScreen = true
     
     let startGroup = DispatchGroup()
@@ -85,7 +87,7 @@ class MatchesFromFirebase {
             
             var conv = conversations
             
-            if let notifyFlag = self?.startNotificationFlag {
+            if let notifyFlag = self?.startMatchNotifyFlag {
                 if conv.count > self?.companions.count ?? 0 && notifyFlag {
                     self?.sendNotification(companionName: "Пара!", message: "У вас есть новая пара!")
                 }

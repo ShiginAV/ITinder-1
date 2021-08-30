@@ -47,6 +47,9 @@ class DialogFromFirebase {
         ConversationService.messagesFromConversationsObserver(conversationId: conversationId) {  [weak self]  () -> ([String : Message]) in
             return (self?.messagesDict ?? [String: Message]())
         } completion: { [weak self] (internetMessages) in
+            guard let internetMessages = internetMessages else {
+                return
+            }
             self?.messagesDict = internetMessages
         }
     }
