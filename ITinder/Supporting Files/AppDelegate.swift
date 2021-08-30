@@ -8,6 +8,8 @@
 import UIKit
 import Firebase
 import GoogleSignIn
+import FirebaseCore
+import FirebaseAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -26,10 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func application(
-      _ app: UIApplication,
-      open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]
-    ) -> Bool {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
       var handled: Bool
 
       handled = GIDSignIn.sharedInstance.handle(url)

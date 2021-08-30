@@ -13,6 +13,8 @@ pod 'Firebase/Database'
 pod 'Firebase/Auth'
 pod 'Firebase/Storage'
 pod 'GoogleSignIn'
+pod 'FacebookCore'
+pod 'FacebookLogin'
 pod 'MessageKit'
 
 end
