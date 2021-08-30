@@ -25,9 +25,11 @@ class MatchesFromFirebase {
             
             if oldValue.count != companions.count {
                 ConversationService.removeConversationsObserver()
-                startNotificationFlag = false
+                
                 let group = DispatchGroup()
                 companions.forEach { (companion) in
+                    
+                    startNotificationFlag = false
                     
                     if !startNotificationFlag {
                         group.enter()
@@ -38,8 +40,9 @@ class MatchesFromFirebase {
                         }
                     })
                 }
+                
                 group.notify(queue: .main) {
-//                    self.startNotificationFlag = true
+                    self.startNotificationFlag = true
                 }
                 
             }
@@ -48,7 +51,6 @@ class MatchesFromFirebase {
             DispatchQueue.main.async {
                 self.delegate?.reloadTable()
                 self.startMatchNotifyFlag = true
-                self.startNotificationFlag = true
             }
         }
     }
@@ -83,7 +85,7 @@ class MatchesFromFirebase {
     init(user: User) {
         downloadPhoto(photoUrl: user.imageUrl, userId: user.identifier)
         
-        ConversationService.getConversations(userId: user.identifier) { [weak self] (conversations) in
+        ConversationService.conversationsObserver(userId: user.identifier) { [weak self] (conversations) in
             
             var conv = conversations
             

@@ -20,7 +20,7 @@ class MatchesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setAllHidden()
         
         startGroup.enter()

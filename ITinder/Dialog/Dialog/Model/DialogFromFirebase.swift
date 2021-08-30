@@ -13,6 +13,7 @@ protocol DialogDelegate: AnyObject {
     func reloadMessages()
     func getCompanionsId() -> [String: String]
     func resetMessageInputBarText()
+    func popToRootViewController()
 }
 
 class DialogFromFirebase {
@@ -21,6 +22,18 @@ class DialogFromFirebase {
     
     var messagesDict = [String: Message]() {
         didSet {
+            
+            if messagesDict.count == 0 {
+                let companionsId = delegate?.getCompanionsId()
+                
+                guard let currentUserId = companionsId?["currentUserId"] else { return }
+                guard let companionId = companionsId?["companionId"] else { return }
+                
+                ConversationService.checkIfConversationNoExists(currentUserId: currentUserId, companionId: companionId) {
+                    self.delegate?.popToRootViewController()
+                }
+            }
+            
             var messagesArray = [Message]()
             messagesDict.values.forEach { (message) in
                 messagesArray.append(message)

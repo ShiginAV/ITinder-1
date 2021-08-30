@@ -94,6 +94,12 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
 
 extension MessageViewController: DialogDelegate {
     
+    func popToRootViewController() {
+        DispatchQueue.main.async {
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
+    
     func resetMessageInputBarText() {
         messageInputBar.inputTextView.text = ""
     }

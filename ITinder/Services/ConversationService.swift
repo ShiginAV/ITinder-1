@@ -15,7 +15,7 @@ class ConversationService {
     static private var messagesReference: DatabaseReference!
     static private var conversationsReference = [DatabaseReference]()
     
-    static func getConversations(userId: String, completion: @escaping ([CompanionStruct]) -> Void) {
+    static func conversationsObserver(userId: String, completion: @escaping ([CompanionStruct]) -> Void) {
         Database.database().reference().child(usersRefKey).child(userId).child(conversationsKey).observe(.value) { (snapshot) in
             var conversations = [CompanionStruct]()
             guard let dialogs = snapshot.children.allObjects as? [DataSnapshot] else { return }
@@ -59,6 +59,17 @@ class ConversationService {
         companionUserReference.child(statusListKey).child(currentUserId).setValue(nil)
         
         Database.database().reference().child(conversationsKey).child(conversationId).setValue(nil)
+        
+        deleteImagesFromStorage(conversationId: conversationId)
+    }
+    
+    static func deleteImagesFromStorage(conversationId: String) {
+        let ref = Storage.storage().reference()
+        ref.child("\(conversationId)/").listAll { (list, error) in
+            list.items.forEach { (image) in
+                ref.child(image.fullPath).delete()
+            }
+        }
     }
     
     static func createMessage(message: Message, date: String, convId: String, text: String, companionId: String) {
@@ -246,4 +257,13 @@ class ConversationService {
                                      sentDate: sentDate,
                                      kind: .photo(media))
     }
+    
+    static func checkIfConversationNoExists(currentUserId: String, companionId: String, completion: @escaping () -> Void) {
+        Database.database().reference().child(usersRefKey).child(currentUserId).child(conversationsKey).child(companionId).getData { (error, snapshot) in
+            if !snapshot.exists() {
+                completion()
+            }
+        }
+    }
+    
 }
