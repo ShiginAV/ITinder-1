@@ -202,16 +202,6 @@ class ConversationService {
     static func createMatchConversation(currentUserId: String, companionId: String) {
         let newConversationId = UUID().uuidString
         let currentUserRef = Database.database().reference().child(usersRefKey).child(currentUserId).child(conversationsKey).child(companionId)
-        
-//        let group = DispatchGroup()
-//
-//        group.enter()
-//        currentUserRef.getData { (error, snapshot) in
-//
-//            group.leave()
-//        }
-//
-//        group.notify(queue: .main) {
             
             currentUserRef.child(conversationIdKey).setValue(newConversationId)
             currentUserRef.child(lastMessageWasReadKey).setValue(true)
@@ -220,7 +210,6 @@ class ConversationService {
             
             companionUserRef.child(conversationIdKey).setValue(newConversationId)
             companionUserRef.child(lastMessageWasReadKey).setValue(true)
-//        }
     }
     
     static private func createTextMessage(sender: Sender, messageId: String, sentDate: Date, text: String) -> Message {
