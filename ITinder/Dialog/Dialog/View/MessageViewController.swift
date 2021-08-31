@@ -31,10 +31,6 @@ class MessageViewController: MessagesViewController {
         configureViews()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-    }
-    
     func configureViews() {
         showMessageTimestampOnSwipeLeft = true
         
@@ -120,6 +116,10 @@ extension MessageViewController: MessageCellDelegate {
         guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
         guard let messagesDataSourse = messagesCollectionView.messagesDataSource else { return }
         let message = messagesDataSourse.messageForItem(at: indexPath, in: messagesCollectionView)
+        if message.sender.senderId == selfSender.senderId {
+            tabBarController?.selectedIndex = 2
+            popToRootViewController()
+        }
         print(message.sender.senderId)
     }
     

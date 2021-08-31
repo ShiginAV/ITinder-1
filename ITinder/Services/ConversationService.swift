@@ -18,7 +18,9 @@ class ConversationService {
     static func conversationsObserver(userId: String, completion: @escaping ([CompanionStruct]) -> Void) {
         Database.database().reference().child(usersRefKey).child(userId).child(conversationsKey).observe(.value) { (snapshot) in
             var conversations = [CompanionStruct]()
-            guard let dialogs = snapshot.children.allObjects as? [DataSnapshot] else { return }
+            guard let dialogs = snapshot.children.allObjects as? [DataSnapshot] else {
+                completion(conversations)
+                return }
             for conversation in dialogs {
                 let userId = conversation.key
                 guard let convId = conversation.childSnapshot(forPath: conversationIdKey).value as? String else { return }
@@ -54,13 +56,12 @@ class ConversationService {
         selfUserReference.child(conversationsKey).child(companionId).setValue(nil)
         selfUserReference.child(statusListKey).child(companionId).setValue(nil)
         
+        Database.database().reference().child(conversationsKey).child(conversationId).setValue(nil)
+        deleteImagesFromStorage(conversationId: conversationId)
+        
         let companionUserReference = Database.database().reference().child(usersRefKey).child(companionId)
         companionUserReference.child(conversationsKey).child(currentUserId).setValue(nil)
         companionUserReference.child(statusListKey).child(currentUserId).setValue(nil)
-        
-        Database.database().reference().child(conversationsKey).child(conversationId).setValue(nil)
-        
-        deleteImagesFromStorage(conversationId: conversationId)
     }
     
     static func deleteImagesFromStorage(conversationId: String) {

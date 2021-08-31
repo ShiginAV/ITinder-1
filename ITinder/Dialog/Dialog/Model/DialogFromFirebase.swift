@@ -51,7 +51,10 @@ class DialogFromFirebase {
             let companionsId = delegate?.getCompanionsId()
             guard let currentUserId = companionsId?["currentUserId"] else { return }
             guard let companionId = companionsId?["companionId"] else { return }
-            ConversationService.setLastMessageWasRead(currentUserId: currentUserId, companionId: companionId)
+            
+            if messages.count != 0 {
+                ConversationService.setLastMessageWasRead(currentUserId: currentUserId, companionId: companionId)
+            }
         }
     }
     

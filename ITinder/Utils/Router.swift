@@ -46,7 +46,7 @@ final class Router {
         navigationController?.pushViewController(dialogViewController, animated: true)
     }
     
-    static func showSettings() {
+    static func openPhoneSettings() {
         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
     }
 }

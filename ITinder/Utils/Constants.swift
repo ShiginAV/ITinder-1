@@ -21,8 +21,6 @@ let cityKey = "city"
 let educationKey = "education"
 let companyKey = "company"
 let employmentKey = "employment"
-let likesKey = "likes"
-let matchesKey = "matches"
 let statusListKey = "statusList"
 
 let conversationsKey = "conversations"

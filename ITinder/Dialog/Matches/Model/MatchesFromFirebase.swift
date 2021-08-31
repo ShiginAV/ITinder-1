@@ -98,12 +98,14 @@ class MatchesFromFirebase {
             for index in 0..<conv.count {
                 
                 self?.startGroup.enter()
+                print("enter")
                 
                 self?.getUserData(conv: conv, index: index) { (user) in
                     conv[index].userName = user.name
                     conv[index].imageUrl = user.imageUrl
                     
                     self?.startGroup.leave()
+                    print("leave")
                 }
             }
             
@@ -172,18 +174,9 @@ class MatchesFromFirebase {
     }
     
     func sendNotification(companionName: String, message: String) {
-        
-        let content = UNMutableNotificationContent()
-        
-        content.title = companionName
-        content.body = message
-        content.sound = UNNotificationSound.default
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        
-        let request = UNNotificationRequest(identifier: "notification", content: content, trigger: trigger)
-        
-        delegate?.sendNotification(request: request)
+        NotificationService.sendNotification(companionName: companionName, message: message) { (request) in
+            self.delegate?.sendNotification(request: request)
+        }
     }
-    
+
 }
