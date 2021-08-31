@@ -18,16 +18,39 @@ class MatchesFromFirebase {
     
     weak var delegate: MatchesDelegate?
     
-    let lock = NSLock()
     let group = DispatchGroup()
     
     var companions = [CompanionStruct]() {
         didSet {
-            lock.lock()
+            
+            if oldValue.count != companions.count {
+                ConversationService.removeConversationsObserver()
+                
+                let group = DispatchGroup()
+                companions.forEach { (companion) in
+                    
+                    startNotificationFlag = false
+                    
+                    if !startNotificationFlag {
+                        group.enter()
+                    }
+                    createLastMessageObserver(companionData: companion, completion: {
+                        if !self.startNotificationFlag {
+                            group.leave()
+                        }
+                    })
+                }
+                
+                group.notify(queue: .main) {
+                    self.startNotificationFlag = true
+                }
+                
+            }
+            
             allCompanionsUpdate()
             DispatchQueue.main.async {
                 self.delegate?.reloadTable()
-                self.lock.unlock()
+                self.startMatchNotifyFlag = true
             }
         }
     }
@@ -45,7 +68,10 @@ class MatchesFromFirebase {
         }
     }
     
-    var notificationFlag = false
+    var startNotificationFlag = false
+    var startMatchNotifyFlag = false
+    var allowMessageNotificationOnScreen = true
+    
     let startGroup = DispatchGroup()
     
     var downloadedPhoto = [String: UIImage]() {
@@ -57,69 +83,72 @@ class MatchesFromFirebase {
     }
     
     init(user: User) {
-        let currentUserPhotoUrl = user.imageUrl
-        let currentUserId = user.identifier
+        downloadPhoto(photoUrl: user.imageUrl, userId: user.identifier)
         
-        downloadPhoto(photoUrl: currentUserPhotoUrl, userId: currentUserId)
-        
-        ConversationService.getConversations(userId: currentUserId) { [weak self] (conversations) in
+        ConversationService.conversationsObserver(userId: user.identifier) { [weak self] (conversations) in
             
             var conv = conversations
             
-            if let notifyFlag = self?.notificationFlag {
+            if let notifyFlag = self?.startMatchNotifyFlag {
                 if conv.count > self?.companions.count ?? 0 && notifyFlag {
-                    self?.sendNotification(companionName: "Match!", message: "You have a new match!")
+                    self?.sendNotification(companionName: "Пара!", message: "У вас есть новая пара!")
                 }
             }
             
             for index in 0..<conv.count {
-                self?.startGroup.enter()
                 
-                self?.getLastMessage(conv: conv, index: index)
+                self?.startGroup.enter()
+                print("enter")
                 
                 self?.getUserData(conv: conv, index: index) { (user) in
                     conv[index].userName = user.name
                     conv[index].imageUrl = user.imageUrl
-                    self?.companions = conv
+                    
                     self?.startGroup.leave()
+                    print("leave")
                 }
             }
             
             self?.startGroup.notify(queue: .main) {
-                self?.notificationFlag = true
+                self?.companions = conv
                 self?.delegate?.setAllVisible()
             }
         }
+
     }
     // MARK: - Firebase data
     
-    private func getLastMessage(conv: [CompanionStruct], index: Int) {
-        ConversationService.getLastMessage(conversationId: conv[index].conversationId, completion: { [weak self] (lastMessage) in
-            self?.lastMessages[conv[index].conversationId] = lastMessage
+    private func createLastMessageObserver(companionData: CompanionStruct, completion: @escaping () -> Void) {
+        ConversationService.createLastMessageObserver(conversationId: companionData.conversationId, completion: { [weak self] (lastMessageText) in
+            
+            self?.lastMessages[companionData.conversationId] = lastMessageText
+            
+            guard let lastMessageText = lastMessageText else {
+                completion()
+                return }
+            
+            guard let startNotifyFlag = self?.startNotificationFlag else { return }
+            guard let screenNotifyFlag = self?.allowMessageNotificationOnScreen else { return }
+            if startNotifyFlag && screenNotifyFlag {
+                self?.sendNotification(companionName: companionData.userName ?? "", message: lastMessageText)
+            }
+            completion()
         })
     }
     
     private func getUserData(conv: [CompanionStruct], index: Int, completion: @escaping (User) -> Void) {
         
-        ConversationService.getUserData(userId: conv[index].userId) { [weak self] (user) in
-            
-            if let notifyFlag = self?.notificationFlag {
-                if !conv[index].lastMessageWasRead && notifyFlag {
-                    self?.sendNotification(companionName: user.name, message: "You have a massage from \(user.name)")
-                }
-            }
-
+        UserService.getUserBy(id: conv[index].userId) { [weak self] (user) in
+            guard let user = user else { return }
             let userId = conv[index].userId
-
             self?.downloadPhoto(photoUrl: user.imageUrl, userId: userId)
-
             completion(user)
         }
     }
     
     private func downloadPhoto(photoUrl: String?, userId: String) {
-        guard let photo = photoUrl else { return }
-        ConversationService.downloadPhoto(stringUrl: photo, userId: userId) { (data) in
+        guard let photo = photoUrl, photoUrl != "" else { return }
+        ConversationService.downloadPhoto(stringUrl: photo) { (data) in
             self.downloadedPhoto[userId] = UIImage(data: data)
         }
     }
@@ -144,18 +173,10 @@ class MatchesFromFirebase {
         oldCompanions = forOldCompanions
     }
     
-    private func sendNotification(companionName: String, message: String) {
-        let content = UNMutableNotificationContent()
-        
-        content.title = companionName
-        content.body = message
-        content.sound = UNNotificationSound.default
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        
-        let request = UNNotificationRequest(identifier: "notification", content: content, trigger: trigger)
-        
-        delegate?.sendNotification(request: request)
+    func sendNotification(companionName: String, message: String) {
+        NotificationService.sendNotification(companionName: companionName, message: message) { (request) in
+            self.delegate?.sendNotification(request: request)
+        }
     }
-    
+
 }

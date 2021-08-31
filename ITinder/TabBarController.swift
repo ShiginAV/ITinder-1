@@ -12,6 +12,12 @@ final class TabBarController: UITabBarController {
         super.viewDidLoad()
         tabBar.tintColor = Colors.primary
         addUserProfileViewController()
+        
+        viewControllers?.forEach({
+            if let navigationVC = $0 as? UINavigationController {
+                navigationVC.viewControllers.forEach { _ = $0.view }
+            }
+        })
     }
     
     private func addUserProfileViewController() {

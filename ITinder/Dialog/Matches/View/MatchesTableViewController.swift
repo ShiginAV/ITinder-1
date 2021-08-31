@@ -21,29 +21,34 @@ class MatchesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setAllHidden()
+        
         startGroup.enter()
-        ConversationService.getCurrentUser { (user) in
+        
+        UserService.getCurrentUser { (user) in
             self.currentUser = user
             self.startGroup.leave()
         }
         
-        startGroup.wait()
-        
-        setAllHidden()
-        
-        model = MatchesFromFirebase(user: currentUser)
-        model.delegate = self
-        
-        navigationController?.navigationBar.isHidden = true
+        startGroup.notify(queue: .main) {
+            self.model = MatchesFromFirebase(user: self.currentUser)
 
-        matchesTableView.delegate = self
-        matchesTableView.dataSource = self
+            self.configureDelegates()
+            
+            self.configureEmptyLines()
+            
+            self.configureNotificationCenter()
+        }
+    }
+    
+    private func configureDelegates() {
+        self.matchesTableView.delegate = self
+        self.matchesTableView.dataSource = self
         
-        matchesCollectionView.delegate = self
-        matchesCollectionView.dataSource = self
+        self.matchesCollectionView.delegate = self
+        self.matchesCollectionView.dataSource = self
         
-        configureEmptyLines()
-        configureNotificationCenter()
+        self.model.delegate = self
     }
     
     private func setAllHidden() {
@@ -53,6 +58,7 @@ class MatchesViewController: UIViewController {
         matchesCollectionView.isHidden = status
         newMatchesLable.isHidden = status
         messagesLable.isHidden = status
+        navigationController?.navigationBar.isHidden = status
     }
     
     private func configureNotificationCenter() {
@@ -130,23 +136,7 @@ extension MatchesViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func createDialog (companion: CompanionStruct) {
-        guard let dialogViewController = self.storyboard?.instantiateViewController(withIdentifier: "Dialog") as? DialogViewController else { return }
-        
-        let companionId = companion.userId
-        let convId = companion.conversationId
-        
-        dialogViewController.companion = companion
-        dialogViewController.companionPhoto = model.downloadedPhoto[companionId]
-        
-        dialogViewController.messageViewController.currentUser = currentUser
-        dialogViewController.messageViewController.conversationId = convId
-        
-        dialogViewController.messageViewController.downloadedPhoto[currentUser.identifier] = model.downloadedPhoto[currentUser.identifier]
-        dialogViewController.messageViewController.downloadedPhoto[companionId] = model.downloadedPhoto[companionId]
-        
-        dialogViewController.messageViewController.companionId = companionId
-        
-        self.navigationController?.pushViewController(dialogViewController, animated: true)
+        Router.showDialogViewController(storyboard: self.storyboard, navigationController: self.navigationController, currentUser: currentUser, companion: companion, avatars: model.downloadedPhoto)
     }
 }
 
@@ -212,7 +202,7 @@ extension MatchesViewController: MatchesDelegate {
     
     func sendNotification(request: UNNotificationRequest) {
         notificationCenter.add(request) { (error) in
-            print(error)
+            print(error as Any)
         }
     }
     
@@ -230,6 +220,7 @@ extension MatchesViewController: UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print(#function)
+        tabBarController?.selectedIndex = 1
     }
+    
 }

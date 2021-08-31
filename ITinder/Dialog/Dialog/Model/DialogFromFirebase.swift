@@ -7,15 +7,40 @@
 
 import Foundation
 import Firebase
+import MessageKit
 
 protocol DialogDelegate: AnyObject {
     func reloadMessages()
     func getCompanionsId() -> [String: String]
+    func resetMessageInputBarText()
+    func popToRootViewController()
 }
 
 class DialogFromFirebase {
     
     weak var delegate: DialogDelegate?
+    
+    var messagesDict = [String: Message]() {
+        didSet {
+            
+            if messagesDict.count == 0 {
+                let companionsId = delegate?.getCompanionsId()
+                
+                guard let currentUserId = companionsId?["currentUserId"] else { return }
+                guard let companionId = companionsId?["companionId"] else { return }
+                
+                ConversationService.checkIfConversationNoExists(currentUserId: currentUserId, companionId: companionId) {
+                    self.delegate?.popToRootViewController()
+                }
+            }
+            
+            var messagesArray = [Message]()
+            messagesDict.values.forEach { (message) in
+                messagesArray.append(message)
+            }
+            messages = messagesArray
+        }
+    }
     
     var messages = [Message]() {
         didSet {
@@ -26,19 +51,69 @@ class DialogFromFirebase {
             let companionsId = delegate?.getCompanionsId()
             guard let currentUserId = companionsId?["currentUserId"] else { return }
             guard let companionId = companionsId?["companionId"] else { return }
-            ConversationService.setLastMessageWasRead(currentUserId: currentUserId, companionId: companionId)
+            
+            if messages.count != 0 {
+                ConversationService.setLastMessageWasRead(currentUserId: currentUserId, companionId: companionId)
+            }
         }
     }
     
     init(conversationId: String) {
-        ConversationService.messagesFromConversations(conversationId: conversationId) { [weak self] (internetMessages) in
-            self?.messages = internetMessages
+        
+        ConversationService.messagesFromConversationsObserver(conversationId: conversationId) {  [weak self]  () -> ([String : Message]) in
+            return (self?.messagesDict ?? [String: Message]())
+        } completion: { [weak self] (internetMessages) in
+            guard let internetMessages = internetMessages else {
+                return
+            }
+            self?.messagesDict = internetMessages
         }
+    }
+    
+    deinit {
+        ConversationService.removeMessagesFromConversationsObserver()
+    }
+    
+    func sendTextMessage(conversationId: String, text: String, selfSender: Sender, companionId: String) {
+        let messageId = UUID().uuidString
+        let date = Date()
+        let stringDate = convertStringFromDate(date: date)
+        
+        let message = Message(sender: selfSender,
+                              messageId: messageId,
+                              sentDate: date,
+                              kind: .text(text))
+        messagesDict[messageId] = message
+        
+        ConversationService.createMessage(message: message, date: stringDate, convId: conversationId, text: text, companionId: companionId)
+        delegate?.resetMessageInputBarText()
+    }
+    
+    func sendImageMessage(conversationId: String, selfSender: Sender, photo: UIImage, companionId: String) {
+        let messageId = UUID().uuidString
+        let date = Date()
+        let stringDate = convertStringFromDate(date: date)
+        
+        let message = Message(sender: selfSender,
+                              messageId: messageId,
+                              sentDate: date,
+                              kind: .photo(MediaForMessage(image: photo,
+                                                           placeholderImage: UIImage(),
+                                                           size: CGSize(width: 150, height: 150))))
+        messagesDict[messageId] = message
+        
+        ConversationService.createMessage(message: message, date: stringDate, convId: conversationId, image: photo, companionId: companionId)
+        delegate?.resetMessageInputBarText()
+    }
+    
+    private func convertStringFromDate(date: Date) -> String {
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "yy-MM-dd H:m:ss.SSSS Z"
+        return dateFormater.string(from: date)
     }
 }
 
 extension DialogFromFirebase {
-    
     func isPreviousMessageSameSender(indexPath: IndexPath) -> Bool {
         guard indexPath.section - 1 >= 0 else { return false}
         return messages[indexPath.section].sender.senderId == messages[indexPath.section - 1].sender.senderId

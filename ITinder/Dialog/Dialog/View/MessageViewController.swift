@@ -24,16 +24,25 @@ class MessageViewController: MessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         model = DialogFromFirebase(conversationId: conversationId)
         model.delegate = self
         
+        configureViews()
+    }
+    
+    func configureViews() {
         showMessageTimestampOnSwipeLeft = true
-        messageInputBar.delegate = self
+        
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.messageCellDelegate = self
+        
+        messageInputBar = CameraInputBarAccessoryView()
+        messageInputBar.delegate = self
+        
+        scrollsToLastItemOnKeyboardBeginsEditing = true
     }
 }
 
@@ -65,9 +74,9 @@ extension MessageViewController: MessagesDataSource, MessagesLayoutDelegate, Mes
 }
 
 extension MessageViewController: InputBarAccessoryViewDelegate {
+
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        ConversationService.createMessage(convId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
-        messageInputBar.inputTextView.text = ""
+        model.sendTextMessage(conversationId: conversationId, text: text, selfSender: selfSender, companionId: companionId)
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
@@ -80,6 +89,17 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
 }
 
 extension MessageViewController: DialogDelegate {
+    
+    func popToRootViewController() {
+        DispatchQueue.main.async {
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
+    
+    func resetMessageInputBarText() {
+        messageInputBar.inputTextView.text = ""
+    }
+    
     func getCompanionsId() -> [String : String] {
         return ["currentUserId": currentUser.identifier,
                 "companionId": companionId]
@@ -96,6 +116,46 @@ extension MessageViewController: MessageCellDelegate {
         guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
         guard let messagesDataSourse = messagesCollectionView.messagesDataSource else { return }
         let message = messagesDataSourse.messageForItem(at: indexPath, in: messagesCollectionView)
+        if message.sender.senderId == selfSender.senderId {
+            tabBarController?.selectedIndex = 2
+            popToRootViewController()
+        }
         print(message.sender.senderId)
+    }
+    
+    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        if message.sender.senderId == selfSender.senderId {
+            return Colors.primary
+        } else {
+            return .systemGray5
+        }
+    }
+}
+
+extension MessageViewController: CameraInputBarAccessoryViewDelegate {
+    
+    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith attachments: [AttachmentManager.Attachment]) {
+        
+        if inputBar.inputTextView.text != "" {
+            model.sendTextMessage(conversationId: conversationId, text: inputBar.inputTextView.text, selfSender: selfSender, companionId: companionId)
+        }
+        
+        for item in attachments {
+            if case .image(let image) = item {
+                model.sendImageMessage(conversationId: conversationId, selfSender: selfSender, photo: image, companionId: companionId)
+            }
+        }
+        
+        inputBar.invalidatePlugins()
+    }
+}
+
+extension MessageViewController {
+    func getSelf() -> UIViewController {
+        return self
+    }
+    
+    func showAlert(alert: UIAlertController) {
+        present(alert, animated: true, completion: nil)
     }
 }

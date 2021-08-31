@@ -366,8 +366,7 @@ open class InputTextView: UITextView {
             if !text.isEmpty {
                 components.append(text)
             }
-        }
-        else {
+        } else {
             attachments.forEach { (attachment) in
                 let (range, image) = attachment
                 if curLocation < range.location {
@@ -411,4 +410,3 @@ open class InputTextView: UITextView {
     }
     
 }
-

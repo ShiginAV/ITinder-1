@@ -154,6 +154,9 @@ class UserService {
                 }
                 
                 if status == .like && currentUser.statusList[user.identifier] == User.Status.like.rawValue {
+                    
+                    ConversationService.createMatchConversation(currentUserId: currentUser.identifier, companionId: user.identifier)
+                    
                     setMatchStatusFor(currentUser: currentUser, with: user) { completion($0) }
                 } else {
                     set(status, for: user) { _ in completion(nil) }

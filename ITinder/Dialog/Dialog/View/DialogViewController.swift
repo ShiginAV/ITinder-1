@@ -18,17 +18,17 @@ class DialogViewController: UIViewController {
     
     @IBOutlet weak var companionName: UILabel!
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
     let messageViewController = MessageViewController()
     
     var companion: CompanionStruct!
     var companionPhoto: UIImage!
     
+    var rootViewController: UIViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        rootViewController = navigationController?.viewControllers.first
         
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         addChild(messageViewController)
@@ -41,6 +41,8 @@ class DialogViewController: UIViewController {
         avatarImage.image = companionPhoto
         
         gestureRecognizerForImage()
+        
+        allowNotificationOnScreen(false)
     }
     
     override func viewDidLayoutSubviews() {
@@ -77,6 +79,16 @@ class DialogViewController: UIViewController {
     @IBAction func backButton(_ sender: Any) {
         navigationController?.popToRootViewController(animated: true)
     }
+    
+    func allowNotificationOnScreen(_ allow: Bool) {
+        let rootVC = rootViewController as? MatchesViewController
+        rootVC?.model.allowMessageNotificationOnScreen = allow
+    }
+    
+    deinit {
+        allowNotificationOnScreen(true)
+    }
+    
 }
 
 extension DialogViewController: UIGestureRecognizerDelegate {
