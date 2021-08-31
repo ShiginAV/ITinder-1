@@ -131,7 +131,6 @@ extension MatchesViewController: UITableViewDataSource, UITableViewDelegate {
             let companionId = model.oldCompanions[indexPath.row].userId
             let conversationId = model.oldCompanions[indexPath.row].conversationId
             model.deleteMatch(currentUserId: currentUser.identifier, companionId: companionId, conversationId: conversationId)
-            
         }
     }
     
@@ -221,6 +220,11 @@ extension MatchesViewController: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         tabBarController?.selectedIndex = 1
+        
+        let companionId = response.notification.request.content.categoryIdentifier
+        guard let currentCompanion = model.companions[companionId] else { return }
+        createDialog(companion: currentCompanion)
+        
     }
     
 }

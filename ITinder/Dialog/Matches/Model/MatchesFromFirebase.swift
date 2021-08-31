@@ -20,7 +20,7 @@ class MatchesFromFirebase {
     
     let group = DispatchGroup()
     
-    var companions = [CompanionStruct]() {
+    var companions = [String: CompanionStruct]() {
         didSet {
             
             if oldValue.count != companions.count {
@@ -28,7 +28,7 @@ class MatchesFromFirebase {
                 
                 let group = DispatchGroup()
                 companions.forEach { (companion) in
-                    
+                    let companion = companion.value
                     startNotificationFlag = false
                     
                     if !startNotificationFlag {
@@ -55,9 +55,21 @@ class MatchesFromFirebase {
         }
     }
     
-    var newCompanions = [CompanionStruct]()
+    var newCompanions = [CompanionStruct]() {
+        didSet {
+            newCompanions.sort {
+                $0.userId > $1.userId
+            }
+        }
+    }
     
-    var oldCompanions = [CompanionStruct]()
+    var oldCompanions = [CompanionStruct]() {
+        didSet {
+            newCompanions.sort {
+                $0.userId > $1.userId
+            }
+        }
+    }
     
     var lastMessages = [String: String]() {
         didSet {
@@ -87,26 +99,29 @@ class MatchesFromFirebase {
         
         ConversationService.conversationsObserver(userId: user.identifier) { [weak self] (conversations) in
             
-            var conv = conversations
+            var conv = [String: CompanionStruct]()
             
             if let notifyFlag = self?.startMatchNotifyFlag {
-                if conv.count > self?.companions.count ?? 0 && notifyFlag {
-                    self?.sendNotification(companionName: "Пара!", message: "У вас есть новая пара!")
+                if conversations.count > self?.companions.count ?? 0 && notifyFlag {
+                    self?.sendNotification(title: "Пара!", message: "У вас есть новая пара!")
                 }
             }
             
-            for index in 0..<conv.count {
+            conversations.forEach { (companion) in
+                var currentCompanion = companion
                 
                 self?.startGroup.enter()
                 print("enter")
                 
-                self?.getUserData(conv: conv, index: index) { (user) in
-                    conv[index].userName = user.name
-                    conv[index].imageUrl = user.imageUrl
+                self?.getUserData(companionId: companion.userId) { (user) in
+                    currentCompanion.userName = user.name
+                    currentCompanion.imageUrl = user.imageUrl
                     
+                    conv[companion.userId] = currentCompanion
                     self?.startGroup.leave()
                     print("leave")
                 }
+                
             }
             
             self?.startGroup.notify(queue: .main) {
@@ -130,18 +145,17 @@ class MatchesFromFirebase {
             guard let startNotifyFlag = self?.startNotificationFlag else { return }
             guard let screenNotifyFlag = self?.allowMessageNotificationOnScreen else { return }
             if startNotifyFlag && screenNotifyFlag {
-                self?.sendNotification(companionName: companionData.userName ?? "", message: lastMessageText)
+                self?.sendNotification(companion: companionData, message: lastMessageText)
             }
             completion()
         })
     }
     
-    private func getUserData(conv: [CompanionStruct], index: Int, completion: @escaping (User) -> Void) {
+    private func getUserData(companionId: String, completion: @escaping (User) -> Void) {
         
-        UserService.getUserBy(id: conv[index].userId) { [weak self] (user) in
+        UserService.getUserBy(id: companionId) { [weak self] (user) in
             guard let user = user else { return }
-            let userId = conv[index].userId
-            self?.downloadPhoto(photoUrl: user.imageUrl, userId: userId)
+            self?.downloadPhoto(photoUrl: user.imageUrl, userId: companionId)
             completion(user)
         }
     }
@@ -162,7 +176,7 @@ class MatchesFromFirebase {
     private func allCompanionsUpdate() {
         var forOldCompanions = [CompanionStruct]()
         var forNewCompanions = [CompanionStruct]()
-        for user in companions {
+        for user in companions.values {
             if lastMessages[user.conversationId] != nil {
                 forOldCompanions.append(user)
             } else {
@@ -173,8 +187,14 @@ class MatchesFromFirebase {
         oldCompanions = forOldCompanions
     }
     
-    func sendNotification(companionName: String, message: String) {
-        NotificationService.sendNotification(companionName: companionName, message: message) { (request) in
+    func sendNotification(title: String, message: String) {
+        NotificationService.sendNotification(title: title, message: message, companion: nil) { (request) in
+            self.delegate?.sendNotification(request: request)
+        }
+    }
+    
+    func sendNotification(companion: CompanionStruct, message: String) {
+        NotificationService.sendNotification(title: nil, message: message, companion: companion) { (request) in
             self.delegate?.sendNotification(request: request)
         }
     }
