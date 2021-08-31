@@ -111,7 +111,6 @@ class MatchesFromFirebase {
                 var currentCompanion = companion
                 
                 self?.startGroup.enter()
-                print("enter")
                 
                 self?.getUserData(companionId: companion.userId) { (user) in
                     currentCompanion.userName = user.name
@@ -119,9 +118,7 @@ class MatchesFromFirebase {
                     
                     conv[companion.userId] = currentCompanion
                     self?.startGroup.leave()
-                    print("leave")
                 }
-                
             }
             
             self?.startGroup.notify(queue: .main) {

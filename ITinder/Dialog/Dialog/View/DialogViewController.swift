@@ -73,7 +73,9 @@ class DialogViewController: UIViewController {
     }
     
     @objc func goToCompamionProfile(tapGestureRecognizer: UITapGestureRecognizer) {
-        print("goToCompamionProfile")
+        UserService.getUserBy(id: companion.userId) { (user) in
+            Router.showUserProfile(user: user, parent: self)
+        }
     }
     
     @IBAction func backButton(_ sender: Any) {
