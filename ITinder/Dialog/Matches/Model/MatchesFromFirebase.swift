@@ -82,7 +82,7 @@ class MatchesFromFirebase {
     
     var startNotificationFlag = false
     var startMatchNotifyFlag = false
-    var allowMessageNotificationOnScreen = true
+    var blockMessageNotificationForUser = ""
     
     let startGroup = DispatchGroup()
     
@@ -140,8 +140,8 @@ class MatchesFromFirebase {
                 return }
             
             guard let startNotifyFlag = self?.startNotificationFlag else { return }
-            guard let screenNotifyFlag = self?.allowMessageNotificationOnScreen else { return }
-            if startNotifyFlag && screenNotifyFlag {
+            
+            if startNotifyFlag && !(self?.blockMessageNotificationForUser == companionData.userId) {
                 self?.sendNotification(companion: companionData, message: lastMessageText)
             }
             completion()

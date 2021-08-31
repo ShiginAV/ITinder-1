@@ -42,7 +42,7 @@ class DialogViewController: UIViewController {
         
         gestureRecognizerForImage()
         
-        allowNotificationOnScreen(false)
+        blockNotificationForUser(userId: companion.userId)
     }
     
     override func viewDidLayoutSubviews() {
@@ -82,15 +82,14 @@ class DialogViewController: UIViewController {
         navigationController?.popToRootViewController(animated: true)
     }
     
-    func allowNotificationOnScreen(_ allow: Bool) {
+    func blockNotificationForUser(userId: String) {
         let rootVC = rootViewController as? MatchesViewController
-        rootVC?.model.allowMessageNotificationOnScreen = allow
+        rootVC?.model.blockMessageNotificationForUser = userId
     }
     
     deinit {
-        allowNotificationOnScreen(true)
+        blockNotificationForUser(userId: "")
     }
-    
 }
 
 extension DialogViewController: UIGestureRecognizerDelegate {
