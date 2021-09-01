@@ -32,4 +32,11 @@ final class Router {
         view.window?.rootViewController = creatingUserInfoVC
         view.window?.makeKeyAndVisible()
     }
+    
+    static func transitionToAuthScreen(parent: UIViewController) {
+        let myStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let authVC = myStoryboard.instantiateViewController(identifier: "AuthMethodsViewController")
+        authVC.modalPresentationStyle = .fullScreen
+        parent.present(authVC, animated: true, completion: nil)
+    }
 }

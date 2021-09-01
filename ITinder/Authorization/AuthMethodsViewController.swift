@@ -25,7 +25,16 @@ class AuthMethodsViewController: UIViewController {
         googleImageTapped()
         facebookImageTapped()
     }
-
+    
+    // reset user defaults to review onboarding
+    @IBAction func resetUser(_ sender: Any) {
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+        defaults.removeObject(forKey: key)
+        }
+    }
+    
     private func googleImageTapped() {
         let googleTap = UITapGestureRecognizer(target: self, action: #selector(loginWithGoogle))
         googleImageView.isUserInteractionEnabled = true

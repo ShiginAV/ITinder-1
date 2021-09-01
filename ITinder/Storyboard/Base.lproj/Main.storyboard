@@ -348,7 +348,7 @@
         <!--Auth Methods View Controller-->
         <scene sceneID="9Gj-V6-Rab">
             <objects>
-                <viewController id="yUU-p2-yJp" customClass="AuthMethodsViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthMethodsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yUU-p2-yJp" customClass="AuthMethodsViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xkd-dZ-WkW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -400,6 +400,13 @@
                                     <constraint firstItem="6OQ-In-Uk6" firstAttribute="width" secondItem="JIl-kL-Z6f" secondAttribute="width" id="RmO-cI-hkt"/>
                                 </constraints>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RfF-4b-fE8">
+                                <rect key="frame" x="326" y="70" width="35" height="30"/>
+                                <state key="normal" title="reset"/>
+                                <connections>
+                                    <action selector="resetUser:" destination="yUU-p2-yJp" eventType="touchUpInside" id="KuK-44-aNS"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="dE1-DD-GLO"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -413,9 +420,11 @@
                             <constraint firstItem="dE1-DD-GLO" firstAttribute="bottom" secondItem="c01-5M-0Rc" secondAttribute="bottom" constant="80" id="Irm-v5-Cb2"/>
                             <constraint firstItem="J04-me-RX3" firstAttribute="width" secondItem="xkd-dZ-WkW" secondAttribute="width" multiplier="0.8" id="NN7-uN-f5D"/>
                             <constraint firstItem="J04-me-RX3" firstAttribute="top" secondItem="q5R-CX-7Km" secondAttribute="bottom" constant="40" id="eOi-rU-sw9"/>
+                            <constraint firstItem="RfF-4b-fE8" firstAttribute="top" secondItem="dE1-DD-GLO" secondAttribute="top" constant="26" id="jcH-nr-iie"/>
                             <constraint firstItem="q5R-CX-7Km" firstAttribute="centerX" secondItem="dE1-DD-GLO" secondAttribute="centerX" id="pKR-YP-TXV"/>
                             <constraint firstItem="5XB-sC-5aq" firstAttribute="centerX" secondItem="dE1-DD-GLO" secondAttribute="centerX" id="vBn-oT-djf"/>
                             <constraint firstItem="c01-5M-0Rc" firstAttribute="centerX" secondItem="dE1-DD-GLO" secondAttribute="centerX" id="xGj-xP-e4O"/>
+                            <constraint firstItem="dE1-DD-GLO" firstAttribute="trailing" secondItem="RfF-4b-fE8" secondAttribute="trailing" constant="53" id="zgW-hN-yB7"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="F1L-ha-5fb"/>

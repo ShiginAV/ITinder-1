@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E50140B26DD77A3004526AA /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50140A26DD77A3004526AA /* OnboardingPageViewController.swift */; };
+		0E50140D26DF8662004526AA /* PageOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50140C26DF8662004526AA /* PageOnboardingViewController.swift */; };
 		0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */; };
 		0EC7545826CE6203008DA01A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545426CE6203008DA01A /* LoginViewController.swift */; };
 		0EC7545926CE6203008DA01A /* AuthMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545526CE6203008DA01A /* AuthMethodsViewController.swift */; };
@@ -51,6 +53,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E50140A26DD77A3004526AA /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
+		0E50140C26DF8662004526AA /* PageOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageOnboardingViewController.swift; sourceTree = "<group>"; };
 		0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
 		0EC7545426CE6203008DA01A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0EC7545526CE6203008DA01A /* AuthMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthMethodsViewController.swift; sourceTree = "<group>"; };
@@ -131,6 +135,8 @@
 		0E7E2A6026BAB0170012E987 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				0E50140A26DD77A3004526AA /* OnboardingPageViewController.swift */,
+				0E50140C26DF8662004526AA /* PageOnboardingViewController.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -502,6 +508,7 @@
 				1180253B26C5131A0096A20F /* UserProfileViewController.swift in Sources */,
 				1180252326C5109C0096A20F /* Colors.swift in Sources */,
 				224F40D626CD14B500A95715 /* TableViewCell.swift in Sources */,
+				0E50140B26DD77A3004526AA /* OnboardingPageViewController.swift in Sources */,
 				1180252126C510840096A20F /* Router.swift in Sources */,
 				0EE0184326B96AEA00AEB059 /* AppDelegate.swift in Sources */,
 				1180253526C512990096A20F /* EditСharacteristicView.swift in Sources */,
@@ -514,6 +521,7 @@
 				1180253926C512FB0096A20F /* SwipeViewController.swift in Sources */,
 				224F40CA26CD14A100A95715 /* DialogViewController.swift in Sources */,
 				224F40CF26CD14AC00A95715 /* MatchesFromFirebase.swift in Sources */,
+				0E50140D26DF8662004526AA /* PageOnboardingViewController.swift in Sources */,
 				0EC7545826CE6203008DA01A /* LoginViewController.swift in Sources */,
 				1180252E26C5119D0096A20F /* SwipeCardInfoView.swift in Sources */,
 				0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */,
