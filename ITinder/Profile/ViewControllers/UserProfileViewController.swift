@@ -120,7 +120,7 @@ final class UserProfileViewController: UIViewController {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 10
-        stack.distribution = .fillEqually
+        stack.distribution = .fill
         return stack
     }()
     

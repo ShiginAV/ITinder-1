@@ -72,9 +72,17 @@ final class EditUserProfileViewController: UIViewController {
         return stack
     }()
     
+    private lazy var descriptionView: UITextView = {
+        let view = UITextView()
+        view.font = UIFont.systemFont(ofSize: 16)
+        view.textContainer.lineFragmentPadding = 0
+        view.textContainerInset = .zero
+        view.delegate = self
+        return view
+    }()
+    
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         view.alwaysBounceVertical = true
         return view
@@ -100,7 +108,7 @@ final class EditUserProfileViewController: UIViewController {
     
     private func configure() {
         view.backgroundColor = .white
-        [scrollView, loaderView].forEach { subview in
+        [cancelButton, doneButton, profileImageView, scrollView, loaderView].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
@@ -109,7 +117,7 @@ final class EditUserProfileViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         
-        [cancelButton, doneButton, profileImageView, characteristicsStackView].forEach { subview in
+        [characteristicsStackView, descriptionView].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(subview)
         }
@@ -120,7 +128,18 @@ final class EditUserProfileViewController: UIViewController {
             loaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             loaderView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            doneButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            
+            cancelButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
+            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            
+            profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            profileImageView.topAnchor.constraint(equalTo: doneButton.bottomAnchor),
+            profileImageView.widthAnchor.constraint(equalToConstant: 160),
+            profileImageView.heightAnchor.constraint(equalTo: profileImageView.widthAnchor),
+            
+            scrollView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: padding * 2),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -130,22 +149,13 @@ final class EditUserProfileViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
-            doneButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             
-            cancelButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
-            
-            profileImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            profileImageView.topAnchor.constraint(equalTo: doneButton.bottomAnchor),
-            profileImageView.widthAnchor.constraint(equalToConstant: 160),
-            profileImageView.heightAnchor.constraint(equalTo: profileImageView.widthAnchor),
-            
-            characteristicsStackView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: padding * 2),
+            characteristicsStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
             characteristicsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
             characteristicsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
-            characteristicsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding)
+            characteristicsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding),
+            
+            descriptionView.heightAnchor.constraint(equalToConstant: 150)
         ])
         addCharacteristicsToStack()
     }
@@ -157,6 +167,7 @@ final class EditUserProfileViewController: UIViewController {
             characteristicsStackView.addArrangedSubview(characteristic)
             fill(characteristic, by: type)
         }
+        characteristicsStackView.addArrangedSubview(descriptionView)
     }
     
     private func fill(_ characteristic: EditСharacteristicView, by type: СharacteristicType) {
@@ -176,6 +187,7 @@ final class EditUserProfileViewController: UIViewController {
         case .employment:
             characteristic.text = user.employment
         }
+        descriptionView.text = user.description
     }
     
     private func showImagePicker() {
@@ -258,5 +270,11 @@ extension EditUserProfileViewController: UIImagePickerControllerDelegate, UINavi
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension EditUserProfileViewController: UITextViewDelegate {
+    func textViewDidEndEditing(_ textView: UITextView) {
+        user.description = textView.text
     }
 }
