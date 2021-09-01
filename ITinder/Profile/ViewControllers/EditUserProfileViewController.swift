@@ -14,6 +14,12 @@ final class EditUserProfileViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    deinit {
+        notifications?.forEach {
+            NotificationCenter.default.removeObserver($0)
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -21,6 +27,8 @@ final class EditUserProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
+        hideKeyboardWhenTappedAround()
+        addKeyboardNotifications()
     }
     
     override func viewDidLayoutSubviews() {
@@ -39,6 +47,8 @@ final class EditUserProfileViewController: UIViewController {
     private var user: User
     private let padding: CGFloat = 20
     private var isImageChanged = false
+    private var scrollViewBottomC: NSLayoutConstraint?
+    private var notifications: [NSObjectProtocol]?
     
     private lazy var loaderView: UIView = {
         let view = UIView()
@@ -85,6 +95,11 @@ final class EditUserProfileViewController: UIViewController {
         let view = UIScrollView()
         view.backgroundColor = .white
         view.alwaysBounceVertical = true
+        
+        view.gestureRecognizers?.forEach {
+            $0.delaysTouchesBegan = true
+            $0.cancelsTouchesInView = false
+        }
         return view
     }()
     
@@ -108,7 +123,7 @@ final class EditUserProfileViewController: UIViewController {
     
     private func configure() {
         view.backgroundColor = .white
-        [cancelButton, doneButton, profileImageView, scrollView, loaderView].forEach { subview in
+        [cancelButton, doneButton, scrollView, loaderView].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
@@ -117,7 +132,7 @@ final class EditUserProfileViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         
-        [characteristicsStackView, descriptionView].forEach { subview in
+        [profileImageView, characteristicsStackView, descriptionView].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(subview)
         }
@@ -134,15 +149,9 @@ final class EditUserProfileViewController: UIViewController {
             cancelButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             
-            profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            profileImageView.topAnchor.constraint(equalTo: doneButton.bottomAnchor),
-            profileImageView.widthAnchor.constraint(equalToConstant: 160),
-            profileImageView.heightAnchor.constraint(equalTo: profileImageView.widthAnchor),
-            
-            scrollView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: padding * 2),
+            scrollView.topAnchor.constraint(equalTo: doneButton.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -150,13 +159,20 @@ final class EditUserProfileViewController: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            characteristicsStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            profileImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            profileImageView.widthAnchor.constraint(equalToConstant: 160),
+            profileImageView.heightAnchor.constraint(equalTo: profileImageView.widthAnchor),
+            
+            characteristicsStackView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: padding * 2),
             characteristicsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
             characteristicsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             characteristicsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding),
             
             descriptionView.heightAnchor.constraint(equalToConstant: 150)
         ])
+        scrollViewBottomC = scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        scrollViewBottomC?.isActive = true
         addCharacteristicsToStack()
     }
     
@@ -196,6 +212,23 @@ final class EditUserProfileViewController: UIViewController {
         picker.sourceType = .photoLibrary
         picker.allowsEditing = true
         present(picker, animated: true)
+    }
+    
+    private func addKeyboardNotifications() {
+        let keyboardDidShowObserver = NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification,
+                                                                             object: nil,
+                                                                             queue: nil) { [weak self] notification in
+            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            self?.scrollViewBottomC?.constant = -keyboardHeight
+            self?.view.layoutIfNeeded()
+        }
+        let keyboardWillHideObserver = NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification,
+                                                                              object: nil,
+                                                                              queue: nil) { [weak self] _ in
+            self?.scrollViewBottomC?.constant = 0
+        }
+        notifications = [keyboardDidShowObserver, keyboardWillHideObserver]
     }
     
     @objc private func doneButtonDidTap() {

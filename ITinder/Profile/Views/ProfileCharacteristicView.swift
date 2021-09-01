@@ -59,5 +59,6 @@ final class ProfileCharacteristicView: UIView {
             descriptionLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
             descriptionLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+        descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
 }
