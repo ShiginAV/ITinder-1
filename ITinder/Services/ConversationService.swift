@@ -52,13 +52,13 @@ class ConversationService {
     }
     
     static func deleteMatch(currentUserId: String, companionId: String, conversationId: String) {
-        let selfUserReference = Database.database().reference().child(usersRefKey).child(currentUserId)
-        selfUserReference.child(conversationsKey).child(companionId).setValue(nil)
-        selfUserReference.child(statusListKey).child(companionId).setValue(nil)
-        
         let companionUserReference = Database.database().reference().child(usersRefKey).child(companionId)
         companionUserReference.child(conversationsKey).child(currentUserId).setValue(nil)
         companionUserReference.child(statusListKey).child(currentUserId).setValue(nil)
+        
+        let selfUserReference = Database.database().reference().child(usersRefKey).child(currentUserId)
+        selfUserReference.child(conversationsKey).child(companionId).setValue(nil)
+        selfUserReference.child(statusListKey).child(companionId).setValue(nil)
         
         Database.database().reference().child(conversationsKey).child(conversationId).setValue(nil)
         deleteImagesFromStorage(conversationId: conversationId)
@@ -259,17 +259,6 @@ class ConversationService {
                                      messageId: messageId,
                                      sentDate: sentDate,
                                      kind: .photo(media))
-    }
-    
-    static func checkIfConversationNoExists(currentUserId: String, companionId: String, completion: @escaping () -> Void) {
-        Database.database().reference().child(usersRefKey).child(currentUserId).child(conversationsKey).child(companionId).getData { (error, snapshot) in
-            print(snapshot)
-            print(error)
-            
-            if !snapshot.exists() {
-                completion()
-            }
-        }
     }
     
 }

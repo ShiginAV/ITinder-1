@@ -12,6 +12,7 @@ protocol MatchesDelegate: AnyObject {
     func reloadTable()
     func sendNotification(request: UNNotificationRequest)
     func setAllVisible()
+    func popToRoot()
 }
 
 class MatchesFromFirebase {
@@ -22,6 +23,10 @@ class MatchesFromFirebase {
     
     var companions = [String: CompanionStruct]() {
         didSet {
+            
+            if companions[blockMessageNotificationForUserId] == nil && blockMessageNotificationForUserId != "" {
+                delegate?.popToRoot()
+            }
             
             if oldValue.count != companions.count {
                 ConversationService.removeConversationsObserver()
