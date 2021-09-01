@@ -84,7 +84,7 @@ class DialogViewController: UIViewController {
     
     func blockNotificationForUser(userId: String) {
         let rootVC = rootViewController as? MatchesViewController
-        rootVC?.model.blockMessageNotificationForUser = userId
+        rootVC?.model.blockMessageNotificationForUserId = userId
     }
     
     deinit {

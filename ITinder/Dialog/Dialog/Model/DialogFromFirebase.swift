@@ -22,7 +22,6 @@ class DialogFromFirebase {
     
     var messagesDict = [String: Message]() {
         didSet {
-            
             if messagesDict.count == 0 {
                 let companionsId = delegate?.getCompanionsId()
                 
@@ -67,6 +66,8 @@ class DialogFromFirebase {
                 return
             }
             self?.messagesDict = internetMessages
+        } photoCompletion: { [weak self] (message) in
+            self?.messagesDict[message.messageId] = message
         }
     }
     
