@@ -189,7 +189,6 @@ extension MatchesViewController: UICollectionViewDelegateFlowLayout {
 
 extension MatchesViewController: MatchesDelegate {
     func popToRoot() {
-        print("huy")
         navigationController?.popToRootViewController(animated: true)
     }
     
