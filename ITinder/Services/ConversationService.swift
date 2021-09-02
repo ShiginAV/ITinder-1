@@ -214,16 +214,25 @@ class ConversationService {
     }
     
     static func createMatchConversation(currentUserId: String, companionId: String) {
+        setMatchNotificationFlagFalse()
+        
         let newConversationId = UUID().uuidString
         let currentUserRef = Database.database().reference().child(usersRefKey).child(currentUserId).child(conversationsKey).child(companionId)
             
-            currentUserRef.child(conversationIdKey).setValue(newConversationId)
-            currentUserRef.child(lastMessageWasReadKey).setValue(true)
+            currentUserRef.setValue([conversationIdKey: newConversationId,
+                                     lastMessageWasReadKey: true])
             
             let companionUserRef = Database.database().reference().child(usersRefKey).child(companionId).child(conversationsKey).child(currentUserId)
             
             companionUserRef.child(conversationIdKey).setValue(newConversationId)
             companionUserRef.child(lastMessageWasReadKey).setValue(true)
+    }
+    
+    static private func setMatchNotificationFlagFalse() {
+        let tabBarVC = UIApplication.shared.windows[0].rootViewController as? UITabBarController
+        let navigationVC = tabBarVC?.viewControllers?[1] as? UINavigationController
+        let matchVC = navigationVC?.viewControllers[0] as? MatchesViewController
+        matchVC?.model.startMatchNotifyFlag = false
     }
     
     static private func createTextMessage(sender: Sender, messageId: String, sentDate: Date, text: String) -> Message {
