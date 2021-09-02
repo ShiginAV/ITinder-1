@@ -71,4 +71,14 @@ struct Utilities {
         let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*?[а-яА-Яa-zA-Z0-9]).{5,}$")
         return passwordTest.evaluate(with: password)
     }
+    
+    static func styleTitleLabel(_ label: UILabel) {
+        label.font = UIFont(name: "Noto Sans Kannada", size: 18)
+        label.textColor = .black
+    }
+    
+    static func styleGrayBodyText(_ label: UILabel) {
+        label.textColor = grayItinderColor
+        label.font = UIFont(name: "Noto Sans Kannada", size: 14)
+    }
 }

@@ -20,6 +20,7 @@ class LoginViewController: UIViewController {
 
         self.hideKeyboardWhenTappedAround()
         signUpLabelTapped()
+        forgotPasswordLabelTapped()
     }
     
     private func signUpLabelTapped() {
@@ -34,6 +35,19 @@ class LoginViewController: UIViewController {
         self.present(vc, animated: true)
     }
 
+    private func forgotPasswordLabelTapped() {
+        let forgotPasswordTap = UITapGestureRecognizer(target: self, action: #selector(transitionToForgotPassScreen))
+        forgotPasswordLabel.isUserInteractionEnabled = true
+        forgotPasswordLabel.addGestureRecognizer(forgotPasswordTap)
+    }
+    
+    @objc func transitionToForgotPassScreen(_ sender: Any) {
+        print("Forgot tapped")
+        let forgotPassVC = ForgotPasswordViewController()
+        forgotPassVC.modalPresentationStyle = .fullScreen
+        self.present(forgotPassVC, animated: true, completion: nil)
+    }
+    
     override func viewDidLayoutSubviews() {
         Utilities.stylePrimaryButton(loginButton)
         Utilities.styleCaptionLabel(toSignUpLabel)

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E4BA65B26E0E7E20080DE17 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4BA65A26E0E7E20080DE17 /* ForgotPasswordViewController.swift */; };
 		0E50140B26DD77A3004526AA /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50140A26DD77A3004526AA /* OnboardingPageViewController.swift */; };
 		0E50140D26DF8662004526AA /* PageOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50140C26DF8662004526AA /* PageOnboardingViewController.swift */; };
 		0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */; };
@@ -53,6 +54,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E4BA65A26E0E7E20080DE17 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		0E50140A26DD77A3004526AA /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		0E50140C26DF8662004526AA /* PageOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageOnboardingViewController.swift; sourceTree = "<group>"; };
 		0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				0EC7545626CE6203008DA01A /* CreatingUserInfoViewController.swift */,
 				0EC7545426CE6203008DA01A /* LoginViewController.swift */,
 				0EC7545726CE6203008DA01A /* SignUpViewController.swift */,
+				0E4BA65A26E0E7E20080DE17 /* ForgotPasswordViewController.swift */,
 			);
 			path = Authorization;
 			sourceTree = "<group>";
@@ -524,6 +527,7 @@
 				0E50140D26DF8662004526AA /* PageOnboardingViewController.swift in Sources */,
 				0EC7545826CE6203008DA01A /* LoginViewController.swift in Sources */,
 				1180252E26C5119D0096A20F /* SwipeCardInfoView.swift in Sources */,
+				0E4BA65B26E0E7E20080DE17 /* ForgotPasswordViewController.swift in Sources */,
 				0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */,
 				1180253D26C513310096A20F /* EditUserProfileViewController.swift in Sources */,
 				0EC7545F26CE624A008DA01A /* Utilities.swift in Sources */,
