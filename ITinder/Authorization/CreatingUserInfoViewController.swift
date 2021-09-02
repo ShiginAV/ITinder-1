@@ -20,6 +20,8 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var userInfoTextView: UITextView!
     @IBOutlet weak var userInfoLabel: UILabel!
     @IBOutlet weak var signUpButton: UIButton!
+    
+    @IBOutlet weak var scrollView: UIScrollView!
     var userID = "default"
     var photoSelectedFlag = false
     let userEmail = Auth.auth().currentUser?.email
@@ -32,6 +34,13 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         userInfoTextView.delegate = self
         
         profileImageTapped()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        scrollView.frame = view.bounds
+        scrollView.contentSize.height = view.bounds.height + 150
     }
     
     private func validateFields() -> String? {

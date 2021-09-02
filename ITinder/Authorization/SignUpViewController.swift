@@ -15,6 +15,7 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var toLoginLabel: UILabel!
     @IBOutlet weak var helperLabel: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,12 @@ class SignUpViewController: UIViewController {
         loginLabelTapped()
     }
 
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        scrollView.frame = view.bounds
+        scrollView.contentSize.height = view.bounds.height + 100
+    }
     private func loginLabelTapped() {
         let loginLabelTap = UITapGestureRecognizer(target: self, action: #selector(transitionToLoginScreen))
         toLoginLabel.isUserInteractionEnabled = true
