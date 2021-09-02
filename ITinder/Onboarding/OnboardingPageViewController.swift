@@ -97,16 +97,12 @@ class OnboardingPageViewController: UIPageViewController {
             pageControl.heightAnchor.constraint(equalToConstant: 20),
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-//            skipButton.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 2),
             skipButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-//            view.trailingAnchor.constraint(equalToSystemSpacingAfter: nextButton.trailingAnchor, multiplier: 2)
-            view.trailingAnchor.constraint(equalTo: nextButton.trailingAnchor, constant: 40),
-            
-            
+            view.trailingAnchor.constraint(equalTo: nextButton.trailingAnchor, constant: 40)
         ])
         
-        let skipButtonBottomAnchor = skipButton.bottomAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.bottomAnchor, multiplier: 2)
-        let nextButtonBottomAnchor = nextButton.bottomAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.bottomAnchor, multiplier: 2)
+        let skipButtonBottomAnchor = view.bottomAnchor.constraint(equalToSystemSpacingBelow: skipButton.bottomAnchor, multiplier: 2)
+        let nextButtonBottomAnchor = view.bottomAnchor.constraint(equalToSystemSpacingBelow: nextButton.bottomAnchor, multiplier: 2)
         let pageControlBottomAnchor = view.bottomAnchor.constraint(equalToSystemSpacingBelow: pageControl.bottomAnchor, multiplier: 2)
         skipButtonBottomAnchor.isActive = true
         nextButtonBottomAnchor.isActive = true
