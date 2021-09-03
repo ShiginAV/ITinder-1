@@ -10,11 +10,17 @@ import UserNotifications
 
 class NotificationService {
     
-    static func sendNotification(companionName: String, message: String, completion: @escaping (_ request: UNNotificationRequest) -> Void) {
+    static func sendNotification(title: String?, message: String, companion: CompanionStruct?, completion: @escaping (_ request: UNNotificationRequest) -> Void) {
         
         let content = UNMutableNotificationContent()
         
-        content.title = companionName
+        if let title = title {
+            content.title = title
+        } else if let companion = companion, let name = companion.userName {
+            content.title = name
+            content.categoryIdentifier = companion.userId
+        }
+        
         content.body = message
         content.sound = UNNotificationSound.default
         
