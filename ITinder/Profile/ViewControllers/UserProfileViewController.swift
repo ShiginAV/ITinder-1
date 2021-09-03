@@ -26,7 +26,6 @@ final class UserProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         configure()
         fill()
     }
@@ -42,8 +41,8 @@ final class UserProfileViewController: UIViewController {
     
     private var isOwner: Bool = false {
         didSet {
-            characteristicStackTopC?.isActive = isOwner
-            characteristicStackNoOwnerTopC?.isActive = !isOwner
+            scrollViewTopC?.isActive = isOwner
+            scrollViewNoOwnerTopC?.isActive = !isOwner
             
             settingsButton.isHidden = !isOwner
             settingsLabel.isHidden = !isOwner
@@ -53,8 +52,8 @@ final class UserProfileViewController: UIViewController {
     }
     
     private let padding: CGFloat = 40
-    private var characteristicStackTopC: NSLayoutConstraint?
-    private var characteristicStackNoOwnerTopC: NSLayoutConstraint?
+    private var scrollViewTopC: NSLayoutConstraint?
+    private var scrollViewNoOwnerTopC: NSLayoutConstraint?
     
     private var characteristics = [СharacteristicType: ProfileCharacteristicView]()
     
@@ -116,11 +115,17 @@ final class UserProfileViewController: UIViewController {
         return button
     }()
     
+    private let scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.backgroundColor = .clear
+        return view
+    }()
+    
     private let characteristicStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 10
-        stack.distribution = .fillEqually
+        stack.distribution = .fill
         return stack
     }()
     
@@ -130,6 +135,7 @@ final class UserProfileViewController: UIViewController {
         view.textContainer.lineFragmentPadding = 0
         view.textContainerInset = .zero
         view.isEditable = false
+        view.isScrollEnabled = false
         return view
     }()
     
@@ -144,11 +150,19 @@ final class UserProfileViewController: UIViewController {
          editButton,
          editLabel,
          nameLabel,
-         characteristicStack,
-         descriptionView,
+         scrollView,
          loaderView].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
+        }
+        
+        let contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        
+        [characteristicStack, descriptionView].forEach { subview in
+            subview.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(subview)
         }
         
         NSLayoutConstraint.activate([
@@ -183,16 +197,27 @@ final class UserProfileViewController: UIViewController {
             nameLabel.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -8),
             nameLabel.bottomAnchor.constraint(lessThanOrEqualTo: settingsButton.bottomAnchor),
             
-            characteristicStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            characteristicStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            descriptionView.topAnchor.constraint(equalTo: characteristicStack.bottomAnchor, constant: 40),
-            descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            descriptionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            descriptionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            characteristicStack.topAnchor.constraint(equalTo: contentView.topAnchor),
+            characteristicStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            characteristicStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            
+            descriptionView.topAnchor.constraint(equalTo: characteristicStack.bottomAnchor, constant: 10),
+            descriptionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            descriptionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            descriptionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
-        characteristicStackTopC = characteristicStack.topAnchor.constraint(equalTo: settingsLabel.bottomAnchor, constant: 40)
-        characteristicStackNoOwnerTopC = characteristicStack.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 40)
+        scrollViewTopC = scrollView.topAnchor.constraint(equalTo: settingsLabel.bottomAnchor, constant: 40)
+        scrollViewNoOwnerTopC = scrollView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 40)
     }
     
     private func fill() {
