@@ -167,11 +167,11 @@ final class EditUserProfileViewController: UIViewController {
             characteristicsStackView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: padding * 2),
             characteristicsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
             characteristicsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
-            characteristicsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding),
+            characteristicsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding * 2),
             
             descriptionView.heightAnchor.constraint(equalToConstant: 150)
         ])
-        scrollViewBottomC = scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        scrollViewBottomC = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         scrollViewBottomC?.isActive = true
         addCharacteristicsToStack()
     }
