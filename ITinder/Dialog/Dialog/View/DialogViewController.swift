@@ -42,7 +42,7 @@ class DialogViewController: UIViewController {
         
         gestureRecognizerForImage()
         
-        allowNotificationOnScreen(false)
+        blockNotificationForUser(userId: companion.userId)
     }
     
     override func viewDidLayoutSubviews() {
@@ -73,22 +73,23 @@ class DialogViewController: UIViewController {
     }
     
     @objc func goToCompamionProfile(tapGestureRecognizer: UITapGestureRecognizer) {
-        print("goToCompamionProfile")
+        UserService.getUserBy(id: companion.userId) { (user) in
+            Router.showUserProfile(user: user, parent: self)
+        }
     }
     
     @IBAction func backButton(_ sender: Any) {
         navigationController?.popToRootViewController(animated: true)
     }
     
-    func allowNotificationOnScreen(_ allow: Bool) {
+    func blockNotificationForUser(userId: String) {
         let rootVC = rootViewController as? MatchesViewController
-        rootVC?.model.allowMessageNotificationOnScreen = allow
+        rootVC?.model.blockMessageNotificationForUserId = userId
     }
     
     deinit {
-        allowNotificationOnScreen(true)
+        blockNotificationForUser(userId: "")
     }
-    
 }
 
 extension DialogViewController: UIGestureRecognizerDelegate {

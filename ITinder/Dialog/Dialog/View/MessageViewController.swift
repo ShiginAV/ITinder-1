@@ -112,6 +112,7 @@ extension MessageViewController: DialogDelegate {
 }
 
 extension MessageViewController: MessageCellDelegate {
+    
     func didTapAvatar(in cell: MessageCollectionViewCell) {
         guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
         guard let messagesDataSourse = messagesCollectionView.messagesDataSource else { return }
@@ -119,8 +120,11 @@ extension MessageViewController: MessageCellDelegate {
         if message.sender.senderId == selfSender.senderId {
             tabBarController?.selectedIndex = 2
             popToRootViewController()
+        } else {
+            UserService.getUserBy(id: message.sender.senderId) { (user) in
+                Router.showUserProfile(user: user, parent: self)
+            }
         }
-        print(message.sender.senderId)
     }
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {

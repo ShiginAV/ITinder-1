@@ -52,16 +52,16 @@ class ConversationService {
     }
     
     static func deleteMatch(currentUserId: String, companionId: String, conversationId: String) {
+        let companionUserReference = Database.database().reference().child(usersRefKey).child(companionId)
+        companionUserReference.child(conversationsKey).child(currentUserId).setValue(nil)
+        companionUserReference.child(statusListKey).child(currentUserId).setValue(nil)
+        
         let selfUserReference = Database.database().reference().child(usersRefKey).child(currentUserId)
         selfUserReference.child(conversationsKey).child(companionId).setValue(nil)
         selfUserReference.child(statusListKey).child(companionId).setValue(nil)
         
         Database.database().reference().child(conversationsKey).child(conversationId).setValue(nil)
         deleteImagesFromStorage(conversationId: conversationId)
-        
-        let companionUserReference = Database.database().reference().child(usersRefKey).child(companionId)
-        companionUserReference.child(conversationsKey).child(currentUserId).setValue(nil)
-        companionUserReference.child(statusListKey).child(currentUserId).setValue(nil)
     }
     
     static func deleteImagesFromStorage(conversationId: String) {
@@ -111,7 +111,7 @@ class ConversationService {
         }
     }
     
-    static func messagesFromConversationsObserver(conversationId: String, messagesCompletion: @escaping () -> ([String: Message]), completion: @escaping ([String: Message]?) -> Void) {
+    static func messagesFromConversationsObserver(conversationId: String, messagesCompletion: @escaping () -> ([String: Message]), completion: @escaping ([String: Message]?) -> Void, photoCompletion: @escaping (Message) -> Void) {
         
         messagesReference = Database.database().reference().child(conversationsKey).child(conversationId).child(messagesKey)
         messagesReference.observe(.value) { (snapshot) in
@@ -140,7 +140,8 @@ class ConversationService {
                 
                 if let currentMessage = cashedMessages[message.messageId] {
                     messagesFromFirebase[message.messageId] = currentMessage
-                    continue }
+                    continue
+                }
                 
                 group.enter()
                 
@@ -173,8 +174,9 @@ class ConversationService {
                         group.leave()
                         
                         createPhotoMessage(sender: senders[senderId]!, messageId: message.messageId, sentDate: date, imageUrl: message.attachment) { (message) in
-                            messagesFromFirebase[message.messageId] = message
-                            completion(messagesFromFirebase)
+//                            messagesFromFirebase[message.messageId] = message
+//                            completion(messagesFromFirebase)
+                            photoCompletion(message)
                         }
                     }
                 }
@@ -257,14 +259,6 @@ class ConversationService {
                                      messageId: messageId,
                                      sentDate: sentDate,
                                      kind: .photo(media))
-    }
-    
-    static func checkIfConversationNoExists(currentUserId: String, companionId: String, completion: @escaping () -> Void) {
-        Database.database().reference().child(usersRefKey).child(currentUserId).child(conversationsKey).child(companionId).getData { (error, snapshot) in
-            if !snapshot.exists() {
-                completion()
-            }
-        }
     }
     
 }
