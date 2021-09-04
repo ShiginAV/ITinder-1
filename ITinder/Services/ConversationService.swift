@@ -12,6 +12,8 @@ import FirebaseStorage
 
 class ConversationService {
     
+    static var messages = [String: [String: Message]]()
+    
     static private var messagesReference: DatabaseReference!
     static private var conversationsReference = [DatabaseReference]()
     
@@ -62,6 +64,8 @@ class ConversationService {
         
         Database.database().reference().child(conversationsKey).child(conversationId).setValue(nil)
         deleteImagesFromStorage(conversationId: conversationId)
+        
+        messages[conversationId] = nil
     }
     
     static func deleteImagesFromStorage(conversationId: String) {
