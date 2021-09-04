@@ -266,7 +266,7 @@ final class UserProfileViewController: UIViewController {
     }
     
     @objc private func settingsButtonDidTap() {
-        Router.openPhoneSettings()
+        Router.showSettings(parent: self)
     }
     
     @objc private func editButtonDidTap() {

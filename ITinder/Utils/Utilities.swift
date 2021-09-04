@@ -12,6 +12,7 @@ struct Utilities {
     
     static func stylePrimaryButton(_ button: UIButton) {
         button.backgroundColor = #colorLiteral(red: 0.3843137255, green: 0.4823529412, blue: 0.9764705882, alpha: 1)
+        button.setBackgroundColor(color: .black.withAlphaComponent(0.2), forState: .highlighted)
         button.tintColor = UIColor.white
         button.titleLabel?.font = UIFont(name: "Source Sans Pro", size: 14)
         

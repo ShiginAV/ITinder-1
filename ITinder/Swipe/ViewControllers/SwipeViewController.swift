@@ -15,8 +15,20 @@ class SwipeViewController: UIViewController {
         addCards()
     }
     
+    func resetCardsStatuses() {
+        UserService.resetUsers { [weak self] isDone in
+            guard isDone, let self = self else { return }
+            self.addCards()
+            self.resetButton.isHidden = true
+            self.emptyShimmerView.isHidden = true
+        }
+    }
+    
     private let cardsLimit = 3
     private var cards = [SwipeCardModel]()
+    private var dislikedUserIds = [String]() {
+        didSet { backButton.isHidden = dislikedUserIds.isEmpty }
+    }
     
     private var shownUserId: String? {
         cards.first?.userId
@@ -51,6 +63,16 @@ class SwipeViewController: UIViewController {
         return view
     }()
     
+    private let backButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("назад", for: .normal)
+        button.setTitleColor(Colors.primary, for: .normal)
+        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
+        button.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
+        button.isHidden = true
+        return button
+    }()
+    
     private let resetButton: UIButton = {
         let button = UIButton()
         button.setTitle("reset", for: .normal)
@@ -64,7 +86,7 @@ class SwipeViewController: UIViewController {
     private func configure() {
         view.backgroundColor = .white
         
-        [loaderView, profileContainerView, emptyShimmerView, resetButton].forEach { subview in
+        [loaderView, profileContainerView, emptyShimmerView, backButton, resetButton].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
@@ -82,7 +104,10 @@ class SwipeViewController: UIViewController {
             emptyShimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             emptyShimmerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            resetButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 44),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            
+            resetButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             resetButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
@@ -102,7 +127,7 @@ class SwipeViewController: UIViewController {
                 .compactMap { $0 }
                 .map { SwipeCardModel(from: $0) }
             
-            self.profileContainerView.fill(cardModels)
+            self.profileContainerView.add(cardModels)
             self.cards.append(contentsOf: cardModels)
             self.isLoading = false
             self.profileContainerView.isHidden = false
@@ -118,11 +143,19 @@ class SwipeViewController: UIViewController {
     }
     
     @objc private func resetButtonDidTap() {
-        UserService.resetUsers { [weak self] isDone in
-            guard isDone, let self = self else { return }
-            self.addCards()
-            self.resetButton.isHidden = true
-            self.emptyShimmerView.isHidden = true
+        resetCardsStatuses()
+    }
+    
+    @objc private func backButtonDidTap() {
+        let userId = dislikedUserIds.removeLast()
+        
+        UserService.getUserBy(id: userId) { [weak self] user in
+            guard let self = self else { return }
+            guard let user = user else { return }
+            
+            let cardModel = SwipeCardModel(from: user)
+            self.cards.insert(cardModel, at: 0)
+            self.profileContainerView.addToFirst(card: cardModel)
         }
     }
 }
@@ -138,6 +171,9 @@ extension SwipeViewController: SwipeCardDelegate {
     func swipeDidEnd(type: SwipeCardType) {
         setLikeAndMatchIfNeeded(type: type)
         
+        if type == .dislike, let userId = cards.first?.userId, dislikedUserIds.count < cardsLimit {
+            dislikedUserIds.append(userId)
+        }
         cards.removeFirst()
         
         if !isLoading && cards.count < cardsLimit {

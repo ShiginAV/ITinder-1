@@ -22,6 +22,8 @@
 		0EE0184F26B96AEF00AEB059 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE0184D26B96AEF00AEB059 /* LaunchScreen.storyboard */; };
 		112CA3E726D93D5C000F37B3 /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112CA3E626D93D5C000F37B3 /* MatchViewController.swift */; };
 		11647D0226CD0BAC002787FF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11647D0126CD0BAC002787FF /* Constants.swift */; };
+		117C435126E3CD8400222E20 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117C435026E3CD8400222E20 /* SettingsViewController.swift */; };
+		117C435526E3D4E900222E20 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117C435426E3D4E900222E20 /* SettingView.swift */; };
 		117CEB0726C7E1F70018A753 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117CEB0626C7E1F70018A753 /* CustomImageView.swift */; };
 		117CEB0926C825790018A753 /* ProfileCharacteristicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117CEB0826C825790018A753 /* ProfileCharacteristicView.swift */; };
 		1180251F26C510550096A20F /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180251E26C510550096A20F /* Icons.swift */; };
@@ -76,6 +78,8 @@
 		0EE0185026B96AEF00AEB059 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		112CA3E626D93D5C000F37B3 /* MatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
 		11647D0126CD0BAC002787FF /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		117C435026E3CD8400222E20 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		117C435426E3D4E900222E20 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		117CEB0626C7E1F70018A753 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		117CEB0826C825790018A753 /* ProfileCharacteristicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCharacteristicView.swift; sourceTree = "<group>"; };
 		1180251E26C510550096A20F /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
@@ -208,6 +212,7 @@
 				1180251D26C510300096A20F /* Utils */,
 				0E7E2A6A26BAC3020012E987 /* Swipe */,
 				0E7E2A6926BAC2F60012E987 /* Profile */,
+				117C434F26E3CD5100222E20 /* Settings */,
 				0E7E2A6726BAC2B40012E987 /* Authorization */,
 				0E7E2A6026BAB0170012E987 /* Onboarding */,
 				0E7E2A5F26BAAFDA0012E987 /* Storyboard */,
@@ -218,6 +223,31 @@
 				0EE0184B26B96AEF00AEB059 /* Assets.xcassets */,
 			);
 			path = ITinder;
+			sourceTree = "<group>";
+		};
+		117C434F26E3CD5100222E20 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				117C435326E3D4CF00222E20 /* Views */,
+				117C435226E3D4BB00222E20 /* ViewControllers */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		117C435226E3D4BB00222E20 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				117C435026E3CD8400222E20 /* SettingsViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		117C435326E3D4CF00222E20 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				117C435426E3D4E900222E20 /* SettingView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		1180251D26C510300096A20F /* Utils */ = {
@@ -535,6 +565,7 @@
 				117CEB0726C7E1F70018A753 /* CustomImageView.swift in Sources */,
 				1180253B26C5131A0096A20F /* UserProfileViewController.swift in Sources */,
 				1180252326C5109C0096A20F /* Colors.swift in Sources */,
+				117C435126E3CD8400222E20 /* SettingsViewController.swift in Sources */,
 				224F40D626CD14B500A95715 /* TableViewCell.swift in Sources */,
 				1180252126C510840096A20F /* Router.swift in Sources */,
 				0EE0184326B96AEA00AEB059 /* AppDelegate.swift in Sources */,
@@ -553,6 +584,7 @@
 				0EC7545826CE6203008DA01A /* LoginViewController.swift in Sources */,
 				1180252E26C5119D0096A20F /* SwipeCardInfoView.swift in Sources */,
 				0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */,
+				117C435526E3D4E900222E20 /* SettingView.swift in Sources */,
 				1180253D26C513310096A20F /* EditUserProfileViewController.swift in Sources */,
 				0EC7545F26CE624A008DA01A /* Utilities.swift in Sources */,
 				0EC7545A26CE6203008DA01A /* CreatingUserInfoViewController.swift in Sources */,

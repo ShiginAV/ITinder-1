@@ -49,4 +49,9 @@ final class Router {
     static func openPhoneSettings() {
         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
     }
+    
+    static func showSettings(parent: UIViewController) {
+        let settingsVC = SettingsViewController()
+        parent.present(settingsVC, animated: true)
+    }
 }

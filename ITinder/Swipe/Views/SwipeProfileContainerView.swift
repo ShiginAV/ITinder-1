@@ -20,8 +20,20 @@ final class SwipeProfileContainerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func fill(_ cards: [SwipeCardModel]) {
+    func add(_ cards: [SwipeCardModel]) {
         cards.forEach { add(card: $0) }
+    }
+    
+    func addToFirst(card: SwipeCardModel) {
+        let cardView = SwipeCardView()
+        cardView.layer.frame = bounds
+        cardView.delegate = self
+        cardView.fill(card)
+        
+        addSubview(cardView)
+        loadedCards.insert(cardView, at: 0)
+        
+        layoutIfNeeded()
     }
     
     private var isButtonsEnabled: Bool = false {
