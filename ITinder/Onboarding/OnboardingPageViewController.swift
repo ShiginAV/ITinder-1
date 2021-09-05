@@ -81,6 +81,9 @@ class OnboardingPageViewController: UIPageViewController {
     }
     
     @objc func nextButtonTapped(_ sender: UIButton) {
+        if pageControl.currentPage == 2 {
+            Router.transitionToAuthScreen(parent: self)
+        }
         pageControl.currentPage += 1
         guard let currentPage = viewControllers?[0] else { return }
         guard let nextPage = dataSource?.pageViewController(self, viewControllerAfter: currentPage) else { return }

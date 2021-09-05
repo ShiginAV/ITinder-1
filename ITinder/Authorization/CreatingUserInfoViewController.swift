@@ -103,6 +103,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         let cleanedUserInfo = userInfoTextView.text!.trimmingCharacters(in: .whitespacesAndNewlines) as NSString
 
         self.upload( photo: profileImageView.image!) { url in
+            if url == nil { return }
             ref.child("users/" + self.userID + "/name").setValue(cleanedName + " " + cleanedSurname)
             ref.child("users/" + self.userID + "/birthDate").setValue(cleanedBirthday)
             ref.child("users/" + self.userID + "/position").setValue(cleanedPosition)

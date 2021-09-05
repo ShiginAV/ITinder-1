@@ -44,6 +44,8 @@ class PageOnboardingViewController: UIViewController {
         imageView.contentMode = .scaleAspectFit
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.numberOfLines = 0
+        titleLabel.textAlignment = .center
         Utilities.styleOnboardingHeaderText(titleLabel)
         
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -64,6 +66,8 @@ class PageOnboardingViewController: UIViewController {
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             imageView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 2),
+            view.trailingAnchor.constraint(equalToSystemSpacingAfter: titleLabel.trailingAnchor, multiplier: 2),
             subtitleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 4),
             view.trailingAnchor.constraint(equalToSystemSpacingAfter: subtitleLabel.trailingAnchor, multiplier: 4)
         ])
