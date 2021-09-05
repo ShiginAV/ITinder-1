@@ -19,8 +19,11 @@ class DialogFromFirebase {
     
     weak var delegate: DialogDelegate?
     
+    let conversationId: String!
+    
     var messagesDict = [String: Message]() {
         didSet {
+            ConversationService.messages[conversationId] = messagesDict
             
             var messagesArray = [Message]()
             messagesDict.values.forEach { (message) in
@@ -47,6 +50,9 @@ class DialogFromFirebase {
     }
     
     init(conversationId: String) {
+        self.conversationId = conversationId
+        
+        messagesDict = ConversationService.messages[conversationId] ?? [String: Message]()
         
         ConversationService.messagesFromConversationsObserver(conversationId: conversationId) {  [weak self]  () -> ([String : Message]) in
             return (self?.messagesDict ?? [String: Message]())
