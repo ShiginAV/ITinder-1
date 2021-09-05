@@ -23,8 +23,10 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     var userID = "default"
+    var userEmail = "default"
+    var userPassword = "default"
     var photoSelectedFlag = false
-    let userEmail = Auth.auth().currentUser?.email
+//    let userEmail = Auth.auth().currentUser?.email
     private var imagePicker: UIImagePickerController!
     
     override func viewDidLoad() {
@@ -78,7 +80,58 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         if errorMessage != nil {
             showAlert(title: "Ошибка регистрации", message: errorMessage)
         } else {
-            createUserData()
+            // авторизируем в firebase authentication
+            Auth.auth().createUser(withEmail: userEmail, password: userPassword) { result, error in
+                if error != nil {
+                    self.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
+                    return
+                } else {
+                    // User was created sucessfully, store uid and email in database
+                    let ref = Database.database().reference()
+                    if let result = result {
+                        self.userID = result.user.uid
+                        ref.child("users/" + self.userID + "/email").setValue(self.userEmail)
+                        ref.child("users/" + self.userID + "/identifier").setValue(self.userID)
+                        
+                        // создаем структуру пользователя, заполняем данными
+                        let cleanedName = self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let cleanedSurname = self.surnameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let cleanedBirthday = self.dateOfBirthTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let cleanedPosition = self.positionTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let cleanedUserInfo = self.userInfoTextView.text!.trimmingCharacters(in: .whitespacesAndNewlines) as NSString
+                        let itinderUser = User(identifier: result.user.uid,
+                                               email: result.user.email!,
+                                               imageUrl: "",
+                                               name: cleanedName,
+                                               position: cleanedPosition,
+                                               description: cleanedUserInfo as String,
+                                               birthDate: cleanedBirthday,
+                                               city: nil,
+                                               education: nil,
+                                               company: nil,
+                                               employment: nil,
+                                               statusList: ["1" : "2"])
+                        
+                        print("🍀 \(itinderUser)")
+                        UserService.persist(user: itinderUser, withImage: self.profileImageView.image) { user in
+                            print("🔥 \(String(describing: user))")
+                            // добавляем пользователя в firebase realtime
+                            let ref = Database.database().reference()
+                            let url = user?.imageUrl
+                            ref.child("users/" + self.userID + "/name").setValue(cleanedName + " " + cleanedSurname)
+                            ref.child("users/" + self.userID + "/birthDate").setValue(cleanedBirthday)
+                            ref.child("users/" + self.userID + "/position").setValue(cleanedPosition)
+                            ref.child("users/" + self.userID + "/description").setValue(cleanedUserInfo)
+                            ref.child("users/" + self.userID + "/imageUrl").setValue(url ?? "defaultURL")
+                            
+                            Router.transitionToMainTabBar(view: self.view, storyboard: self.storyboard)
+                        }
+                    } else {
+                        self.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
+                        return
+                    }
+                }
+            }
         }
     }
     
@@ -92,52 +145,6 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         Utilities.styleCaptionLabel(captionLabel)
         Utilities.stylePlaceholderLabel(userInfoLabel)
         profileImageView.layer.cornerRadius = profileImageView.bounds.height / 2
-    }
-    
-    private func createUserData() {
-        let ref = Database.database().reference()
-        let cleanedName = nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanedSurname = surnameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanedBirthday = dateOfBirthTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanedPosition = positionTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanedUserInfo = userInfoTextView.text!.trimmingCharacters(in: .whitespacesAndNewlines) as NSString
-
-        self.upload( photo: profileImageView.image!) { url in
-            if url == nil { return }
-            ref.child("users/" + self.userID + "/name").setValue(cleanedName + " " + cleanedSurname)
-            ref.child("users/" + self.userID + "/birthDate").setValue(cleanedBirthday)
-            ref.child("users/" + self.userID + "/position").setValue(cleanedPosition)
-            ref.child("users/" + self.userID + "/description").setValue(cleanedUserInfo)
-            ref.child("users/" + self.userID + "/imageUrl").setValue(url?.absoluteString ?? "defaultURL")
-        }
-        
-        Router.transitionToMainTabBar(view: view, storyboard: storyboard) // в комплешн
-        // тут дергать сервис узерсервис, в комплишне транзитор
-    }
-    
-    func upload(photo: UIImage, completion: @escaping ((_ url:URL?) -> Void)) {
-        if photoSelectedFlag == true {
-            let ref = Storage.storage().reference().child("Avatars").child(userID)
-            
-            guard let imageData = profileImageView.image?.jpegData(compressionQuality: 0.5) else { return }
-            let metadata1 = StorageMetadata()
-            metadata1.contentType = "image/jpeg"
-            
-            ref.putData(imageData, metadata: metadata1) { metadata, _ in
-                guard metadata != nil else {
-                    completion(nil)
-                    return
-                }
-                ref.downloadURL { url, _ in
-                    guard let url = url else {
-                        completion(nil)
-                        return
-                    }
-                    completion(url)
-                }
-            }
-        }
-        completion(nil)
     }
     
     func textViewDidChange(_ textView: UITextView) {
