@@ -199,19 +199,21 @@ class UserService {
         usersDatabase
             .queryOrderedByKey()
             .observeSingleEvent(of: .value) { snapshot in
-                guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
-                    completion(false)
-                    return
-                }
+                guard let children = snapshot.children.allObjects as? [DataSnapshot] else { completion(false); return }
+                guard let currentUserId = currentUserId else { completion(false); return }
                 
                 var updates = [String: Any]()
                 children.forEach {
                     if let value = $0.value as? [String: Any] {
                         if let userId = value[identifierKey] as? String,
-                           let currentUserId = currentUserId,
                            var statusList = value[statusListKey] as? [String: String] {
                             
-                            statusList[currentUserId] = nil
+                            if userId == currentUserId {
+                                statusList = statusList.filter { $1 == User.Status.match.rawValue }
+                                
+                            } else if statusList[currentUserId] != User.Status.match.rawValue {
+                                statusList[currentUserId] = nil
+                            }
                             updates[userId + "/" + statusListKey] = statusList
                         }
                     }

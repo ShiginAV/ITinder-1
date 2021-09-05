@@ -14,7 +14,7 @@ final class SettingsViewController: UIViewController {
         configure()
     }
     
-    private let padding: CGFloat = 20
+    private let padding: CGFloat = 40
     
     private let pushNotificationsView = SettingView(title: "Настройка пуш уведомлений", buttonTitle: "Перейти") {
         Router.openPhoneSettings()
@@ -23,11 +23,11 @@ final class SettingsViewController: UIViewController {
         self?.resetCardsStatuses()
     }
     
-    private lazy var stackView: UIStackView = {
+    private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
-        stack.spacing = padding
+        stack.spacing = 20
         stack.distribution = .fillEqually
         return stack
     }()
@@ -40,7 +40,7 @@ final class SettingsViewController: UIViewController {
         stackView.addArrangedSubview(resetView)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding * 2),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding)
