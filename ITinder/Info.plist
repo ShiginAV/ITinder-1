@@ -61,6 +61,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>We need to access your camera to take photos</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Please allow to use your photo library</string>
 	<key>UIApplicationSceneManifest</key>

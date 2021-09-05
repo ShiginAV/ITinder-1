@@ -26,3 +26,12 @@ extension UIViewController {
         view.endEditing(true)
     }
 }
+
+extension UIScreen {
+    static var isIphoneSE: Bool {
+        let screenSize = main.bounds.size
+        let isIphoneSE = screenSize.height <= 568
+        return isIphoneSE
+    }
+}
+

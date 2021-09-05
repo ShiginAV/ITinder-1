@@ -24,6 +24,7 @@ final class EditСharacteristicView: UIView {
         self.type = type
         super.init(frame: .zero)
         configure()
+        configureDatePicker()
         fill()
     }
     
@@ -49,6 +50,27 @@ final class EditСharacteristicView: UIView {
         textField.addTarget(self, action: #selector(textDidChange(_:)), for: .editingChanged)
         textField.addTarget(self, action: #selector(textDidEndEditing(_:)), for: .editingDidEnd)
         return textField
+    }()
+    
+    private lazy var datePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        if #available(iOS 14, *) {
+            picker.preferredDatePickerStyle = .wheels
+        }
+        let year: Double = 60 * 60 * 24 * 365
+        let years98 = year * 98.0
+        let years12 = year * 12.0
+        picker.minimumDate = Date(timeInterval: -years98, since: Date())
+        picker.maximumDate = Date(timeInterval: -years12, since: Date())
+        picker.backgroundColor = .white
+        return picker
+    }()
+    
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        return formatter
     }()
     
     private func configure() {
@@ -79,12 +101,29 @@ final class EditСharacteristicView: UIView {
         textField.placeholder = type.placeholder
     }
     
+    private func configureDatePicker() {
+        guard type == .birthDate else { return }
+        
+        textField.inputView = datePicker
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44.0))
+        let emptyItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(datePickerDoneButtonDidTap))
+        doneButton.tintColor = Colors.primary
+        toolBar.setItems([emptyItem, doneButton], animated: true)
+        textField.inputAccessoryView = toolBar
+    }
+    
     @objc private func textDidChange(_ sender: UITextField) {
         delegate?.textDidChange(type: type, text: sender.text)
     }
     
     @objc private func textDidEndEditing(_ sender: UITextField) {
         delegate?.textDidEndEditing(type: type, text: sender.text)
+    }
+    
+    @objc func datePickerDoneButtonDidTap() {
+        textField.text = dateFormatter.string(from: datePicker.date)
+        endEditing(true)
     }
 }
 

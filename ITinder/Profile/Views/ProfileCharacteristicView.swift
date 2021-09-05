@@ -31,7 +31,7 @@ final class ProfileCharacteristicView: UIView {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        label.textColor = .black
+        label.textColor = .darkGray
         label.text = type.text + ": "
         return label
     }()
@@ -39,7 +39,8 @@ final class ProfileCharacteristicView: UIView {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        label.textColor = .darkGray
+        label.textColor = .black
+        label.numberOfLines = 2
         return label
     }()
     
@@ -58,5 +59,6 @@ final class ProfileCharacteristicView: UIView {
             descriptionLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
             descriptionLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+        descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
 }

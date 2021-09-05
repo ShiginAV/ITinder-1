@@ -37,7 +37,6 @@ public protocol AttachmentManagerDelegate: AnyObject {
     ///   - shouldBecomeVisible: If the AttachmentManager should be presented or dismissed
     func attachmentManager(_ manager: AttachmentManager, shouldBecomeVisible: Bool)
     
-    
     /// Notifys when an attachment has been inserted into the AttachmentManager
     ///
     /// - Parameters:

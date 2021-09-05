@@ -51,10 +51,20 @@ class SwipeViewController: UIViewController {
         return view
     }()
     
+    private let resetButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("reset", for: .normal)
+        button.setTitleColor(Colors.primary, for: .normal)
+        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
+        button.addTarget(self, action: #selector(resetButtonDidTap), for: .touchUpInside)
+        button.isHidden = true
+        return button
+    }()
+    
     private func configure() {
         view.backgroundColor = .white
         
-        [loaderView, profileContainerView, emptyShimmerView].forEach { subview in
+        [loaderView, profileContainerView, emptyShimmerView, resetButton].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
@@ -70,13 +80,16 @@ class SwipeViewController: UIViewController {
             emptyShimmerView.topAnchor.constraint(equalTo: view.topAnchor),
             emptyShimmerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyShimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            emptyShimmerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            emptyShimmerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            resetButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 44),
+            resetButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
     
     private func addCards() {
         isLoading = true
-        UserService.shared.getNextUsers(usersCount: cardsLimit) { [weak self] users in
+        UserService.getNextUsers(usersCount: cardsLimit) { [weak self] users in
             guard let self = self else { return }
             
             guard let users = users else {
@@ -100,36 +113,49 @@ class SwipeViewController: UIViewController {
         if cards.isEmpty {
             emptyShimmerView.isHidden = false
             profileContainerView.isHidden = true
+            resetButton.isHidden = false
         }
     }
     
-    private func checkForMatch(currentUser: User?) {
-        guard let shownUserId = shownUserId else { return }
-        //UserService.shared.set(match: shownUserId)
-        //show match
+    @objc private func resetButtonDidTap() {
+        UserService.resetUsers { [weak self] isDone in
+            guard isDone, let self = self else { return }
+            self.addCards()
+            self.resetButton.isHidden = true
+            self.emptyShimmerView.isHidden = true
+        }
     }
 }
 
 extension SwipeViewController: SwipeCardDelegate {
     func profileInfoDidTap() {
         guard let shownUserId = shownUserId else { return }
-        UserService.shared.getUserBy(id: shownUserId) { user in
+        UserService.getUserBy(id: shownUserId) { user in
             Router.showUserProfile(user: user, parent: self)
         }
     }
     
     func swipeDidEnd(type: SwipeCardType) {
+        setLikeAndMatchIfNeeded(type: type)
+        
         cards.removeFirst()
         
         if !isLoading && cards.count < cardsLimit {
             addCards()
         }
+    }
+    
+    private func setLikeAndMatchIfNeeded(type: SwipeCardType) {
+        guard let shownUserId = shownUserId else { return }
         
-        if type == .like {
-            guard let shownUserId = shownUserId else { return }
-//            UserService.shared.set(like: shownUserId) { [weak self] user in
-//                self?.checkForMatch(currentUser: user)
-//            }
+        let status: User.Status
+        switch type {
+        case .like: status = .like
+        case .dislike, .neutral: status = .dislike
+        }
+        UserService.set(status: status, forUserId: shownUserId) { user in
+            guard type == .like, let user = user else { return }
+            Router.showMatch(user: user, parent: self)
         }
     }
 }

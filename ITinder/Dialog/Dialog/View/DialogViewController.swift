@@ -18,17 +18,17 @@ class DialogViewController: UIViewController {
     
     @IBOutlet weak var companionName: UILabel!
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
     let messageViewController = MessageViewController()
     
     var companion: CompanionStruct!
     var companionPhoto: UIImage!
     
+    var rootViewController: UIViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        rootViewController = navigationController?.viewControllers.first
         
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         addChild(messageViewController)
@@ -41,6 +41,8 @@ class DialogViewController: UIViewController {
         avatarImage.image = companionPhoto
         
         gestureRecognizerForImage()
+        
+        blockNotificationForUser(userId: companion.userId)
     }
     
     override func viewDidLayoutSubviews() {
@@ -71,11 +73,22 @@ class DialogViewController: UIViewController {
     }
     
     @objc func goToCompamionProfile(tapGestureRecognizer: UITapGestureRecognizer) {
-        print("goToCompamionProfile")
+        UserService.getUserBy(id: companion.userId) { (user) in
+            Router.showUserProfile(user: user, parent: self)
+        }
     }
     
     @IBAction func backButton(_ sender: Any) {
         navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func blockNotificationForUser(userId: String) {
+        let rootVC = rootViewController as? MatchesViewController
+        rootVC?.model.blockMessageNotificationForUserId = userId
+    }
+    
+    deinit {
+        blockNotificationForUser(userId: "")
     }
 }
 

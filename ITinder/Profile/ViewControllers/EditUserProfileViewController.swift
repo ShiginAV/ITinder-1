@@ -14,6 +14,12 @@ final class EditUserProfileViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    deinit {
+        notifications?.forEach {
+            NotificationCenter.default.removeObserver($0)
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -21,6 +27,8 @@ final class EditUserProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
+        hideKeyboardWhenTappedAround()
+        addKeyboardNotifications()
     }
     
     override func viewDidLayoutSubviews() {
@@ -39,6 +47,8 @@ final class EditUserProfileViewController: UIViewController {
     private var user: User
     private let padding: CGFloat = 20
     private var isImageChanged = false
+    private var scrollViewBottomC: NSLayoutConstraint?
+    private var notifications: [NSObjectProtocol]?
     
     private lazy var loaderView: UIView = {
         let view = UIView()
@@ -72,19 +82,32 @@ final class EditUserProfileViewController: UIViewController {
         return stack
     }()
     
+    private lazy var descriptionView: UITextView = {
+        let view = UITextView()
+        view.font = UIFont.systemFont(ofSize: 16)
+        view.textContainer.lineFragmentPadding = 0
+        view.textContainerInset = .zero
+        view.delegate = self
+        return view
+    }()
+    
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         view.alwaysBounceVertical = true
+        
+        view.gestureRecognizers?.forEach {
+            $0.delaysTouchesBegan = true
+            $0.cancelsTouchesInView = false
+        }
         return view
     }()
     
     private let doneButton: UIButton = {
         let button = UIButton()
         button.setTitle("Готово", for: .normal)
-        button.setTitleColor(Colors.blue, for: .normal)
-        button.setTitleColor(Colors.blue.withAlphaComponent(0.5), for: .highlighted)
+        button.setTitleColor(Colors.primary, for: .normal)
+        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
         button.addTarget(self, action: #selector(doneButtonDidTap), for: .touchUpInside)
         return button
     }()
@@ -92,15 +115,15 @@ final class EditUserProfileViewController: UIViewController {
     private let cancelButton: UIButton = {
         let button = UIButton()
         button.setTitle("Отмена", for: .normal)
-        button.setTitleColor(Colors.blue, for: .normal)
-        button.setTitleColor(Colors.blue.withAlphaComponent(0.5), for: .highlighted)
+        button.setTitleColor(Colors.primary, for: .normal)
+        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
         button.addTarget(self, action: #selector(cancelButtonDidTap), for: .touchUpInside)
         return button
     }()
     
     private func configure() {
         view.backgroundColor = .white
-        [scrollView, loaderView].forEach { subview in
+        [cancelButton, doneButton, scrollView, loaderView].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
@@ -109,7 +132,7 @@ final class EditUserProfileViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         
-        [cancelButton, doneButton, profileImageView, characteristicsStackView].forEach { subview in
+        [profileImageView, characteristicsStackView, descriptionView].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(subview)
         }
@@ -120,33 +143,36 @@ final class EditUserProfileViewController: UIViewController {
             loaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             loaderView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            doneButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            
+            cancelButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
+            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            
+            scrollView.topAnchor.constraint(equalTo: doneButton.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
-            doneButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
-            
-            cancelButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
             
             profileImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            profileImageView.topAnchor.constraint(equalTo: doneButton.bottomAnchor),
+            profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             profileImageView.widthAnchor.constraint(equalToConstant: 160),
             profileImageView.heightAnchor.constraint(equalTo: profileImageView.widthAnchor),
             
             characteristicsStackView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: padding * 2),
             characteristicsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
             characteristicsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
-            characteristicsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding)
+            characteristicsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding * 2),
+            
+            descriptionView.heightAnchor.constraint(equalToConstant: 150)
         ])
+        scrollViewBottomC = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        scrollViewBottomC?.isActive = true
         addCharacteristicsToStack()
     }
     
@@ -157,6 +183,7 @@ final class EditUserProfileViewController: UIViewController {
             characteristicsStackView.addArrangedSubview(characteristic)
             fill(characteristic, by: type)
         }
+        characteristicsStackView.addArrangedSubview(descriptionView)
     }
     
     private func fill(_ characteristic: EditСharacteristicView, by type: СharacteristicType) {
@@ -176,6 +203,7 @@ final class EditUserProfileViewController: UIViewController {
         case .employment:
             characteristic.text = user.employment
         }
+        descriptionView.text = user.description
     }
     
     private func showImagePicker() {
@@ -186,13 +214,30 @@ final class EditUserProfileViewController: UIViewController {
         present(picker, animated: true)
     }
     
+    private func addKeyboardNotifications() {
+        let keyboardDidShowObserver = NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification,
+                                                                             object: nil,
+                                                                             queue: nil) { [weak self] notification in
+            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            self?.scrollViewBottomC?.constant = -keyboardHeight
+            self?.view.layoutIfNeeded()
+        }
+        let keyboardWillHideObserver = NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification,
+                                                                              object: nil,
+                                                                              queue: nil) { [weak self] _ in
+            self?.scrollViewBottomC?.constant = 0
+        }
+        notifications = [keyboardDidShowObserver, keyboardWillHideObserver]
+    }
+    
     @objc private func doneButtonDidTap() {
         view.endEditing(true)
         
         loaderView.isHidden = false
         let image = isImageChanged ? profileImageView.image : nil
         
-        UserService.shared.persist(user: self.user, withImage: image) { [weak self] newUser in
+        UserService.persist(user: self.user, withImage: image) { [weak self] newUser in
             guard let self = self else { return }
             guard let newUser = newUser else {
                 self.loaderView.isHidden = true
@@ -258,5 +303,11 @@ extension EditUserProfileViewController: UIImagePickerControllerDelegate, UINavi
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension EditUserProfileViewController: UITextViewDelegate {
+    func textViewDidEndEditing(_ textView: UITextView) {
+        user.description = textView.text
     }
 }

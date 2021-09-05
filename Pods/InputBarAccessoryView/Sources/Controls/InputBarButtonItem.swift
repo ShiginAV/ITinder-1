@@ -235,7 +235,6 @@ open class InputBarButtonItem: UIButton, InputItem {
         return self
     }
     
-    
     /// Sets the onKeyboardSwipeGestureAction
     ///
     /// - Parameter action: The new onKeyboardSwipeGestureAction
