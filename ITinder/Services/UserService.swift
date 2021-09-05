@@ -193,7 +193,7 @@ class UserService {
         }
     }
     
-    // reset likes and matches for all users
+    // reset likes and matches for current user
     static func resetUsers(completion: @escaping ((Bool) -> Void)) {
         lastUserId = ""
         usersDatabase
@@ -207,8 +207,12 @@ class UserService {
                 var updates = [String: Any]()
                 children.forEach {
                     if let value = $0.value as? [String: Any] {
-                        if let userId = value[identifierKey] as? String {
-                            updates[userId + "/" + statusListKey] = [:]
+                        if let userId = value[identifierKey] as? String,
+                           let currentUserId = currentUserId,
+                           var statusList = value[statusListKey] as? [String: String] {
+                            
+                            statusList[currentUserId] = nil
+                            updates[userId + "/" + statusListKey] = statusList
                         }
                     }
                 }

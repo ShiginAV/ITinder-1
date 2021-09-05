@@ -111,7 +111,7 @@ final class SwipeCardView: UIView {
             profileImageView.topAnchor.constraint(equalTo: topAnchor),
             profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             profileImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            profileImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.7),
+            profileImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: UIScreen.isIphoneSE ? 0.6 : 0.7),
             
             cardGradientView.leadingAnchor.constraint(equalTo: profileImageView.leadingAnchor),
             cardGradientView.trailingAnchor.constraint(equalTo: profileImageView.trailingAnchor),
