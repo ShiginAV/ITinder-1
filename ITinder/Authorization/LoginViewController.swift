@@ -49,6 +49,8 @@ class LoginViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
+        passwordTextField.isSecureTextEntry = true
+        
         Utilities.stylePrimaryButton(loginButton)
         Utilities.styleCaptionLabel(toSignUpLabel)
         Utilities.styleCaptionLabel(forgotPasswordLabel)

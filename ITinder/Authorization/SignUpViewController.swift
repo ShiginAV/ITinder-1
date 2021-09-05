@@ -49,6 +49,8 @@ class SignUpViewController: UIViewController {
         Utilities.styleCaptionLabel(toLoginLabel)
         Utilities.styleCaptionLabel(helperLabel)
         helperLabel.text = "Пароль должен содержать не менее 6 символов, буквы или цифры"
+        passwordTextField.isSecureTextEntry = true
+        repeatedPasswordTextField.isSecureTextEntry = true
     }
 
     @IBAction func signUpButtonTapped(_ sender: Any) {
