@@ -19,8 +19,11 @@ final class SettingsViewController: UIViewController {
     private let pushNotificationsView = SettingView(title: "Настройка пуш уведомлений", buttonTitle: "Перейти") {
         Router.openPhoneSettings()
     }
-    private lazy var resetView = SettingView(title: "Сбросить все лайки, дизлайки, матчи", buttonTitle: "Хорошо") { [weak self] in
+    private lazy var resetView = SettingView(title: "Сбросить лайки и дизлайки", buttonTitle: "Сбросить") { [weak self] in
         self?.resetCardsStatuses()
+    }
+    private lazy var exitView = SettingView(title: "Выйти из аккаунта", buttonTitle: "Выйти") {
+        print("EXIT")
     }
     
     private let stackView: UIStackView = {
@@ -38,6 +41,7 @@ final class SettingsViewController: UIViewController {
         view.addSubview(stackView)
         stackView.addArrangedSubview(pushNotificationsView)
         stackView.addArrangedSubview(resetView)
+        stackView.addArrangedSubview(exitView)
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),

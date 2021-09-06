@@ -18,7 +18,12 @@ class SwipeViewController: UIViewController {
     func resetCardsStatuses() {
         UserService.resetUsers { [weak self] isDone in
             guard isDone, let self = self else { return }
+            
+            self.dislikedUserIds.removeAll()
+            self.cards.removeAll()
+            self.profileContainerView.removeAllCards()
             self.addCards()
+            
             self.resetButton.isHidden = true
             self.emptyShimmerView.isHidden = true
         }
@@ -27,7 +32,7 @@ class SwipeViewController: UIViewController {
     private let cardsLimit = 3
     private var cards = [SwipeCardModel]()
     private var dislikedUserIds = [String]() {
-        didSet { backButton.isHidden = dislikedUserIds.isEmpty }
+        didSet { profileContainerView.returnButtonIsHidden = dislikedUserIds.isEmpty }
     }
     
     private var shownUserId: String? {
@@ -63,16 +68,6 @@ class SwipeViewController: UIViewController {
         return view
     }()
     
-    private let backButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("назад", for: .normal)
-        button.setTitleColor(Colors.primary, for: .normal)
-        button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
-        button.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
-        button.isHidden = true
-        return button
-    }()
-    
     private let resetButton: UIButton = {
         let button = UIButton()
         button.setTitle("reset", for: .normal)
@@ -86,7 +81,7 @@ class SwipeViewController: UIViewController {
     private func configure() {
         view.backgroundColor = .white
         
-        [loaderView, profileContainerView, emptyShimmerView, backButton, resetButton].forEach { subview in
+        [loaderView, profileContainerView, emptyShimmerView, resetButton].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
@@ -103,9 +98,6 @@ class SwipeViewController: UIViewController {
             emptyShimmerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyShimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             emptyShimmerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
-            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             
             resetButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             resetButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
@@ -142,11 +134,7 @@ class SwipeViewController: UIViewController {
         }
     }
     
-    @objc private func resetButtonDidTap() {
-        resetCardsStatuses()
-    }
-    
-    @objc private func backButtonDidTap() {
+    private func returnDislikedUser() {
         let userId = dislikedUserIds.removeLast()
         
         UserService.getUserBy(id: userId) { [weak self] user in
@@ -158,9 +146,13 @@ class SwipeViewController: UIViewController {
             self.profileContainerView.addToFirst(card: cardModel)
         }
     }
+    
+    @objc private func resetButtonDidTap() {
+        resetCardsStatuses()
+    }
 }
 
-extension SwipeViewController: SwipeCardDelegate {
+extension SwipeViewController: SwipeProfileContainerViewDelegate {
     func profileInfoDidTap() {
         guard let shownUserId = shownUserId else { return }
         UserService.getUserBy(id: shownUserId) { user in
@@ -169,11 +161,8 @@ extension SwipeViewController: SwipeCardDelegate {
     }
     
     func swipeDidEnd(type: SwipeCardType) {
-        setLikeAndMatchIfNeeded(type: type)
-        
-        if type == .dislike, let userId = cards.first?.userId, dislikedUserIds.count < cardsLimit {
-            dislikedUserIds.append(userId)
-        }
+        setLikeAndMatchIfNeeded(type)
+        saveDislikedUser(type)
         cards.removeFirst()
         
         if !isLoading && cards.count < cardsLimit {
@@ -181,7 +170,22 @@ extension SwipeViewController: SwipeCardDelegate {
         }
     }
     
-    private func setLikeAndMatchIfNeeded(type: SwipeCardType) {
+    func returnButtonDidTap() {
+        returnDislikedUser()
+    }
+    
+    private func saveDislikedUser(_ type: SwipeCardType) {
+        if type == .like {
+            dislikedUserIds.removeAll()
+        } else if type == .dislike, let userId = cards.first?.userId {
+            if dislikedUserIds.count == cardsLimit {
+                dislikedUserIds.removeFirst()
+            }
+            dislikedUserIds.append(userId)
+        }
+    }
+    
+    private func setLikeAndMatchIfNeeded(_ type: SwipeCardType) {
         guard let shownUserId = shownUserId else { return }
         
         let status: User.Status
