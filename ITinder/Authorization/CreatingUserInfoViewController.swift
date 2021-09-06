@@ -26,16 +26,15 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     var userEmail = "default"
     var userPassword = "default"
     var photoSelectedFlag = false
-//    let userEmail = Auth.auth().currentUser?.email
     private var imagePicker: UIImagePickerController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.hideKeyboardWhenTappedAround()
         userInfoTextView.delegate = self
         
         profileImageTapped()
+        self.hideKeyboardWhenTappedAround()
     }
     
     override func viewWillLayoutSubviews() {
@@ -80,7 +79,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         if errorMessage != nil {
             showAlert(title: "Ошибка регистрации", message: errorMessage)
         } else {
-            // авторизируем в firebase authentication
+            // authorize in firebase authentication
             Auth.auth().createUser(withEmail: userEmail, password: userPassword) { result, error in
                 if error != nil {
                     self.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
@@ -93,7 +92,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
                         ref.child("users/" + self.userID + "/email").setValue(self.userEmail)
                         ref.child("users/" + self.userID + "/identifier").setValue(self.userID)
                         
-                        // создаем структуру пользователя, заполняем данными
+                        // create a user structure, fill it with data
                         let cleanedName = self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
                         let cleanedSurname = self.surnameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
                         let cleanedBirthday = self.dateOfBirthTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -112,10 +111,8 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
                                                employment: nil,
                                                statusList: ["1" : "2"])
                         
-                        print("🍀 \(itinderUser)")
                         UserService.persist(user: itinderUser, withImage: self.profileImageView.image) { user in
-                            print("🔥 \(String(describing: user))")
-                            // добавляем пользователя в firebase realtime
+                            // add user to firebase realtime
                             let ref = Database.database().reference()
                             let url = user?.imageUrl
                             ref.child("users/" + self.userID + "/name").setValue(cleanedName + " " + cleanedSurname)

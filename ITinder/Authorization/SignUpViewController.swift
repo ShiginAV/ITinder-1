@@ -57,18 +57,15 @@ class SignUpViewController: UIViewController {
         if errorMessage != nil {
             showAlert(title: "Ошибка регистрации", message: errorMessage)
         } else {
-            // Create the user
             let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-//            AuthorizationService.createUserInFiresore(email: email, password: password, vc: self)
-            // передаем email, password и переходим на экран создания пользователя
+            // pass email, password and go to the user creation screen
             let creatingUserInfoVC = (storyboard?.instantiateViewController(identifier: "CreatingUserInfoViewController"))! as CreatingUserInfoViewController
             creatingUserInfoVC.userEmail = email
             creatingUserInfoVC.userPassword = password
             
             view.window?.rootViewController = creatingUserInfoVC
             view.window?.makeKeyAndVisible()
-            
         }
     }
     

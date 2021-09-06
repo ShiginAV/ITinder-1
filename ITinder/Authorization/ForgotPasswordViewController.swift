@@ -33,8 +33,7 @@ class ForgotPasswordViewController: UIViewController {
     
     @objc func resetPassword(_ sender: UIButton) {
         guard let cleanedPassword = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
-        let auth = Auth.auth()
-        auth.sendPasswordReset(withEmail: cleanedPassword) { error in
+        Auth.auth().sendPasswordReset(withEmail: cleanedPassword) { error in
             if error != nil {
                 self.showAlert(title: "Ошибка", message: error?.localizedDescription)
                 return
@@ -71,8 +70,11 @@ class ForgotPasswordViewController: UIViewController {
         Utilities.styleGrayBodyText(subtitleLabel)
         
         emailTextField.translatesAutoresizingMaskIntoConstraints = false
-        emailTextField.placeholder = "   Электронный адрес"
+        emailTextField.placeholder = " Электронный адрес"
         Utilities.stylePrimaryTextField(emailTextField)
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: self.emailTextField.frame.height))
+        emailTextField.leftView = paddingView
+        emailTextField.leftViewMode = .always
         
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         sendButton.setTitle("отправить", for: .normal)

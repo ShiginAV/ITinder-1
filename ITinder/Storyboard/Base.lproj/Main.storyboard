@@ -432,7 +432,7 @@
                                 </constraints>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5aV-is-yM1">
-                                <rect key="frame" x="326" y="70" width="35" height="30"/>
+                                <rect key="frame" x="369" y="54" width="35" height="30"/>
                                 <state key="normal" title="reset"/>
                                 <connections>
                                     <action selector="resetUser:" destination="6YQ-Uf-fVL" eventType="touchUpInside" id="wQg-UK-U6g"/>
@@ -446,13 +446,13 @@
                             <constraint firstItem="NQG-gh-3wG" firstAttribute="width" secondItem="XV7-fs-fwd" secondAttribute="width" multiplier="1:2" id="4w7-LK-c0g"/>
                             <constraint firstItem="Svy-k3-Y5U" firstAttribute="top" secondItem="ckv-O0-CI4" secondAttribute="bottom" constant="40" id="E1M-o8-S5u"/>
                             <constraint firstItem="Kln-vR-yfx" firstAttribute="width" secondItem="XV7-fs-fwd" secondAttribute="width" multiplier="0.8" id="Qju-5S-JDL"/>
-                            <constraint firstItem="LHC-Ld-0IA" firstAttribute="trailing" secondItem="5aV-is-yM1" secondAttribute="trailing" constant="53" id="Yab-JM-CNV"/>
+                            <constraint firstItem="LHC-Ld-0IA" firstAttribute="trailing" secondItem="5aV-is-yM1" secondAttribute="trailing" constant="10" id="Yab-JM-CNV"/>
                             <constraint firstItem="Kln-vR-yfx" firstAttribute="top" secondItem="Svy-k3-Y5U" secondAttribute="bottom" constant="60" id="Ycv-rU-fX0"/>
                             <constraint firstItem="Svy-k3-Y5U" firstAttribute="centerX" secondItem="LHC-Ld-0IA" secondAttribute="centerX" id="ao4-tx-oOA"/>
                             <constraint firstItem="LHC-Ld-0IA" firstAttribute="bottom" secondItem="Kln-vR-yfx" secondAttribute="bottom" constant="80" id="b7O-de-gA2"/>
                             <constraint firstItem="ckv-O0-CI4" firstAttribute="width" secondItem="XV7-fs-fwd" secondAttribute="width" multiplier="0.45" id="q5m-lD-TDo"/>
                             <constraint firstItem="Xyl-8f-shv" firstAttribute="top" secondItem="NQG-gh-3wG" secondAttribute="bottom" constant="40" id="qjG-nM-U0T"/>
-                            <constraint firstItem="5aV-is-yM1" firstAttribute="top" secondItem="LHC-Ld-0IA" secondAttribute="top" constant="26" id="rEO-vn-VTv"/>
+                            <constraint firstItem="5aV-is-yM1" firstAttribute="top" secondItem="LHC-Ld-0IA" secondAttribute="top" constant="10" id="rEO-vn-VTv"/>
                             <constraint firstItem="ckv-O0-CI4" firstAttribute="centerX" secondItem="LHC-Ld-0IA" secondAttribute="centerX" id="u8g-8e-SNu"/>
                             <constraint firstItem="NQG-gh-3wG" firstAttribute="centerX" secondItem="LHC-Ld-0IA" secondAttribute="centerX" id="vpy-rr-kuV"/>
                             <constraint firstItem="Kln-vR-yfx" firstAttribute="centerX" secondItem="LHC-Ld-0IA" secondAttribute="centerX" id="ymQ-eM-lw6"/>

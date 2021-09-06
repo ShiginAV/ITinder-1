@@ -23,12 +23,6 @@ class OnboardingPageViewController: UIPageViewController {
         layout()
     }
     
-    override func viewDidLayoutSubviews() {
-        if !OnboardingManager.shared.isNewUser(){
-            Router.transitionToAuthScreen(parent: self)
-        }
-    }
-    
     func setup() {
         dataSource = self
         delegate = self
@@ -44,15 +38,15 @@ class OnboardingPageViewController: UIPageViewController {
         let page3 = PageOnboardingViewController(imageName: "onb3",
                                                  titleText: "Свайп влево если не подходит",
                                                  subtitleText: "Если пользователь не подходит \nдля вашей команды, \nсделайте свайп влево")
-
         pages.append(page1)
         pages.append(page2)
         pages.append(page3)
 
-        // set initial vc to be displayed
+        // set initial viewController to be displayed
         setViewControllers([pages[initialPage]], direction: .forward, animated: true, completion: nil)
     }
     
+    // swiping by clicking on pageControl
     @objc func pageControlTapped(_ sender: UIPageControl) {
         setViewControllers([pages[sender.currentPage]], direction: .forward, animated: true, completion: nil)
     }
@@ -65,23 +59,26 @@ class OnboardingPageViewController: UIPageViewController {
         pageControl.currentPage = initialPage
         
         skipButton.translatesAutoresizingMaskIntoConstraints = false
-        skipButton.setTitleColor(Utilities.grayItinderColor, for: .normal)
-        skipButton.setTitle("пропустить", for: .normal)
+        skipButton.setTitleColor(Utilities.blueItinderColor, for: .normal)
+        skipButton.setTitle("скрыть", for: .normal)
         skipButton.addTarget(self, action: #selector(skipButtonTapped(_:)), for: .primaryActionTriggered)
         
         nextButton.translatesAutoresizingMaskIntoConstraints = false
-        nextButton.setTitleColor(Utilities.grayItinderColor, for: .normal)
+        nextButton.setTitleColor(Utilities.blueItinderColor, for: .normal)
         nextButton.setTitle("далее", for: .normal)
         nextButton.addTarget(self, action: #selector(nextButtonTapped(_:)), for: .primaryActionTriggered)
     }
     
+    // transition to authentication screen
     @objc func skipButtonTapped(_ sender: UIButton) {
         OnboardingManager.shared.setIsNotNewUser()
         Router.transitionToAuthScreen(parent: self)
     }
     
+    // page flipping onboarding
     @objc func nextButtonTapped(_ sender: UIButton) {
         if pageControl.currentPage == 2 {
+            OnboardingManager.shared.setIsNotNewUser()
             Router.transitionToAuthScreen(parent: self)
         }
         pageControl.currentPage += 1
@@ -101,15 +98,12 @@ class OnboardingPageViewController: UIPageViewController {
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             skipButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            view.trailingAnchor.constraint(equalTo: nextButton.trailingAnchor, constant: 40)
+            view.trailingAnchor.constraint(equalTo: nextButton.trailingAnchor, constant: 40),
+            
+            view.bottomAnchor.constraint(equalToSystemSpacingBelow: skipButton.bottomAnchor, multiplier: 2),
+            view.bottomAnchor.constraint(equalToSystemSpacingBelow: nextButton.bottomAnchor, multiplier: 2),
+            view.bottomAnchor.constraint(equalToSystemSpacingBelow: pageControl.bottomAnchor, multiplier: 2)
         ])
-        
-        let skipButtonBottomAnchor = view.bottomAnchor.constraint(equalToSystemSpacingBelow: skipButton.bottomAnchor, multiplier: 2)
-        let nextButtonBottomAnchor = view.bottomAnchor.constraint(equalToSystemSpacingBelow: nextButton.bottomAnchor, multiplier: 2)
-        let pageControlBottomAnchor = view.bottomAnchor.constraint(equalToSystemSpacingBelow: pageControl.bottomAnchor, multiplier: 2)
-        skipButtonBottomAnchor.isActive = true
-        nextButtonBottomAnchor.isActive = true
-        pageControlBottomAnchor.isActive = true
     }
 }
 
@@ -139,22 +133,6 @@ extension OnboardingPageViewController: UIPageViewControllerDelegate, UIPageView
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard let viewControllers = pageViewController.viewControllers else { return }
         guard let currentIndex = pages.firstIndex(of: viewControllers[0]) else { return }
-        
         pageControl.currentPage = currentIndex
-    }
-}
-
-class OnboardingManager {
-    
-    static let shared = OnboardingManager()
-    
-    private init() {}
-    
-    func isNewUser() -> Bool {
-        return !UserDefaults.standard.bool(forKey: "isNewUser")
-    }
-    
-    func setIsNotNewUser() {
-        UserDefaults.standard.set(true, forKey: "isNewUser")
     }
 }
