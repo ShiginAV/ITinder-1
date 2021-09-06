@@ -29,13 +29,13 @@ class OnboardingPageViewController: UIPageViewController {
         
         pageControl.addTarget(self, action: #selector(pageControlTapped), for: .valueChanged)
         
-        let page1 = PageOnboardingViewController(imageName: "onb1",
+        let page1 = PageOnboardingViewController(image: OnboardingImages.onboardingImage1.image!,
                                                  titleText: "Добро пожаловать  в ITinder!",
                                                  subtitleText: "Данное приложение поможет вам \nнайти коллег для работы в команде и \nвашего проекта.")
-        let page2 = PageOnboardingViewController(imageName: "onb2",
+        let page2 = PageOnboardingViewController(image: OnboardingImages.onboardingImage2.image!,
                                                  titleText: "Свайп вправо если подходит",
                                                  subtitleText: "Доступ к чату откроется в том случае, \nесли оба пользователя \nвыберут друг друга")
-        let page3 = PageOnboardingViewController(imageName: "onb3",
+        let page3 = PageOnboardingViewController(image: OnboardingImages.onboardingImage3.image!,
                                                  titleText: "Свайп влево если не подходит",
                                                  subtitleText: "Если пользователь не подходит \nдля вашей команды, \nсделайте свайп влево")
         pages.append(page1)

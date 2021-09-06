@@ -16,7 +16,7 @@ final class UserProfileViewController: UIViewController {
     init(user: User?) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
-        title = "Profile"
+        title = "Профиль"
         tabBarItem.image = UIImage(systemName: "person.crop.circle")
     }
     

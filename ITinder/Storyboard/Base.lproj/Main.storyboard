@@ -309,11 +309,11 @@
             </objects>
             <point key="canvasLocation" x="5044.927536231884" y="101.78571428571428"/>
         </scene>
-        <!--Chats-->
+        <!--Сообщения-->
         <scene sceneID="gJe-SL-83H">
             <objects>
                 <navigationController navigationBarHidden="YES" id="lt1-aZ-wsV" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Chats" image="message" catalog="system" id="L7q-1K-vyO"/>
+                    <tabBarItem key="tabBarItem" title="Сообщения" image="message" catalog="system" id="L7q-1K-vyO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3OL-Vy-b2k">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -335,7 +335,7 @@
                         <viewLayoutGuide key="safeArea" id="BWH-Wk-fzT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Swipe" image="heart" catalog="system" id="FIx-BM-VEP"/>
+                    <tabBarItem key="tabBarItem" title="Свайпы" image="heart" catalog="system" id="FIx-BM-VEP"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i5x-Wd-KBk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

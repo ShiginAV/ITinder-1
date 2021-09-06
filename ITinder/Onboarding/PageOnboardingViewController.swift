@@ -14,9 +14,9 @@ class PageOnboardingViewController: UIViewController {
     let titleLabel = UILabel()
     let subtitleLabel = UILabel()
     
-    init(imageName: String, titleText: String, subtitleText: String) {
+    init(image: UIImage, titleText: String, subtitleText: String) {
         super.init(nibName: nil, bundle: nil)
-        imageView.image = UIImage(named: imageName)
+        imageView.image = image
         titleLabel.text = titleText
         subtitleLabel.text = subtitleText
     }
