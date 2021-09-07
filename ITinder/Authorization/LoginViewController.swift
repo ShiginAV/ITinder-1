@@ -30,9 +30,7 @@ class LoginViewController: UIViewController {
     }
     
     @objc func transitionToSignUpScreen(_ sender: Any) {
-        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "SignUpViewController") as?  SignUpViewController else { return }
-        vc.modalPresentationStyle = .fullScreen
-        self.present(vc, animated: true)
+        Router.transitionToSignUpVC(parent: self, storyboard: self.storyboard)
     }
 
     private func forgotPasswordLabelTapped() {

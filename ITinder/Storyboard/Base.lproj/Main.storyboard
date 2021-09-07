@@ -473,7 +473,7 @@
         <!--Login View Controller-->
         <scene sceneID="SJ2-ea-XuR">
             <objects>
-                <viewController storyboardIdentifier="LoginViewController" id="Nrl-i1-mfG" customClass="LoginViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" modalPresentationStyle="fullScreen" id="Nrl-i1-mfG" customClass="LoginViewController" customModule="ITinder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2RC-YK-Wp3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -769,6 +769,13 @@
                                             <action selector="signUpButtonTapped:" destination="RJA-LR-WgG" eventType="touchUpInside" id="6hK-lR-hZS"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZOR-Yq-8s0">
+                                        <rect key="frame" x="24" y="4" width="46" height="30"/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="backButtonTapped:" destination="RJA-LR-WgG" eventType="touchUpInside" id="wN7-gq-q3s"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="LVf-dY-zlB" firstAttribute="top" secondItem="r9w-qh-CwI" secondAttribute="bottom" constant="8" id="7KG-OB-2hv"/>
@@ -781,8 +788,10 @@
                                     <constraint firstItem="y7P-Gu-I5F" firstAttribute="width" secondItem="Cn2-28-bTP" secondAttribute="width" multiplier="0.449275" constant="-17" id="XSz-VN-Tgy"/>
                                     <constraint firstItem="r9w-qh-CwI" firstAttribute="width" secondItem="Cn2-28-bTP" secondAttribute="width" multiplier="0.190821" id="YwM-lJ-AL7"/>
                                     <constraint firstItem="y7P-Gu-I5F" firstAttribute="top" secondItem="raO-hg-aWE" secondAttribute="bottom" constant="20" id="aqK-Wt-c4l"/>
+                                    <constraint firstItem="ZOR-Yq-8s0" firstAttribute="top" secondItem="XY0-fn-Q8x" secondAttribute="top" constant="4" id="faf-zU-4Hp"/>
                                     <constraint firstItem="y7P-Gu-I5F" firstAttribute="centerX" secondItem="Cn2-28-bTP" secondAttribute="centerX" id="mrT-bZ-enT"/>
                                     <constraint firstAttribute="bottom" secondItem="raO-hg-aWE" secondAttribute="bottom" constant="279" id="oP7-2V-KyJ"/>
+                                    <constraint firstItem="ZOR-Yq-8s0" firstAttribute="leading" secondItem="XY0-fn-Q8x" secondAttribute="leading" constant="24" id="pVF-68-FKb"/>
                                     <constraint firstItem="r9w-qh-CwI" firstAttribute="top" secondItem="Cn2-28-bTP" secondAttribute="top" constant="20" symbolic="YES" id="vNP-FT-HUb"/>
                                     <constraint firstItem="r9w-qh-CwI" firstAttribute="centerX" secondItem="Cn2-28-bTP" secondAttribute="centerX" id="wGy-o5-mtx"/>
                                 </constraints>
@@ -800,6 +809,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backButton" destination="ZOR-Yq-8s0" id="fZP-wv-7QT"/>
                         <outlet property="captionLabel" destination="LVf-dY-zlB" id="RSA-Pp-22i"/>
                         <outlet property="dateOfBirthTextField" destination="i7Y-0d-c7B" id="14C-JD-Bkt"/>
                         <outlet property="nameTextField" destination="iRF-Sl-bCh" id="WbV-Bx-CBa"/>

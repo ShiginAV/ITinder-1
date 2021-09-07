@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import Firebase
 
 class SignUpViewController: UIViewController {
 
@@ -36,9 +38,7 @@ class SignUpViewController: UIViewController {
         toLoginLabel.addGestureRecognizer(loginLabelTap)
     }
     @objc func transitionToLoginScreen(_ sender: Any) {
-        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
-        vc.modalPresentationStyle = .fullScreen
-        self.present(vc, animated: true)
+        Router.transitionToLoginVC(parent: self, storyboard: storyboard)
     }
     
     override func viewDidLayoutSubviews() {
@@ -77,7 +77,7 @@ class SignUpViewController: UIViewController {
         }
         
         let cleanedPassword = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        if Utilities.isPasswordValid(cleanedPassword) == false {
+        if Utilities.isPasswordValid(cleanedPassword) == false || cleanedPassword.count < 6 {
             return "Пожалуйста, убедитесь, что пароль содержит не менее 6 символов, буквы или цифры"
         }
         

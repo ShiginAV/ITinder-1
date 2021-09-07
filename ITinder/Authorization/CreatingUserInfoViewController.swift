@@ -20,8 +20,10 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var userInfoTextView: UITextView!
     @IBOutlet weak var userInfoLabel: UILabel!
     @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
     
     @IBOutlet weak var scrollView: UIScrollView!
+    let activityView = UIActivityIndicatorView(style: .medium)
     var userID = "default"
     var userEmail = "default"
     var userPassword = "default"
@@ -75,14 +77,20 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func signUpButtonTapped(_ sender: Any) {
+        signUpButton.isEnabled = false
         let errorMessage = validateFields()
         if errorMessage != nil {
             showAlert(title: "Ошибка регистрации", message: errorMessage)
+            signUpButton.isEnabled = true
         } else {
+            self.showActivityIndicatory()
+            
             // authorize in firebase authentication
             Auth.auth().createUser(withEmail: userEmail, password: userPassword) { result, error in
                 if error != nil {
                     self.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
+                    self.signUpButton.isEnabled = true
+                    self.stopShowActivityIndicatory()
                     return
                 } else {
                     // User was created sucessfully, store uid and email in database
@@ -109,7 +117,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
                                                education: nil,
                                                company: nil,
                                                employment: nil,
-                                               statusList: ["1" : "2"])
+                                               statusList: [:])
                         
                         UserService.persist(user: itinderUser, withImage: self.profileImageView.image) { user in
                             // add user to firebase realtime
@@ -121,15 +129,29 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
                             ref.child("users/" + self.userID + "/description").setValue(cleanedUserInfo)
                             ref.child("users/" + self.userID + "/imageUrl").setValue(url ?? "defaultURL")
                             
+                            self.signUpButton.isEnabled = true
+                            self.stopShowActivityIndicatory()
                             Router.transitionToMainTabBar(view: self.view, storyboard: self.storyboard)
                         }
                     } else {
+                        self.signUpButton.isEnabled = true
+                        self.stopShowActivityIndicatory()
                         self.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
                         return
                     }
                 }
             }
         }
+    }
+    
+    private func showActivityIndicatory() {
+        activityView.center = self.view.center
+        self.view.addSubview(activityView)
+        activityView.startAnimating()
+    }
+    
+    private func stopShowActivityIndicatory() {
+        activityView.stopAnimating()
     }
     
     override func viewDidLayoutSubviews() {
@@ -141,11 +163,17 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         Utilities.stylePrimaryTextView(userInfoTextView)
         Utilities.styleCaptionLabel(captionLabel)
         Utilities.stylePlaceholderLabel(userInfoLabel)
+        backButton.setTitle("назад", for: .normal)
+        backButton.setTitleColor(Utilities.blueItinderColor, for: .normal)
         profileImageView.layer.cornerRadius = profileImageView.bounds.height / 2
     }
     
     func textViewDidChange(_ textView: UITextView) {
         userInfoLabel.isHidden = !textView.text.isEmpty
+    }
+    
+    @IBAction func backButtonTapped(_ sender: Any) {
+        Router.transitionToSignUpVC(parent: self, storyboard: storyboard)
     }
 }
 

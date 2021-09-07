@@ -27,6 +27,18 @@ final class Router {
         view.window?.makeKeyAndVisible()
     }
     
+    static func transitionToLoginVC(parent: UIViewController, storyboard: UIStoryboard?) {
+        guard let vc = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+        vc.modalPresentationStyle = .fullScreen
+        parent.present(vc, animated: true)
+    }
+    
+    static func transitionToSignUpVC(parent: UIViewController, storyboard: UIStoryboard?) {
+        guard let vc = storyboard?.instantiateViewController(withIdentifier: "SignUpViewController") as? SignUpViewController else { return }
+        vc.modalPresentationStyle = .fullScreen
+        parent.present(vc, animated: true)
+    }
+    
     static func transitionToMainTabBar(view: UIView, storyboard: UIStoryboard?) {
         let creatingUserInfoVC = storyboard?.instantiateViewController(identifier: "TabBarController")
         view.window?.rootViewController = creatingUserInfoVC
