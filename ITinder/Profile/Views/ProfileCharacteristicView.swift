@@ -40,7 +40,7 @@ final class ProfileCharacteristicView: UIView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         label.textColor = .black
-        label.numberOfLines = 2
+        label.numberOfLines = 0
         return label
     }()
     
@@ -52,7 +52,7 @@ final class ProfileCharacteristicView: UIView {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
             
             descriptionLabel.topAnchor.constraint(equalTo: topAnchor),
             descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor),

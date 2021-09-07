@@ -55,7 +55,7 @@ final class SettingsViewController: UIViewController {
     private func resetCardsStatuses() {
         guard let window = UIApplication.shared.windows.first else { return }
         guard let tabBarController = window.rootViewController as? UITabBarController else { return }
-        guard let swipeVC = tabBarController.viewControllers?[0] as? SwipeViewController else { return }
+        guard let swipeVC = tabBarController.viewControllers?.first as? SwipeViewController else { return }
         swipeVC.resetCardsStatuses()
     }
 }
