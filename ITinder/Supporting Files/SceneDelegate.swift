@@ -22,13 +22,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let authVC = myStoryboard.instantiateViewController(identifier: "AuthMethodsViewController")
             
             // checking that the user is already logged in
-//            if Auth.auth().currentUser == nil {
+            if Auth.auth().currentUser == nil {
                 window?.rootViewController = authVC
-//            } else {
-//                let myStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-//                let mainTabVC = myStoryboard.instantiateViewController(identifier: "TabBarController")
-//                window?.rootViewController = mainTabVC
-//            }
+            } else {
+                let myStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                let mainTabVC = myStoryboard.instantiateViewController(identifier: "TabBarController")
+                window?.rootViewController = mainTabVC
+            }
             
         } else {
             window?.rootViewController = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
