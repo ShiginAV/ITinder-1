@@ -42,14 +42,14 @@ class SwipeViewController: UIViewController {
     private var isLoading: Bool = false {
         didSet {
             if isLoading {
-                loaderView.startAnimating()
+                spinnerView.startAnimating()
             } else {
-                loaderView.stopAnimating()
+                spinnerView.stopAnimating()
             }
         }
     }
     
-    private let loaderView: UIActivityIndicatorView = {
+    private let spinnerView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView()
         view.hidesWhenStopped = true
         return view
@@ -78,17 +78,30 @@ class SwipeViewController: UIViewController {
         return button
     }()
     
+    private lazy var loaderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.frame = self.view.frame
+        
+        let spinner = UIActivityIndicatorView()
+        spinner.frame.origin = self.view.center
+        spinner.color = .white
+        spinner.startAnimating()
+        view.addSubview(spinner)
+        return view
+    }()
+    
     private func configure() {
         view.backgroundColor = .white
         
-        [loaderView, profileContainerView, emptyShimmerView, resetButton].forEach { subview in
+        [spinnerView, profileContainerView, emptyShimmerView, resetButton].forEach { subview in
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
         NSLayoutConstraint.activate([
-            loaderView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loaderView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
+            spinnerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            spinnerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+
             profileContainerView.topAnchor.constraint(equalTo: view.topAnchor),
             profileContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             profileContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -136,14 +149,19 @@ class SwipeViewController: UIViewController {
     
     private func returnDislikedUser() {
         let userId = dislikedUserIds.removeLast()
+        view.addSubview(loaderView)
         
         UserService.set(status: nil, forUserId: userId) { [weak self] user in
-            guard let self = self else { return }
-            guard let user = user else { return }
+            guard let self = self, let user = user else {
+                self?.loaderView.removeFromSuperview()
+                return
+            }
             
             let cardModel = SwipeCardModel(from: user)
             self.cards.insert(cardModel, at: 0)
             self.profileContainerView.addToFirst(card: cardModel)
+            
+            self.loaderView.removeFromSuperview()
         }
     }
     
