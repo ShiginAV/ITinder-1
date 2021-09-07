@@ -139,7 +139,7 @@ class UserService {
         }
     }
     
-    static func set(status: User.Status, forUserId: String, completion: @escaping ((User?) -> Void)) {
+    static func set(status: User.Status?, forUserId: String, completion: @escaping ((User?) -> Void)) {
         getCurrentUser {
             guard let currentUser = $0 else {
                 assertionFailure()
@@ -154,23 +154,22 @@ class UserService {
                 }
                 
                 if status == .like && currentUser.statusList[user.identifier] == User.Status.like.rawValue {
-                    
                     ConversationService.createMatchConversation(currentUserId: currentUser.identifier, companionId: user.identifier)
-                    
                     setMatchStatusFor(currentUser: currentUser, with: user) { completion($0) }
                 } else {
-                    set(status, for: user) { _ in completion(nil) }
+                    set(status, for: user) { completion($0) }
                 }
             }
         }
     }
     
-    private static func set(_ status: User.Status, for user: User, completion: @escaping ((User?) -> Void)) {
+    private static func set(_ status: User.Status?, for user: User, completion: @escaping ((User?) -> Void)) {
         guard let currentUserId = currentUserId else { completion(nil); return }
-        var statusList = user.statusList
-        statusList[currentUserId] = status.rawValue
         
-        usersDatabase.child(user.identifier).updateChildValues([statusListKey: statusList]) { error, _ in
+        var user = user
+        user.statusList[currentUserId] = status?.rawValue
+        
+        usersDatabase.child(user.identifier).updateChildValues([statusListKey: user.statusList]) { error, _ in
             guard error == nil else { completion(nil); return }
             completion(user)
         }
@@ -183,10 +182,10 @@ class UserService {
         usersDatabase.child(currentUser.identifier).updateChildValues([statusListKey: currentUserStatusList]) { error, _ in
             guard error == nil else { completion(nil); return }
             
-            var likedUserStatusList = likedUser.statusList
-            likedUserStatusList[currentUser.identifier] = User.Status.match.rawValue
+            var likedUser = likedUser
+            likedUser.statusList[currentUser.identifier] = User.Status.match.rawValue
             
-            usersDatabase.child(likedUser.identifier).updateChildValues([statusListKey: likedUserStatusList]) { error, _ in
+            usersDatabase.child(likedUser.identifier).updateChildValues([statusListKey: likedUser.statusList]) { error, _ in
                 guard error == nil else { completion(nil); return }
                 completion(likedUser)
             }
@@ -199,19 +198,21 @@ class UserService {
         usersDatabase
             .queryOrderedByKey()
             .observeSingleEvent(of: .value) { snapshot in
-                guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
-                    completion(false)
-                    return
-                }
+                guard let children = snapshot.children.allObjects as? [DataSnapshot] else { completion(false); return }
+                guard let currentUserId = currentUserId else { completion(false); return }
                 
                 var updates = [String: Any]()
                 children.forEach {
                     if let value = $0.value as? [String: Any] {
                         if let userId = value[identifierKey] as? String,
-                           let currentUserId = currentUserId,
                            var statusList = value[statusListKey] as? [String: String] {
                             
-                            statusList[currentUserId] = nil
+                            if userId == currentUserId {
+                                statusList = statusList.filter { $1 == User.Status.match.rawValue }
+                                
+                            } else if statusList[currentUserId] != User.Status.match.rawValue {
+                                statusList[currentUserId] = nil
+                            }
                             updates[userId + "/" + statusListKey] = statusList
                         }
                     }

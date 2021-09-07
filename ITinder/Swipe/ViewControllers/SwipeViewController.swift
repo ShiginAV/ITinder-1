@@ -15,8 +15,25 @@ class SwipeViewController: UIViewController {
         addCards()
     }
     
+    func resetCardsStatuses() {
+        UserService.resetUsers { [weak self] isDone in
+            guard isDone, let self = self else { return }
+            
+            self.dislikedUserIds.removeAll()
+            self.cards.removeAll()
+            self.profileContainerView.removeAllCards()
+            self.addCards()
+            
+            self.resetButton.isHidden = true
+            self.emptyShimmerView.isHidden = true
+        }
+    }
+    
     private let cardsLimit = 3
     private var cards = [SwipeCardModel]()
+    private var dislikedUserIds = [String]() {
+        didSet { profileContainerView.returnButtonIsHidden = dislikedUserIds.isEmpty }
+    }
     
     private var shownUserId: String? {
         cards.first?.userId
@@ -82,7 +99,7 @@ class SwipeViewController: UIViewController {
             emptyShimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             emptyShimmerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            resetButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 44),
+            resetButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             resetButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
@@ -102,7 +119,7 @@ class SwipeViewController: UIViewController {
                 .compactMap { $0 }
                 .map { SwipeCardModel(from: $0) }
             
-            self.profileContainerView.fill(cardModels)
+            self.profileContainerView.add(cardModels)
             self.cards.append(contentsOf: cardModels)
             self.isLoading = false
             self.profileContainerView.isHidden = false
@@ -117,17 +134,25 @@ class SwipeViewController: UIViewController {
         }
     }
     
-    @objc private func resetButtonDidTap() {
-        UserService.resetUsers { [weak self] isDone in
-            guard isDone, let self = self else { return }
-            self.addCards()
-            self.resetButton.isHidden = true
-            self.emptyShimmerView.isHidden = true
+    private func returnDislikedUser() {
+        let userId = dislikedUserIds.removeLast()
+        
+        UserService.set(status: nil, forUserId: userId) { [weak self] user in
+            guard let self = self else { return }
+            guard let user = user else { return }
+            
+            let cardModel = SwipeCardModel(from: user)
+            self.cards.insert(cardModel, at: 0)
+            self.profileContainerView.addToFirst(card: cardModel)
         }
+    }
+    
+    @objc private func resetButtonDidTap() {
+        resetCardsStatuses()
     }
 }
 
-extension SwipeViewController: SwipeCardDelegate {
+extension SwipeViewController: SwipeProfileContainerViewDelegate {
     func profileInfoDidTap() {
         guard let shownUserId = shownUserId else { return }
         UserService.getUserBy(id: shownUserId) { user in
@@ -136,8 +161,8 @@ extension SwipeViewController: SwipeCardDelegate {
     }
     
     func swipeDidEnd(type: SwipeCardType) {
-        setLikeAndMatchIfNeeded(type: type)
-        
+        setLikeAndMatchIfNeeded(type)
+        saveDislikedUser(type)
         cards.removeFirst()
         
         if !isLoading && cards.count < cardsLimit {
@@ -145,7 +170,23 @@ extension SwipeViewController: SwipeCardDelegate {
         }
     }
     
-    private func setLikeAndMatchIfNeeded(type: SwipeCardType) {
+    func returnButtonDidTap() {
+        returnDislikedUser()
+    }
+    
+    private func saveDislikedUser(_ type: SwipeCardType) {
+        if type == .like {
+            dislikedUserIds.removeAll()
+        } else if type == .dislike, let userId = cards.first?.userId {
+            if dislikedUserIds.count == cardsLimit {
+                dislikedUserIds.removeFirst()
+            }
+            dislikedUserIds.append(userId)
+        }
+    }
+    
+    private func setLikeAndMatchIfNeeded(_ type: SwipeCardType) {
+        guard let currentUserId = UserService.currentUserId else { return }
         guard let shownUserId = shownUserId else { return }
         
         let status: User.Status
@@ -154,7 +195,7 @@ extension SwipeViewController: SwipeCardDelegate {
         case .dislike, .neutral: status = .dislike
         }
         UserService.set(status: status, forUserId: shownUserId) { user in
-            guard type == .like, let user = user else { return }
+            guard let user = user, user.statusList[currentUserId] == User.Status.match.rawValue else { return }
             Router.showMatch(user: user, parent: self)
         }
     }

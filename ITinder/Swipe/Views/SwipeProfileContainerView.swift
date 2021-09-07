@@ -7,9 +7,13 @@
 
 import UIKit
 
+protocol SwipeProfileContainerViewDelegate: SwipeCardDelegate {
+    func returnButtonDidTap()
+}
+
 final class SwipeProfileContainerView: UIView {
     
-    weak var delegate: SwipeCardDelegate?
+    weak var delegate: SwipeProfileContainerViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -20,50 +24,47 @@ final class SwipeProfileContainerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func fill(_ cards: [SwipeCardModel]) {
+    var returnButtonIsHidden: Bool = true {
+        didSet { swipeButtonsView.returnButtonIsHidden = returnButtonIsHidden }
+    }
+    
+    func add(_ cards: [SwipeCardModel]) {
         cards.forEach { add(card: $0) }
     }
     
-    private var isButtonsEnabled: Bool = false {
-        didSet {
-            likeButton.isEnabled = isButtonsEnabled
-            dislikeButton.isEnabled = isButtonsEnabled
-        }
+    func addToFirst(card: SwipeCardModel) {
+        let cardView = SwipeCardView()
+        cardView.layer.frame = bounds
+        cardView.delegate = self
+        cardView.fill(card)
+        
+        addSubview(cardView)
+        loadedCards.insert(cardView, at: 0)
+        
+        bringSubviewToFront(swipeButtonsView)
+        layoutIfNeeded()
+    }
+    
+    func removeAllCards() {
+        loadedCards.forEach { $0.removeFromSuperview() }
+        loadedCards.removeAll()
     }
     
     private var loadedCards = [SwipeCardView]()
     
-    private let buttonsStakView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.spacing = 44
-        return stack
-    }()
-    
-    private let likeButton: UIButton = {
-        let button = UIButton()
-        button.setImage(SwipeCardIcons.likeButton.image, for: .normal)
-        button.setImage(SwipeCardIcons.likeButtonActive.image, for: .highlighted)
-        button.addTarget(self, action: #selector(likeDidTap), for: .touchUpInside)
-        return button
-    }()
-    
-    private let dislikeButton: UIButton = {
-        let button = UIButton()
-        button.setImage(SwipeCardIcons.dislikeButton.image, for: .normal)
-        button.setImage(SwipeCardIcons.dislikeButtonActive.image, for: .highlighted)
-        button.addTarget(self, action: #selector(dislikeDidTap), for: .touchUpInside)
-        return button
+    private lazy var swipeButtonsView: SwipeButtonsView = {
+        let view = SwipeButtonsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.delegate = self
+        return view
     }()
     
     private func configure() {
-        buttonsStakView.addArrangedSubview(dislikeButton)
-        buttonsStakView.addArrangedSubview(likeButton)
-        buttonsStakView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(buttonsStakView)
+        addSubview(swipeButtonsView)
+        
         NSLayoutConstraint.activate([
-            buttonsStakView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            buttonsStakView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            swipeButtonsView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            swipeButtonsView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     
@@ -78,18 +79,6 @@ final class SwipeProfileContainerView: UIView {
         
         layoutIfNeeded()
     }
-    
-    @objc private func likeDidTap() {
-        isButtonsEnabled = false
-        guard let cardView = loadedCards.first else { return }
-        cardView.swipeCardToRight()
-    }
-    
-    @objc private func dislikeDidTap() {
-        isButtonsEnabled = false
-        guard let cardView = loadedCards.first else { return }
-        cardView.swipeCradToLeft()
-    }
 }
 
 extension SwipeProfileContainerView: SwipeCardDelegate {
@@ -101,7 +90,25 @@ extension SwipeProfileContainerView: SwipeCardDelegate {
         delegate?.swipeDidEnd(type: type)
         loadedCards.removeFirst()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.isButtonsEnabled = true
+            self.swipeButtonsView.isButtonsEnabled = true
         }
+    }
+}
+
+extension SwipeProfileContainerView: SwipeButtonsViewDelegate {
+    func returnDidTap() {
+        delegate?.returnButtonDidTap()
+    }
+    
+    func dislikeDidTap() {
+        swipeButtonsView.isButtonsEnabled = false
+        guard let cardView = loadedCards.first else { return }
+        cardView.swipeCradToLeft()
+    }
+    
+    func likeDidTap() {
+        swipeButtonsView.isButtonsEnabled = false
+        guard let cardView = loadedCards.first else { return }
+        cardView.swipeCardToRight()
     }
 }
