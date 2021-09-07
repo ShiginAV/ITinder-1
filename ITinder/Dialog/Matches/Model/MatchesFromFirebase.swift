@@ -60,21 +60,9 @@ class MatchesFromFirebase {
         }
     }
     
-    var newCompanions = [CompanionStruct]() {
-        didSet {
-            newCompanions.sort {
-                $0.userId > $1.userId
-            }
-        }
-    }
+    var newCompanions = [CompanionStruct]()
+    var oldCompanions = [CompanionStruct]()
     
-    var oldCompanions = [CompanionStruct]() {
-        didSet {
-            newCompanions.sort {
-                $0.userId > $1.userId
-            }
-        }
-    }
     
     var lastMessages = [String: String]() {
         didSet {
@@ -176,8 +164,22 @@ class MatchesFromFirebase {
     // MARK: - Logic
     
     private func allCompanionsUpdate() {
-        var forOldCompanions = [CompanionStruct]()
-        var forNewCompanions = [CompanionStruct]()
+        var forOldCompanions = [CompanionStruct]() {
+            didSet {
+                forOldCompanions.sort {
+                    $0.conversationId > $1.conversationId
+                }
+            }
+        }
+        
+        var forNewCompanions = [CompanionStruct]() {
+            didSet {
+                forNewCompanions.sort {
+                    $0.conversationId > $1.conversationId
+                }
+            }
+        }
+        
         for user in companions.values {
             if lastMessages[user.conversationId] != nil {
                 forOldCompanions.append(user)
