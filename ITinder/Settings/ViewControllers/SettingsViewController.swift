@@ -21,6 +21,7 @@ final class SettingsViewController: UIViewController {
     }
     private lazy var resetView = SettingView(title: "Сбросить лайки и дизлайки", buttonTitle: "Сбросить") { [weak self] in
         self?.resetCardsStatuses()
+        self?.dismiss(animated: true)
     }
     private lazy var exitView = SettingView(title: "Выйти из аккаунта", buttonTitle: "Выйти") {
         print("EXIT")

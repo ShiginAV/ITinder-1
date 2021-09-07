@@ -76,12 +76,12 @@ final class SwipeButtonsView: UIView {
             returnButton.centerYAnchor.constraint(equalTo: dislikeButton.centerYAnchor),
             
             dislikeButton.topAnchor.constraint(equalTo: topAnchor),
-            dislikeButton.leadingAnchor.constraint(equalTo: returnButton.trailingAnchor, constant: 30),
+            dislikeButton.leadingAnchor.constraint(equalTo: returnButton.trailingAnchor, constant: 20),
             dislikeButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             likeButton.topAnchor.constraint(equalTo: topAnchor),
             likeButton.leadingAnchor.constraint(equalTo: dislikeButton.trailingAnchor, constant: 44),
-            likeButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            likeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -57),
             likeButton.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }

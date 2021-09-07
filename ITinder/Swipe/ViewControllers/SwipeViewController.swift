@@ -137,7 +137,7 @@ class SwipeViewController: UIViewController {
     private func returnDislikedUser() {
         let userId = dislikedUserIds.removeLast()
         
-        UserService.getUserBy(id: userId) { [weak self] user in
+        UserService.set(status: nil, forUserId: userId) { [weak self] user in
             guard let self = self else { return }
             guard let user = user else { return }
             
@@ -186,6 +186,7 @@ extension SwipeViewController: SwipeProfileContainerViewDelegate {
     }
     
     private func setLikeAndMatchIfNeeded(_ type: SwipeCardType) {
+        guard let currentUserId = UserService.currentUserId else { return }
         guard let shownUserId = shownUserId else { return }
         
         let status: User.Status
@@ -194,7 +195,7 @@ extension SwipeViewController: SwipeProfileContainerViewDelegate {
         case .dislike, .neutral: status = .dislike
         }
         UserService.set(status: status, forUserId: shownUserId) { user in
-            guard type == .like, let user = user else { return }
+            guard let user = user, user.statusList[currentUserId] == User.Status.match.rawValue else { return }
             Router.showMatch(user: user, parent: self)
         }
     }

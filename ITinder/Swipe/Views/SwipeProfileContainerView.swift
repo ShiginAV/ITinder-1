@@ -63,7 +63,7 @@ final class SwipeProfileContainerView: UIView {
         addSubview(swipeButtonsView)
         
         NSLayoutConstraint.activate([
-            swipeButtonsView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 40),
+            swipeButtonsView.centerXAnchor.constraint(equalTo: centerXAnchor),
             swipeButtonsView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }

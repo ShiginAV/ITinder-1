@@ -26,6 +26,7 @@
 		117C435526E3D4E900222E20 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117C435426E3D4E900222E20 /* SettingView.swift */; };
 		117CEB0726C7E1F70018A753 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117CEB0626C7E1F70018A753 /* CustomImageView.swift */; };
 		117CEB0926C825790018A753 /* ProfileCharacteristicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117CEB0826C825790018A753 /* ProfileCharacteristicView.swift */; };
+		117F9F0126E69EFB0014A4C9 /* SwipeButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117F9F0026E69EFB0014A4C9 /* SwipeButtonsView.swift */; };
 		1180251F26C510550096A20F /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180251E26C510550096A20F /* Icons.swift */; };
 		1180252126C510840096A20F /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180252026C510840096A20F /* Router.swift */; };
 		1180252326C5109C0096A20F /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1180252226C5109C0096A20F /* Colors.swift */; };
@@ -82,6 +83,7 @@
 		117C435426E3D4E900222E20 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		117CEB0626C7E1F70018A753 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		117CEB0826C825790018A753 /* ProfileCharacteristicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCharacteristicView.swift; sourceTree = "<group>"; };
+		117F9F0026E69EFB0014A4C9 /* SwipeButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeButtonsView.swift; sourceTree = "<group>"; };
 		1180251E26C510550096A20F /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
 		1180252026C510840096A20F /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		1180252226C5109C0096A20F /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				1180252F26C511BB0096A20F /* SwipeCardView.swift */,
 				1180253126C5125E0096A20F /* SwipeProfileContainerView.swift */,
 				11812D4326C6D5F6007399A2 /* EmptyShimmerView.swift */,
+				117F9F0026E69EFB0014A4C9 /* SwipeButtonsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -585,6 +588,7 @@
 				1180252E26C5119D0096A20F /* SwipeCardInfoView.swift in Sources */,
 				0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */,
 				117C435526E3D4E900222E20 /* SettingView.swift in Sources */,
+				117F9F0126E69EFB0014A4C9 /* SwipeButtonsView.swift in Sources */,
 				1180253D26C513310096A20F /* EditUserProfileViewController.swift in Sources */,
 				0EC7545F26CE624A008DA01A /* Utilities.swift in Sources */,
 				0EC7545A26CE6203008DA01A /* CreatingUserInfoViewController.swift in Sources */,
