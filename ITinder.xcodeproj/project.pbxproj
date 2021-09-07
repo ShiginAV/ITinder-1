@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E4BA65B26E0E7E20080DE17 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4BA65A26E0E7E20080DE17 /* ForgotPasswordViewController.swift */; };
+		0E50140B26DD77A3004526AA /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50140A26DD77A3004526AA /* OnboardingPageViewController.swift */; };
+		0E50140D26DF8662004526AA /* PageOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50140C26DF8662004526AA /* PageOnboardingViewController.swift */; };
+		0E90F09A26E670EB00556820 /* OnboardingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E90F09926E670EB00556820 /* OnboardingManager.swift */; };
 		0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */; };
-		0EA8271D26CE803A00A69C32 /* Transitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8271C26CE803A00A69C32 /* Transitor.swift */; };
 		0EC7545826CE6203008DA01A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545426CE6203008DA01A /* LoginViewController.swift */; };
 		0EC7545926CE6203008DA01A /* AuthMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545526CE6203008DA01A /* AuthMethodsViewController.swift */; };
 		0EC7545A26CE6203008DA01A /* CreatingUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC7545626CE6203008DA01A /* CreatingUserInfoViewController.swift */; };
@@ -59,8 +62,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E4BA65A26E0E7E20080DE17 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
+		0E50140A26DD77A3004526AA /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
+		0E50140C26DF8662004526AA /* PageOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageOnboardingViewController.swift; sourceTree = "<group>"; };
+		0E90F09926E670EB00556820 /* OnboardingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingManager.swift; sourceTree = "<group>"; };
 		0EA8271A26CE7B6700A69C32 /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
-		0EA8271C26CE803A00A69C32 /* Transitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transitor.swift; sourceTree = "<group>"; };
 		0EC7545426CE6203008DA01A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0EC7545526CE6203008DA01A /* AuthMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthMethodsViewController.swift; sourceTree = "<group>"; };
 		0EC7545626CE6203008DA01A /* CreatingUserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreatingUserInfoViewController.swift; sourceTree = "<group>"; };
@@ -147,6 +153,9 @@
 		0E7E2A6026BAB0170012E987 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				0E50140A26DD77A3004526AA /* OnboardingPageViewController.swift */,
+				0E50140C26DF8662004526AA /* PageOnboardingViewController.swift */,
+				0E90F09926E670EB00556820 /* OnboardingManager.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -158,6 +167,7 @@
 				0EC7545626CE6203008DA01A /* CreatingUserInfoViewController.swift */,
 				0EC7545426CE6203008DA01A /* LoginViewController.swift */,
 				0EC7545726CE6203008DA01A /* SignUpViewController.swift */,
+				0E4BA65A26E0E7E20080DE17 /* ForgotPasswordViewController.swift */,
 			);
 			path = Authorization;
 			sourceTree = "<group>";
@@ -228,7 +238,6 @@
 				1180251E26C510550096A20F /* Icons.swift */,
 				1180252026C510840096A20F /* Router.swift */,
 				1180252226C5109C0096A20F /* Colors.swift */,
-				0EA8271C26CE803A00A69C32 /* Transitor.swift */,
 				11647D0126CD0BAC002787FF /* Constants.swift */,
 			);
 			path = Utils;
@@ -400,8 +409,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0EE0185326B96AEF00AEB059 /* Build configuration list for PBXNativeTarget "ITinder" */;
 			buildPhases = (
-				2263769726BFE59F00836AA5 /* Swift lint */,
 				4488CA0C128B4F89ECE2BC34 /* [CP] Check Pods Manifest.lock */,
+				2263769726BFE59F00836AA5 /* Swift lint */,
 				0EE0183B26B96AEA00AEB059 /* Sources */,
 				0EE0183C26B96AEA00AEB059 /* Frameworks */,
 				0EE0183D26B96AEA00AEB059 /* Resources */,
@@ -530,12 +539,14 @@
 				0EC7545B26CE6203008DA01A /* SignUpViewController.swift in Sources */,
 				22F7E5CB26D11F13009EE3B2 /* AlertService.swift in Sources */,
 				11647D0226CD0BAC002787FF /* Constants.swift in Sources */,
+				0E90F09A26E670EB00556820 /* OnboardingManager.swift in Sources */,
 				224F40C426CD149900A95715 /* MessageAndSenderModel.swift in Sources */,
 				1180253226C5125E0096A20F /* SwipeProfileContainerView.swift in Sources */,
 				117CEB0726C7E1F70018A753 /* CustomImageView.swift in Sources */,
 				1180253B26C5131A0096A20F /* UserProfileViewController.swift in Sources */,
 				1180252326C5109C0096A20F /* Colors.swift in Sources */,
 				224F40D626CD14B500A95715 /* TableViewCell.swift in Sources */,
+				0E50140B26DD77A3004526AA /* OnboardingPageViewController.swift in Sources */,
 				1180252126C510840096A20F /* Router.swift in Sources */,
 				0EE0184326B96AEA00AEB059 /* AppDelegate.swift in Sources */,
 				1180253526C512990096A20F /* EditСharacteristicView.swift in Sources */,
@@ -550,8 +561,10 @@
 				1180253926C512FB0096A20F /* SwipeViewController.swift in Sources */,
 				224F40CA26CD14A100A95715 /* DialogViewController.swift in Sources */,
 				224F40CF26CD14AC00A95715 /* MatchesFromFirebase.swift in Sources */,
+				0E50140D26DF8662004526AA /* PageOnboardingViewController.swift in Sources */,
 				0EC7545826CE6203008DA01A /* LoginViewController.swift in Sources */,
 				1180252E26C5119D0096A20F /* SwipeCardInfoView.swift in Sources */,
+				0E4BA65B26E0E7E20080DE17 /* ForgotPasswordViewController.swift in Sources */,
 				0EE0184526B96AEA00AEB059 /* SceneDelegate.swift in Sources */,
 				1180253D26C513310096A20F /* EditUserProfileViewController.swift in Sources */,
 				0EC7545F26CE624A008DA01A /* Utilities.swift in Sources */,
@@ -561,7 +574,6 @@
 				112CA3E726D93D5C000F37B3 /* MatchViewController.swift in Sources */,
 				224F40D526CD14B500A95715 /* CollectionViewCell.swift in Sources */,
 				0EA8271B26CE7B6700A69C32 /* AuthorizationService.swift in Sources */,
-				0EA8271D26CE803A00A69C32 /* Transitor.swift in Sources */,
 				1180253F26C513670096A20F /* TabBarController.swift in Sources */,
 				224F40C926CD14A100A95715 /* MessageViewController.swift in Sources */,
 				224F40CE26CD14AC00A95715 /* CompanionModel.swift in Sources */,
@@ -719,7 +731,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 568BW9C96K;
+				DEVELOPMENT_TEAM = 78553PNJDP;
 				INFOPLIST_FILE = ITinder/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -740,7 +752,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 568BW9C96K;
+				DEVELOPMENT_TEAM = 78553PNJDP;
 				INFOPLIST_FILE = ITinder/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (

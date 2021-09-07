@@ -19,6 +19,42 @@ final class Router {
         parent.present(editProfileVC, animated: true, completion: nil)
     }
     
+    static func transitionToCreatingUserInfoVC(view: UIView) {
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let creatingUserInfoVC = storyboard.instantiateViewController(identifier: "CreatingUserInfoViewController") as CreatingUserInfoViewController
+        
+        view.window?.rootViewController = creatingUserInfoVC
+        view.window?.makeKeyAndVisible()
+    }
+    
+    static func transitionToLoginVC(parent: UIViewController) {
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+        vc.modalPresentationStyle = .fullScreen
+        parent.present(vc, animated: true)
+    }
+    
+    static func transitionToSignUpVC(parent: UIViewController) {
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "SignUpViewController") as? SignUpViewController else { return }
+        vc.modalPresentationStyle = .fullScreen
+        parent.present(vc, animated: true)
+    }
+    
+    static func transitionToMainTabBar(view: UIView) {
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let creatingUserInfoVC = storyboard.instantiateViewController(identifier: "TabBarController")
+        view.window?.rootViewController = creatingUserInfoVC
+        view.window?.makeKeyAndVisible()
+    }
+    
+    static func transitionToAuthScreen(parent: UIViewController) {
+        let myStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let authVC = myStoryboard.instantiateViewController(identifier: "AuthMethodsViewController")
+        authVC.modalPresentationStyle = .fullScreen
+        parent.present(authVC, animated: true, completion: nil)
+    }
+    
     static func showMatch(user: User, parent: UIViewController) {
         let matchVC = MatchViewController(user: user)
         matchVC.modalPresentationStyle = .fullScreen
@@ -48,5 +84,6 @@ final class Router {
     
     static func openPhoneSettings() {
         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+
     }
 }
