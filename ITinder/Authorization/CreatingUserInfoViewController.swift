@@ -25,7 +25,6 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     let dataPicker = UIDatePicker()
     let activityView = UIActivityIndicatorView(style: .medium)
-    var userID = "default"
     var userEmail = "default"
     var userPassword = "default"
     var photoSelectedFlag = false
@@ -96,11 +95,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
                     return
                 } else {
                     // User was created sucessfully, store uid and email in database
-                    let ref = Database.database().reference()
                     if let result = result {
-                        self.userID = result.user.uid
-                        ref.child("users/" + self.userID + "/email").setValue(self.userEmail)
-                        ref.child("users/" + self.userID + "/identifier").setValue(self.userID)
                         
                         // create a user structure, fill it with data
                         let cleanedName = self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -111,7 +106,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
                         let itinderUser = User(identifier: result.user.uid,
                                                email: result.user.email!,
                                                imageUrl: "",
-                                               name: cleanedName,
+                                               name: cleanedName + " " + cleanedSurname,
                                                position: cleanedPosition,
                                                description: cleanedUserInfo as String,
                                                birthDate: cleanedBirthday,
@@ -121,19 +116,11 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
                                                employment: nil,
                                                statusList: [:])
                         
-                        UserService.persist(user: itinderUser, withImage: self.profileImageView.image) { user in
-                            // add user to firebase realtime
-                            let ref = Database.database().reference()
-                            let url = user?.imageUrl
-                            ref.child("users/" + self.userID + "/name").setValue(cleanedName + " " + cleanedSurname)
-                            ref.child("users/" + self.userID + "/birthDate").setValue(cleanedBirthday)
-                            ref.child("users/" + self.userID + "/position").setValue(cleanedPosition)
-                            ref.child("users/" + self.userID + "/description").setValue(cleanedUserInfo)
-                            ref.child("users/" + self.userID + "/imageUrl").setValue(url ?? "defaultURL")
+                        UserService.persist(user: itinderUser, withImage: self.profileImageView.image) {_ in
                             
                             self.signUpButton.isEnabled = true
                             self.stopShowActivityIndicatory()
-                            Router.transitionToMainTabBar(view: self.view, storyboard: self.storyboard)
+                            Router.transitionToMainTabBar(view: self.view)
                         }
                     } else {
                         self.signUpButton.isEnabled = true
@@ -156,7 +143,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(doneButtonInDatapickerTapped(_:)))
-        doneButton.tintColor = Utilities.blueItinderColor
+        doneButton.tintColor = Colors.blueItinderColor
         toolBar.setItems([doneButton], animated: true)
         dateOfBirthTextField.inputAccessoryView = toolBar
         dateOfBirthTextField.inputView = dataPicker
@@ -179,6 +166,8 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     }
     
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
         Utilities.stylePrimaryButton(signUpButton)
         Utilities.stylePrimaryTextField(nameTextField)
         Utilities.stylePrimaryTextField(surnameTextField)
@@ -188,7 +177,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         Utilities.styleCaptionLabel(captionLabel)
         Utilities.stylePlaceholderLabel(userInfoLabel)
         backButton.setTitle("назад", for: .normal)
-        backButton.setTitleColor(Utilities.blueItinderColor, for: .normal)
+        backButton.setTitleColor(Colors.blueItinderColor, for: .normal)
         profileImageView.layer.cornerRadius = profileImageView.bounds.height / 2
     }
     
@@ -197,7 +186,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func backButtonTapped(_ sender: Any) {
-        Router.transitionToSignUpVC(parent: self, storyboard: storyboard)
+        Router.transitionToSignUpVC(parent: self)
     }
 }
 

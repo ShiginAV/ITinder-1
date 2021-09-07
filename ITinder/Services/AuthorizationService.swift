@@ -11,32 +11,12 @@ import FirebaseAuth
 
 class AuthorizationService {
     
-    static func createUserInFiresore( email: String, password: String, vc: UIViewController) {
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
-            if error != nil {
-                vc.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
-            } else {
-                // User was created sucessfully, store uid and email in database
-                let ref = Database.database().reference()
-                if let result = result {
-                    let uid = result.user.uid
-                    ref.child("users/" + uid + "/email").setValue(email)
-                    ref.child("users/" + uid + "/identifier").setValue(uid)
-                    
-                    Router.transitionToCreatingUserInfoVC(view: vc.view, storyboard: vc.storyboard, uid: uid)
-                } else {
-                    vc.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
-                }
-            }
-        }
-    }
-    
     static func signInUserInFirebase(email: String, password: String, vc: UIViewController) {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if error != nil {
                 vc.showAlert(title: "Ошибка входа", message: error?.localizedDescription)
             } else {
-                Router.transitionToMainTabBar(view: vc.view, storyboard: vc.storyboard)
+                Router.transitionToMainTabBar(view: vc.view)
             }
         }
     }
@@ -63,12 +43,12 @@ class AuthorizationService {
                         ref.child("users/" + uid + "/identifier").setValue(uid)
                         
                         //transition to sign in screen
-                        Router.transitionToCreatingUserInfoVC(view: vc.view, storyboard: vc.storyboard, uid: uid)
+                        Router.transitionToCreatingUserInfoVC(view: vc.view)
                         
                         return
                     }
                     // user already in database
-                    Router.transitionToMainTabBar(view: vc.view, storyboard: vc.storyboard)
+                    Router.transitionToMainTabBar(view: vc.view)
                 }
             }
         }

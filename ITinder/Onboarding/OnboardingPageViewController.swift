@@ -53,18 +53,18 @@ class OnboardingPageViewController: UIPageViewController {
     
     func style() {
         pageControl.translatesAutoresizingMaskIntoConstraints = false
-        pageControl.currentPageIndicatorTintColor = Utilities.blueItinderColor
-        pageControl.pageIndicatorTintColor = Utilities.lightGrayItinderColor
+        pageControl.currentPageIndicatorTintColor = Colors.blueItinderColor
+        pageControl.pageIndicatorTintColor = Colors.lightGrayItinderColor
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = initialPage
         
         skipButton.translatesAutoresizingMaskIntoConstraints = false
-        skipButton.setTitleColor(Utilities.blueItinderColor, for: .normal)
+        skipButton.setTitleColor(Colors.blueItinderColor, for: .normal)
         skipButton.setTitle("скрыть", for: .normal)
         skipButton.addTarget(self, action: #selector(skipButtonTapped(_:)), for: .primaryActionTriggered)
         
         nextButton.translatesAutoresizingMaskIntoConstraints = false
-        nextButton.setTitleColor(Utilities.blueItinderColor, for: .normal)
+        nextButton.setTitleColor(Colors.blueItinderColor, for: .normal)
         nextButton.setTitle("далее", for: .normal)
         nextButton.addTarget(self, action: #selector(nextButtonTapped(_:)), for: .primaryActionTriggered)
     }

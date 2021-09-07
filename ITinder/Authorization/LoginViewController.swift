@@ -30,7 +30,7 @@ class LoginViewController: UIViewController {
     }
     
     @objc func transitionToSignUpScreen(_ sender: Any) {
-        Router.transitionToSignUpVC(parent: self, storyboard: self.storyboard)
+        Router.transitionToSignUpVC(parent: self)
     }
 
     private func forgotPasswordLabelTapped() {

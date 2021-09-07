@@ -38,7 +38,7 @@ class SignUpViewController: UIViewController {
         toLoginLabel.addGestureRecognizer(loginLabelTap)
     }
     @objc func transitionToLoginScreen(_ sender: Any) {
-        Router.transitionToLoginVC(parent: self, storyboard: storyboard)
+        Router.transitionToLoginVC(parent: self)
     }
     
     override func viewDidLayoutSubviews() {

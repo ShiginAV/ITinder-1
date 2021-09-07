@@ -19,28 +19,31 @@ final class Router {
         parent.present(editProfileVC, animated: true, completion: nil)
     }
     
-    static func transitionToCreatingUserInfoVC(view: UIView, storyboard: UIStoryboard?, uid: String) {
-        let creatingUserInfoVC = (storyboard?.instantiateViewController(identifier: "CreatingUserInfoViewController"))! as CreatingUserInfoViewController
-        creatingUserInfoVC.userID = uid
+    static func transitionToCreatingUserInfoVC(view: UIView) {
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let creatingUserInfoVC = storyboard.instantiateViewController(identifier: "CreatingUserInfoViewController") as CreatingUserInfoViewController
         
         view.window?.rootViewController = creatingUserInfoVC
         view.window?.makeKeyAndVisible()
     }
     
-    static func transitionToLoginVC(parent: UIViewController, storyboard: UIStoryboard?) {
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+    static func transitionToLoginVC(parent: UIViewController) {
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
         vc.modalPresentationStyle = .fullScreen
         parent.present(vc, animated: true)
     }
     
-    static func transitionToSignUpVC(parent: UIViewController, storyboard: UIStoryboard?) {
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "SignUpViewController") as? SignUpViewController else { return }
+    static func transitionToSignUpVC(parent: UIViewController) {
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "SignUpViewController") as? SignUpViewController else { return }
         vc.modalPresentationStyle = .fullScreen
         parent.present(vc, animated: true)
     }
     
-    static func transitionToMainTabBar(view: UIView, storyboard: UIStoryboard?) {
-        let creatingUserInfoVC = storyboard?.instantiateViewController(identifier: "TabBarController")
+    static func transitionToMainTabBar(view: UIView) {
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let creatingUserInfoVC = storyboard.instantiateViewController(identifier: "TabBarController")
         view.window?.rootViewController = creatingUserInfoVC
         view.window?.makeKeyAndVisible()
     }

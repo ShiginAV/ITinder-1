@@ -66,13 +66,14 @@ class AuthMethodsViewController: UIViewController {
     
     private func signIntoFirebaseWithFacebook() {
         // get credential
-        let credential = FacebookAuthProvider.credential(withAccessToken: AccessToken.current!.tokenString)
+        guard let accessToken = AccessToken.current?.tokenString else { return }
+        let credential = FacebookAuthProvider.credential(withAccessToken: accessToken)
         //try to auth with this credential
         AuthorizationService.signInWithGivenCredential(credential: credential, vc: self)
     }
     
     @objc func loginWithGoogle(_ sender: Any) {
-        let signInConfig = GIDConfiguration.init(clientID: "572025486763-l8q1t2jh5a5ntjperccufpt9ne4lcipp.apps.googleusercontent.com")
+        let signInConfig = GIDConfiguration.init(clientID: clientID)
         
         GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
             guard error == nil else { return }
@@ -80,12 +81,15 @@ class AuthMethodsViewController: UIViewController {
             
             // get credentials
             let authentication = user.authentication
-            let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken!, accessToken: authentication.accessToken)
+            guard let idToken = authentication.idToken else { return }
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
             AuthorizationService.signInWithGivenCredential(credential: credential, vc: self)
           }
     }
     
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
         Utilities.stylePrimaryButton(loginButton)
         Utilities.styleSecondaryButton(signUpButton)
     }
