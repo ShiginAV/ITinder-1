@@ -23,6 +23,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var backButton: UIButton!
     
     @IBOutlet weak var scrollView: UIScrollView!
+    let dataPicker = UIDatePicker()
     let activityView = UIActivityIndicatorView(style: .medium)
     var userID = "default"
     var userEmail = "default"
@@ -37,6 +38,7 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         
         profileImageTapped()
         self.hideKeyboardWhenTappedAround()
+        createDataPickerView()
     }
     
     override func viewWillLayoutSubviews() {
@@ -148,6 +150,28 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         activityView.center = self.view.center
         self.view.addSubview(activityView)
         activityView.startAnimating()
+    }
+    
+    private func createDataPickerView() {
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(doneButtonInDatapickerTapped(_:)))
+        doneButton.tintColor = Utilities.blueItinderColor
+        toolBar.setItems([doneButton], animated: true)
+        dateOfBirthTextField.inputAccessoryView = toolBar
+        dateOfBirthTextField.inputView = dataPicker
+        dataPicker.datePickerMode = .date
+        if #available(iOS 14, *) {
+            dataPicker.preferredDatePickerStyle = .wheels
+        }
+    }
+    
+    @objc func doneButtonInDatapickerTapped(_ sender: Any) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        
+        dateOfBirthTextField.text = formatter.string(from: dataPicker.date)
+        self.view.endEditing(true)
     }
     
     private func stopShowActivityIndicatory() {
