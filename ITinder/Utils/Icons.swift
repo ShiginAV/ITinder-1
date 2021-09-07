@@ -33,6 +33,12 @@ enum UserProfileIcons: String, Imageable {
     case employmentIcon = "employment_icon"
 }
 
+enum OnboardingImages: String, Imageable {
+    case onboardingImage1 = "onb1"
+    case onboardingImage2 = "onb2"
+    case onboardingImage3 = "onb3"
+}
+
 private class BundleClass { }
 private let bundle = Bundle(for: BundleClass.self)
 

@@ -20,21 +20,48 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var userInfoTextView: UITextView!
     @IBOutlet weak var userInfoLabel: UILabel!
     @IBOutlet weak var signUpButton: UIButton!
-    var userID = "default"
+    @IBOutlet weak var backButton: UIButton!
     
-    let userEmail = Auth.auth().currentUser?.email
+    @IBOutlet weak var scrollView: UIScrollView!
+    let dataPicker = UIDatePicker()
+    let activityView = UIActivityIndicatorView(style: .medium)
+    var userEmail = "default"
+    var userPassword = "default"
+    var photoSelectedFlag = false
     private var imagePicker: UIImagePickerController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.hideKeyboardWhenTappedAround()
         userInfoTextView.delegate = self
-        let errorMessage = validateFields()
-        if errorMessage != nil {
-            showAlert(title: "Ошибка регистрации", message: errorMessage)
-        }
         
+        profileImageTapped()
+        self.hideKeyboardWhenTappedAround()
+        createDataPickerView()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        scrollView.frame = view.bounds
+        scrollView.contentSize.height = view.bounds.height + 150
+    }
+    
+    private func validateFields() -> String? {
+        if nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
+                surnameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
+                dateOfBirthTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
+                positionTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
+                userInfoTextView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            return "Пожалуйста, заполните все поля регистрации"
+        }
+        if photoSelectedFlag == false {
+            return "Пожалуйста, выберите фото профиля"
+        }
+        return nil
+    }
+    
+    private func profileImageTapped() {
         let imageTap = UITapGestureRecognizer(target: self, action: #selector(openImagePicker))
         profileImageView.isUserInteractionEnabled = true
         profileImageView.addGestureRecognizer(imageTap)
@@ -44,7 +71,6 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         imagePicker.allowsEditing = true
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
-        
     }
     
     @objc func openImagePicker(_ sender: Any) {
@@ -52,9 +78,96 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func signUpButtonTapped(_ sender: Any) {
-        createUserData()
+        signUpButton.isEnabled = false
+        let errorMessage = validateFields()
+        if errorMessage != nil {
+            showAlert(title: "Ошибка регистрации", message: errorMessage)
+            signUpButton.isEnabled = true
+        } else {
+            self.showActivityIndicatory()
+            
+            // authorize in firebase authentication
+            Auth.auth().createUser(withEmail: userEmail, password: userPassword) { result, error in
+                if error != nil {
+                    self.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
+                    self.signUpButton.isEnabled = true
+                    self.stopShowActivityIndicatory()
+                    return
+                } else {
+                    // User was created sucessfully, store uid and email in database
+                    if let result = result {
+                        
+                        // create a user structure, fill it with data
+                        let cleanedName = self.nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let cleanedSurname = self.surnameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let cleanedBirthday = self.dateOfBirthTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let cleanedPosition = self.positionTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let cleanedUserInfo = self.userInfoTextView.text!.trimmingCharacters(in: .whitespacesAndNewlines) as NSString
+                        let itinderUser = User(identifier: result.user.uid,
+                                               email: result.user.email!,
+                                               imageUrl: "",
+                                               name: cleanedName + " " + cleanedSurname,
+                                               position: cleanedPosition,
+                                               description: cleanedUserInfo as String,
+                                               birthDate: cleanedBirthday,
+                                               city: nil,
+                                               education: nil,
+                                               company: nil,
+                                               employment: nil,
+                                               statusList: [:])
+                        
+                        UserService.persist(user: itinderUser, withImage: self.profileImageView.image) {_ in
+                            
+                            self.signUpButton.isEnabled = true
+                            self.stopShowActivityIndicatory()
+                            Router.transitionToMainTabBar(view: self.view)
+                        }
+                    } else {
+                        self.signUpButton.isEnabled = true
+                        self.stopShowActivityIndicatory()
+                        self.showAlert(title: "Ошибка регистрации пользователя", message: error?.localizedDescription)
+                        return
+                    }
+                }
+            }
+        }
     }
+    
+    private func showActivityIndicatory() {
+        activityView.center = self.view.center
+        self.view.addSubview(activityView)
+        activityView.startAnimating()
+    }
+    
+    private func createDataPickerView() {
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(doneButtonInDatapickerTapped(_:)))
+        doneButton.tintColor = Colors.blueItinderColor
+        toolBar.setItems([doneButton], animated: true)
+        dateOfBirthTextField.inputAccessoryView = toolBar
+        dateOfBirthTextField.inputView = dataPicker
+        dataPicker.datePickerMode = .date
+        if #available(iOS 14, *) {
+            dataPicker.preferredDatePickerStyle = .wheels
+        }
+    }
+    
+    @objc func doneButtonInDatapickerTapped(_ sender: Any) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        
+        dateOfBirthTextField.text = formatter.string(from: dataPicker.date)
+        self.view.endEditing(true)
+    }
+    
+    private func stopShowActivityIndicatory() {
+        activityView.stopAnimating()
+    }
+    
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
         Utilities.stylePrimaryButton(signUpButton)
         Utilities.stylePrimaryTextField(nameTextField)
         Utilities.stylePrimaryTextField(surnameTextField)
@@ -63,63 +176,17 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
         Utilities.stylePrimaryTextView(userInfoTextView)
         Utilities.styleCaptionLabel(captionLabel)
         Utilities.stylePlaceholderLabel(userInfoLabel)
+        backButton.setTitle("назад", for: .normal)
+        backButton.setTitleColor(Colors.blueItinderColor, for: .normal)
         profileImageView.layer.cornerRadius = profileImageView.bounds.height / 2
-    }
-    
-    private func validateFields() -> String! {
-        if nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-                surnameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-                dateOfBirthTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-                positionTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-            return "Пожалуйста, заполните все поля регистрации"
-        }
-        return nil
-    }
-    
-    private func createUserData() {
-        let ref = Database.database().reference()
-        let cleanedName = nameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanedSurname = surnameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanedBirthday = dateOfBirthTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanedPosition = positionTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanedUserInfo = (userInfoTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "") as NSString
-
-        self.upload( photo: profileImageView.image!) { url in
-            ref.child("users/" + self.userID + "/name").setValue(cleanedName + " " + cleanedSurname)
-            ref.child("users/" + self.userID + "/birthDate").setValue(cleanedBirthday)
-            ref.child("users/" + self.userID + "/position").setValue(cleanedPosition)
-            ref.child("users/" + self.userID + "/description").setValue(cleanedUserInfo)
-            ref.child("users/" + self.userID + "/imageUrl").setValue(url?.absoluteString ?? "defaultURL")
-        }
-        
-        Transitor.transitionToMainTabBar(view: view, storyboard: storyboard)
-    }
-    
-    func upload(photo: UIImage, completion: @escaping ((_ url:URL?) -> Void)) {
-        let ref = Storage.storage().reference().child("Avatars").child(userID)
-        
-        guard let imageData = profileImageView.image?.jpegData(compressionQuality: 0.5) else { return }
-        let metadata1 = StorageMetadata()
-        metadata1.contentType = "image/jpeg"
-        
-        ref.putData(imageData, metadata: metadata1) { metadata, _ in
-            guard metadata != nil else {
-                completion(nil)
-                return
-            }
-            ref.downloadURL { url, _ in
-                guard let url = url else {
-                    completion(nil)
-                    return
-                }
-                completion(url)
-            }
-        }
-        
     }
     
     func textViewDidChange(_ textView: UITextView) {
         userInfoLabel.isHidden = !textView.text.isEmpty
+    }
+    
+    @IBAction func backButtonTapped(_ sender: Any) {
+        Router.transitionToSignUpVC(parent: self)
     }
 }
 
@@ -132,6 +199,7 @@ extension CreatingUserInfoViewController: UIImagePickerControllerDelegate, UINav
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             self.profileImageView.image = pickedImage
+            photoSelectedFlag = true
         }
         
         picker.dismiss(animated: true, completion: nil)

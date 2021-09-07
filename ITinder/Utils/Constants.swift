@@ -36,3 +36,5 @@ let senderKey = "sender"
 let messageTypeKey = "messageType"
 let attachmentKey = "attachment"
 let textKey = "text"
+
+let clientID = "572025486763-l8q1t2jh5a5ntjperccufpt9ne4lcipp.apps.googleusercontent.com"
