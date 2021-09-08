@@ -94,9 +94,9 @@ class UserService {
         }
     }
     
-    static func update(_ characteristics: [String: Any], withImage: UIImage?, completion: @escaping ((User?) -> Void)) {
+    static func update(by characteristics: [String: Any], withImage: UIImage?, completion: @escaping ((User?) -> Void)) {
         guard let image = withImage else {
-            update(characteristics) { completion($0) }
+            update(by: characteristics) { completion($0) }
             return
         }
         guard let currentUserId = currentUserId else { completion(nil); return }
@@ -105,11 +105,11 @@ class UserService {
             guard let urlString = urlString else { completion(nil); return }
             var characteristics = characteristics
             characteristics[imageUrlKey] = urlString
-            update(characteristics) { completion($0) }
+            update(by: characteristics) { completion($0) }
         }
     }
     
-    private static func update(_ characteristics: [String: Any], completion: @escaping ((User?) -> Void)) {
+    private static func update(by characteristics: [String: Any], completion: @escaping ((User?) -> Void)) {
         guard let currentUserId = currentUserId else { completion(nil); return }
         
         usersDatabase.child(currentUserId).updateChildValues(characteristics) { error, _ in

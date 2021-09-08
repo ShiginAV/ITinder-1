@@ -152,16 +152,16 @@ class SwipeViewController: UIViewController {
         view.addSubview(loaderView)
         
         UserService.set(status: nil, forUserId: userId) { [weak self] user in
-            guard let self = self, let user = user else {
+            guard let _self = self, let user = user else {
                 self?.loaderView.removeFromSuperview()
                 return
             }
             
             let cardModel = SwipeCardModel(from: user)
-            self.cards.insert(cardModel, at: 0)
-            self.profileContainerView.addToFirst(card: cardModel)
+            _self.cards.insert(cardModel, at: 0)
+            _self.profileContainerView.addToFirst(card: cardModel)
             
-            self.loaderView.removeFromSuperview()
+            _self.loaderView.removeFromSuperview()
         }
     }
     
