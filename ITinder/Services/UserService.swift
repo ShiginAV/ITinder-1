@@ -44,7 +44,8 @@ class UserService {
         }
     }
     
-    static func getNextUsers(usersCount: Int, completion: @escaping ([User]?) -> Void) {
+    static func getNextUsers(fromStart: Bool = false, usersCount: Int, completion: @escaping ([User]?) -> Void) {
+        if fromStart { lastUserId = "" }
         var query = usersDatabase.queryOrderedByKey()
         
         if lastUserId != "" {

@@ -12,7 +12,7 @@ class SwipeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
-        addCards()
+        addCards(fromStart: true)
     }
     
     func resetCardsStatuses() {
@@ -117,9 +117,9 @@ class SwipeViewController: UIViewController {
         ])
     }
     
-    private func addCards() {
+    private func addCards(fromStart: Bool = false) {
         isLoading = true
-        UserService.getNextUsers(usersCount: cardsLimit) { [weak self] users in
+        UserService.getNextUsers(fromStart: fromStart, usersCount: cardsLimit) { [weak self] users in
             guard let self = self else { return }
             
             guard let users = users else {
