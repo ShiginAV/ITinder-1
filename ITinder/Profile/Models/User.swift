@@ -26,6 +26,5 @@ struct User {
     var company: String?
     var employment: String?
     var statusList: [String: String]
-    
     var conversations: [String: [String: Any]]
 }

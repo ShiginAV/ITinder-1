@@ -44,28 +44,6 @@ class UserService {
         }
     }
     
-    static func getCurrentUserObserver(completion: @escaping (User?) -> Void) {
-        guard let currentUserId = currentUserId else {
-            assertionFailure()
-            completion(nil)
-            return
-        }
-        getUserObserverBy(id: currentUserId) { user in
-            completion(user)
-        }
-    }
-    
-    static func getUserObserverBy(id: String, completion: @escaping (User?) -> Void) {
-        usersDatabase.observe(.value, with: { snapshot in
-            guard let value = snapshot.childSnapshot(forPath: id).value as? [String: Any] else {
-                assertionFailure()
-                completion(nil)
-                return
-            }
-            completion(User(dictionary: value))
-        })
-    }
-    
     static func getNextUsers(usersCount: Int, completion: @escaping ([User]?) -> Void) {
         var query = usersDatabase.queryOrderedByKey()
         
@@ -113,6 +91,30 @@ class UserService {
         users.filter {
             guard let currentUserId = currentUserId else { return false }
             return $0.identifier != currentUserId && $0.statusList[currentUserId] == nil
+        }
+    }
+    
+    static func update(by characteristics: [String: Any], withImage: UIImage?, completion: @escaping ((User?) -> Void)) {
+        guard let image = withImage else {
+            update(by: characteristics) { completion($0) }
+            return
+        }
+        guard let currentUserId = currentUserId else { completion(nil); return }
+        
+        upload(image: image, forUserId: currentUserId) { urlString in
+            guard let urlString = urlString else { completion(nil); return }
+            var characteristics = characteristics
+            characteristics[imageUrlKey] = urlString
+            update(by: characteristics) { completion($0) }
+        }
+    }
+    
+    private static func update(by characteristics: [String: Any], completion: @escaping ((User?) -> Void)) {
+        guard let currentUserId = currentUserId else { completion(nil); return }
+        
+        usersDatabase.child(currentUserId).updateChildValues(characteristics) { error, _ in
+            guard error == nil else { completion(nil); return }
+            getCurrentUser { completion($0) }
         }
     }
     

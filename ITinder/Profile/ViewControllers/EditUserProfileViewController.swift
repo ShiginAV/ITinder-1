@@ -36,19 +36,13 @@ final class EditUserProfileViewController: UIViewController {
         profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
     }
     
-    private var isDoneButtonEnabled: Bool = false {
-        didSet {
-            doneButton.isUserInteractionEnabled = isDoneButtonEnabled
-            let titleColor = isDoneButtonEnabled ? UIColor.systemBlue : .lightGray
-            doneButton.setTitleColor(titleColor, for: .normal)
-        }
-    }
-    
     private var user: User
+    private var characteristicsDict = [String: Any]()
     private let padding: CGFloat = 20
     private var isImageChanged = false
     private var scrollViewBottomC: NSLayoutConstraint?
     private var notifications: [NSObjectProtocol]?
+    private let descriptionPlaceholder = "Добавить информацию о себе"
     
     private lazy var loaderView: UIView = {
         let view = UIView()
@@ -87,6 +81,8 @@ final class EditUserProfileViewController: UIViewController {
         view.font = UIFont.systemFont(ofSize: 16)
         view.textContainer.lineFragmentPadding = 0
         view.textContainerInset = .zero
+        view.text = descriptionPlaceholder
+        view.textColor = .lightGray
         view.delegate = self
         return view
     }()
@@ -108,6 +104,7 @@ final class EditUserProfileViewController: UIViewController {
         button.setTitle("Готово", for: .normal)
         button.setTitleColor(Colors.primary, for: .normal)
         button.setTitleColor(Colors.primary.withAlphaComponent(0.5), for: .highlighted)
+        button.setTitleColor(.lightGray, for: .disabled)
         button.addTarget(self, action: #selector(doneButtonDidTap), for: .touchUpInside)
         return button
     }()
@@ -203,7 +200,10 @@ final class EditUserProfileViewController: UIViewController {
         case .employment:
             characteristic.text = user.employment
         }
-        descriptionView.text = user.description
+        if let description = user.description, description != "" {
+            descriptionView.text = user.description
+            descriptionView.textColor = .black
+        }
     }
     
     private func showImagePicker() {
@@ -237,7 +237,7 @@ final class EditUserProfileViewController: UIViewController {
         loaderView.isHidden = false
         let image = isImageChanged ? profileImageView.image : nil
         
-        UserService.persist(user: self.user, withImage: image) { [weak self] newUser in
+        UserService.update(by: characteristicsDict, withImage: image) { [weak self] newUser in
             guard let self = self else { return }
             guard let newUser = newUser else {
                 self.loaderView.isHidden = true
@@ -265,9 +265,9 @@ extension EditUserProfileViewController: EditСharacteristicDelegate {
     func textDidChange(type: СharacteristicType, text: String?) {
         switch type {
         case .name, .position:
-            isDoneButtonEnabled = (text != nil && text != "")
+            doneButton.isEnabled = (text != nil && text != "")
         case .birthDate, .company, .education, .city, .employment:
-            isDoneButtonEnabled = true
+            doneButton.isEnabled = true
         }
     }
     
@@ -275,20 +275,20 @@ extension EditUserProfileViewController: EditСharacteristicDelegate {
         switch type {
         case .name:
             guard let text = text, text != "" else { return }
-            user.name = text
+            characteristicsDict[nameKey] = text
         case .position:
             guard let text = text, text != "" else { return }
-            user.position = text
+            characteristicsDict[positionKey] = text
         case .birthDate:
-            user.birthDate = text
+            characteristicsDict[birthDateKey] = text
         case .company:
-            user.company = text
+            characteristicsDict[companyKey] = text
         case .education:
-            user.education = text
+            characteristicsDict[educationKey] = text
         case .city:
-            user.city = text
+            characteristicsDict[cityKey] = text
         case .employment:
-            user.employment = text
+            characteristicsDict[employmentKey] = text
         }
     }
 }
@@ -307,7 +307,23 @@ extension EditUserProfileViewController: UIImagePickerControllerDelegate, UINavi
 }
 
 extension EditUserProfileViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        doneButton.isEnabled = !textView.text.isEmpty
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == .lightGray {
+            textView.text = nil
+            textView.textColor = .black
+        }
+    }
+    
     func textViewDidEndEditing(_ textView: UITextView) {
-        user.description = textView.text
+        if textView.text.isEmpty {
+            textView.text = descriptionPlaceholder
+            textView.textColor = .lightGray
+        } else {
+            characteristicsDict[descriptionKey] = textView.text
+        }
     }
 }
