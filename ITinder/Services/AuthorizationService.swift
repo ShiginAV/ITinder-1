@@ -21,6 +21,10 @@ class AuthorizationService {
         }
     }
     
+    static func signOutUser() {
+        try? Auth.auth().signOut()
+    }
+    
     static func signInWithGivenCredential(credential: AuthCredential, vc: UIViewController) {
         Auth.auth().signIn(with: credential) { result, error in
             if error != nil {
