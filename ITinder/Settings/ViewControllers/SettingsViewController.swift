@@ -24,7 +24,8 @@ final class SettingsViewController: UIViewController {
         self?.dismiss(animated: true)
     }
     private lazy var exitView = SettingView(title: "Выйти из аккаунта", buttonTitle: "Выйти") {
-        print("EXIT")
+        AuthorizationService.signOutUser()
+        Router.transitionToAuthScreen(parent: self)
     }
     
     private let stackView: UIStackView = {
