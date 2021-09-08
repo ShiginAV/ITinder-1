@@ -45,6 +45,7 @@ final class EditUserProfileViewController: UIViewController {
     }
     
     private var user: User
+    private var characteristicsDict = [String: Any]()
     private let padding: CGFloat = 20
     private var isImageChanged = false
     private var scrollViewBottomC: NSLayoutConstraint?
@@ -237,7 +238,7 @@ final class EditUserProfileViewController: UIViewController {
         loaderView.isHidden = false
         let image = isImageChanged ? profileImageView.image : nil
         
-        UserService.persist(user: self.user, withImage: image) { [weak self] newUser in
+        UserService.update(characteristicsDict, withImage: image) { [weak self] newUser in
             guard let self = self else { return }
             guard let newUser = newUser else {
                 self.loaderView.isHidden = true
@@ -275,20 +276,20 @@ extension EditUserProfileViewController: EditСharacteristicDelegate {
         switch type {
         case .name:
             guard let text = text, text != "" else { return }
-            user.name = text
+            characteristicsDict[nameKey] = text
         case .position:
             guard let text = text, text != "" else { return }
-            user.position = text
+            characteristicsDict[positionKey] = text
         case .birthDate:
-            user.birthDate = text
+            characteristicsDict[birthDateKey] = text
         case .company:
-            user.company = text
+            characteristicsDict[companyKey] = text
         case .education:
-            user.education = text
+            characteristicsDict[educationKey] = text
         case .city:
-            user.city = text
+            characteristicsDict[cityKey] = text
         case .employment:
-            user.employment = text
+            characteristicsDict[employmentKey] = text
         }
     }
 }

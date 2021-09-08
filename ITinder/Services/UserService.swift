@@ -94,6 +94,30 @@ class UserService {
         }
     }
     
+    static func update(_ characteristics: [String: Any], withImage: UIImage?, completion: @escaping ((User?) -> Void)) {
+        guard let image = withImage else {
+            update(characteristics) { completion($0) }
+            return
+        }
+        guard let currentUserId = currentUserId else { completion(nil); return }
+        
+        upload(image: image, forUserId: currentUserId) { urlString in
+            guard let urlString = urlString else { completion(nil); return }
+            var characteristics = characteristics
+            characteristics[imageUrlKey] = urlString
+            update(characteristics) { completion($0) }
+        }
+    }
+    
+    private static func update(_ characteristics: [String: Any], completion: @escaping ((User?) -> Void)) {
+        guard let currentUserId = currentUserId else { completion(nil); return }
+        
+        usersDatabase.child(currentUserId).updateChildValues(characteristics) { error, _ in
+            guard error == nil else { completion(nil); return }
+            getCurrentUser { completion($0) }
+        }
+    }
+    
     static func persist(user: User, withImage: UIImage?, completion: @escaping ((User?) -> Void)) {
         guard let image = withImage else {
             persist(user) { user in
@@ -239,6 +263,7 @@ extension User {
         company = dictionary[companyKey] as? String
         employment = dictionary[employmentKey] as? String
         statusList = dictionary[statusListKey] as? [String: String] ?? [:]
+        conversations = dictionary[conversationsKey] as? [String: [String: Any]] ?? [:]
     }
     
     var userDictionary: [String: Any] {
@@ -253,6 +278,7 @@ extension User {
          educationKey: education ?? "",
          companyKey: company ?? "",
          employmentKey: employment ?? "",
-         statusListKey: statusList]
+         statusListKey: statusList,
+         conversationsKey: conversations]
     }
 }
