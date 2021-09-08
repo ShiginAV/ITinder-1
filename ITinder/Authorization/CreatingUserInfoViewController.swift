@@ -114,7 +114,8 @@ class CreatingUserInfoViewController: UIViewController, UITextViewDelegate {
                                                education: nil,
                                                company: nil,
                                                employment: nil,
-                                               statusList: [:])
+                                               statusList: [:],
+                                               conversations: [:])
                         
                         UserService.persist(user: itinderUser, withImage: self.profileImageView.image) {_ in
                             
