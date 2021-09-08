@@ -27,7 +27,7 @@ final class TabBarController: UITabBarController {
         viewControllers.append(userProfileVC)
         self.viewControllers = viewControllers
         
-        UserService.getCurrentUser { user in
+        UserService.getCurrentUserObserver { user in
             userProfileVC.user = user
         }
     }

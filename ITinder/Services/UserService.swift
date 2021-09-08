@@ -44,6 +44,28 @@ class UserService {
         }
     }
     
+    static func getCurrentUserObserver(completion: @escaping (User?) -> Void) {
+        guard let currentUserId = currentUserId else {
+            assertionFailure()
+            completion(nil)
+            return
+        }
+        getUserObserverBy(id: currentUserId) { user in
+            completion(user)
+        }
+    }
+    
+    static func getUserObserverBy(id: String, completion: @escaping (User?) -> Void) {
+        usersDatabase.observe(.value, with: { snapshot in
+            guard let value = snapshot.childSnapshot(forPath: id).value as? [String: Any] else {
+                assertionFailure()
+                completion(nil)
+                return
+            }
+            completion(User(dictionary: value))
+        })
+    }
+    
     static func getNextUsers(usersCount: Int, completion: @escaping ([User]?) -> Void) {
         var query = usersDatabase.queryOrderedByKey()
         
@@ -239,6 +261,7 @@ extension User {
         company = dictionary[companyKey] as? String
         employment = dictionary[employmentKey] as? String
         statusList = dictionary[statusListKey] as? [String: String] ?? [:]
+        conversations = dictionary[conversationsKey] as? [String: [String: Any]] ?? [:]
     }
     
     var userDictionary: [String: Any] {
@@ -253,6 +276,7 @@ extension User {
          educationKey: education ?? "",
          companyKey: company ?? "",
          employmentKey: employment ?? "",
-         statusListKey: statusList]
+         statusListKey: statusList,
+         conversationsKey: conversations]
     }
 }
