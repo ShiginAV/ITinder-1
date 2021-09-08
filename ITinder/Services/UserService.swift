@@ -44,7 +44,7 @@ class UserService {
         }
     }
     
-    static func currentUserObserver(completion: @escaping (User?) -> Void) {
+    static func getCurrentUserObserver(completion: @escaping (User?) -> Void) {
         guard let currentUserId = currentUserId else {
             assertionFailure()
             completion(nil)
